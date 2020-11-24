@@ -53,7 +53,7 @@ indeks GetLastIdxKol (MATRIKS M)
 boolean IsIdxEff (MATRIKS M, indeks i, indeks j)
 /* Mengirimkan true jika i, j adalah indeks efektif bagi M */
 {
-   return ((i >= GetFirstIdxBrs(M)) && (i <= GetLastIdxBrs(M)) && (j >= GetFirstIdxKol(M)) && (j <= GetLastIdxKol(M));
+   return ((i >= GetFirstIdxBrs(M)) && (i <= GetLastIdxBrs(M)) && (j >= GetFirstIdxKol(M)) && (j <= GetLastIdxKol(M)));
 }
 ElType GetElmtDiagonal (MATRIKS M, indeks i)
 /* Mengirimkan elemen M(i,i) */
@@ -196,7 +196,7 @@ MATRIKS KaliKons (MATRIKS M, ElType X)
    {
       for (j = GetFirstIdxKol(M); j <= GetLastIdxKol(M); ++j)
       {
-         Elmt(M,i,j) *= k;
+         Elmt(M,i,j) *= X;
       }
    }
    return M;
