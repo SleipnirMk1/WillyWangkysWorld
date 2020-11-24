@@ -166,7 +166,7 @@ void GeserKeSbX (POINT *P)
 /* Proses : P digeser ke sumbu X. */
 /* Contoh : Jika koordinat semula (9,9), maka menjadi (9,0) */
 {
-	*P = MakePOINT(Absis(*P), 0, Area(P));
+	*P = MakePOINT(Absis(*P), 0, Area(*P));
 }
 void GeserKeSbY (POINT *P)
 /* I.S. P terdefinisi*/
@@ -174,7 +174,7 @@ void GeserKeSbY (POINT *P)
 /* Proses : P digeser ke sumbu Y. */
 /* Contoh : Jika koordinat semula (9,9), maka menjadi (0,9) */
 {
-	*P = MakePOINT(0, Ordinat(*P), Area(P));
+	*P = MakePOINT(0, Ordinat(*P), Area(*P));
 }
 void Mirror (POINT *P, boolean SbX)
 /* I.S. P terdefinisi */
@@ -188,5 +188,5 @@ void Putar (POINT *P, float Sudut)
 /* I.S. P terdefinisi */
 /* F.S. P digeser sebesar Sudut derajat dengan sumbu titik (0,0) searah jarum jam*/
 {
-	*P = MakePOINT(((Absis(*P) * cos(Sudut)) + (-1) * Ordinat(*P) * sin(Sudut) ), ((Absis(*P) * sin(Sudut)) + (Ordinat(*P) * cos(Sudut))), Area(P));
+	*P = MakePOINT(((Absis(*P) * cos(Sudut)) + (-1) * Ordinat(*P) * sin(Sudut) ), ((Absis(*P) * sin(Sudut)) + (Ordinat(*P) * cos(Sudut))), Area(*P));
 }
