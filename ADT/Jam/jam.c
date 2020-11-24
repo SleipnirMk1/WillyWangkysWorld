@@ -176,5 +176,13 @@ long Durasi (JAM JAw, JAM JAkh)
     }
     return n;
 }
-
+void CetakDurasi(long Durasi)
+{
+	int x, y;
+	x = Durasi % 86400;
+	x = x/3600;
+	y = x % 3600;
+	y = y / 60;
+	printf (x, ' hour(s) ', y, 'minute(s)');
+}
 #endif
