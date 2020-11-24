@@ -65,14 +65,15 @@ void SalinKata();
 void SetKata(Kata *K, char arr[]);
 boolean IsEmpty(QueueKata S);
 void CreateEmpty(QueueKata *S);
-void Enqueue(QueueKata *S, Kata K);
-void Dequeue(QueueKata *S, Kata *K);
+void EnqueueKata(QueueKata *S, Kata K);
+void DequeueKata(QueueKata *S, Kata *K);
 int NbElmt(QueueKata S);
 void PrintKata(Kata K);
 void PrintQueueKata(QueueKata S);
-QueueKata GetQueue();
+QueueKata GetQueueKata();
 boolean IsEQ(QueueKata Q1, QueueKata Q2);
 boolean KataSama(Kata K1, Kata K2);
+QueueKata SetQueueKata(char arr[]);
 
 
 #endif

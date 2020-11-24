@@ -105,7 +105,7 @@ void SalinKata()
 void SetKata(Kata *K, char arr[])
 {
   int n = 0;
-  while (arr[n] != '\0')
+  while (arr[n] != '\0' && arr[n] != ' ')
     n++;
 
   for (int i = 0; i < n; ++i)
@@ -117,8 +117,35 @@ void SetKata(Kata *K, char arr[])
   (*K).Length = n;
 }
 
+QueueKata SetQueueKata(char arr[])
+{
+  QueueKata kalimat;
+  CreateEmpty(&kalimat);
 
-QueueKata GetQueue()
+  STARTWITH(arr);
+  IgnoreBlank();
+
+  if (EOP)
+  {
+      EndKata = true;
+      CKata.Length = 0;
+  }
+  else
+  {
+      EndKata = false;
+      SalinKata();
+  }
+
+  while(!EndKata)
+  {
+    EnqueueKata(&kalimat, CKata);
+    ADVKATA();
+  }
+
+  return kalimat;
+}
+
+QueueKata GetQueueKata()
 {
   QueueKata kalimat;
   CreateEmpty(&kalimat);
@@ -127,7 +154,7 @@ QueueKata GetQueue()
 
   while(!EndKata)
   {
-    Enqueue(&kalimat, CKata);
+    EnqueueKata(&kalimat, CKata);
     ADVKATA();
   }
 
@@ -154,7 +181,7 @@ void CreateEmpty(QueueKata *S)
   IdxMax(*S) = IDXNIL;
 }
 
-void Enqueue(QueueKata *S, Kata K)
+void EnqueueKata(QueueKata *S, Kata K)
 {
   if (IsEmpty(*S))
   {
@@ -169,7 +196,7 @@ void Enqueue(QueueKata *S, Kata K)
   }
 }
 
-void Dequeue(QueueKata *S, Kata *K)
+void DequeueKata(QueueKata *S, Kata *K)
 {
   if (NbElmt(*S) == 1)
   {
@@ -202,7 +229,7 @@ void PrintQueueKata(QueueKata S)
   for(int i = 0; i < n; i++)
   {
     Kata K;
-    Dequeue(&S, &K);
+    DequeueKata(&S, &K);
     PrintKata(K);
 
     if (i != n-1)
@@ -218,8 +245,8 @@ boolean IsEQ(QueueKata Q1, QueueKata Q2)
     while(!IsEmpty(Q1) && same)
     {
       Kata K1, K2;
-      Dequeue(&Q1, &K1);
-      Dequeue(&Q2, &K2);
+      DequeueKata(&Q1, &K1);
+      DequeueKata(&Q2, &K2);
 
       if (!KataSama(K1, K2))
         same = false;
@@ -243,7 +270,7 @@ boolean KataSama(Kata K1, Kata K2)
   {
     boolean same = true;
     int i = 0;
-    while(i < K1.Length && !same)
+    while(i < K1.Length && same)
     {
       if (K1.TabKata[i] != K2.TabKata[i])
         same = false;

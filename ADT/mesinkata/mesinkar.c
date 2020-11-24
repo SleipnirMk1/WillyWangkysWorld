@@ -4,7 +4,7 @@
 #include "mesinkar.h"
 #include <stdio.h>
 
-#define MAX 100
+#define MAX 200
 
 char CC;
 boolean EOP;
@@ -34,6 +34,37 @@ void START() {
   idx = 0;
 
 	ADV();
+}
+
+void STARTWITH(char kal[])
+{
+  idx = 0;
+  
+  while(kal[idx] != '\0')
+  {
+    PITA[idx] = kal[idx];
+    idx++;
+  }
+  
+  PITA[idx] = '\0';
+  idx = 0;
+
+  while(idx < MAX && PITA[idx] != '\0')
+    idx++;
+
+  if (idx != MAX)
+  {
+    PITA[idx] = MARK;
+    PITA[idx+1] = '\0';
+  }
+  else
+  {
+    PITA[idx-1] = MARK;
+  }
+
+  idx = 0;
+
+  ADV();
 }
 
 void ADV() {
