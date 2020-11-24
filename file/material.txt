@@ -1,0 +1,5 @@
+Material Harga
+Wood 10
+Stone 15
+Iron 20
+mamank 25
