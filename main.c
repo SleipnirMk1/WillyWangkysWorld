@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "ADT\mesinkata\mesinkata.h"
 
-boolean RUN = true;
-
 boolean MAINPHASE = false;
-int DAY;
+boolean RUN_NEWGAME = true;
+boolean RUN = true;
+boolean OFFICE_MODE = false;
 
 Kata NEW, LOAD, EXIT;
 Kata BUILD, UPGRADE, BUY, UNDO, EXECUTE, MAIN;
@@ -47,11 +47,11 @@ int main()
 	// generateStaFromFile();
 
 	RUN = true;
+	RUN_NEWGAME = true;
 
 	printf("NEW // LOAD // EXIT\n");
 	boolean runned = false;
-	boolean inputNew = true;
-	while(inputNew)
+	while(RUN_NEWGAME)
 	{
 		QueueKata input = GetQueueKata();
 		Kata K;
@@ -59,19 +59,18 @@ int main()
 		
 		if (KataSama(K, EXIT))
 		{
-			RUN = false;
-			inputNew = false;
+			EXIT(1);
 		}
 		else if (KataSama(K, NEW))
 		{
 			generateNewGame();
-			inputNew = false;
+			RUN_NEWGAME = false;
 			runned = true;
 		}
 		else if (KataSama(K, LOAD))
 		{
 			generateLoadGame();
-			inputNew = false;
+			RUN_NEWGAME = false;
 			runned = true;
 		}
 		else
@@ -185,6 +184,7 @@ int main()
 		
 	}
 
+
 	if (runned)
 	{
 		printf("Masukkan 'y' jika ingin melakukan SAVE GAME : ");
@@ -194,18 +194,58 @@ int main()
 			saveGame();
 	}
 
-	printf("\n");
-	printf("Thanks For Playing!!!\n");
+	printf("Thanks for playing... :D");
 
 	return 0;
 }
 
 
-void move(int dir)
+void move(int X)
 {
 	printf("Move To %d\n", dir);
-}
 
+	if (X == 0)
+	{
+		if (!IsWall(PosX(P),PosY(P) + 1))	
+		{
+			PosX(P)	= PosX(P);
+			PosY(P)	= PosY(P) + 1;
+
+			printf("North\n");
+		}
+	}
+	else if (X == 1)
+	{
+		if (!IsWall(PosX(P)-1,PosY(P)))
+		{
+			PosX(P)	= PosX(P) - 1;
+			PosY(P)	= PosY(P);
+
+			printf("West\n");
+		}
+	}
+	else if (X == 2)
+	{
+		if (!IsWall(PosX(P),PosY(P) - 1))
+		{
+			PosX(P)	= PosX(P);
+			PosY(P)	= PosY(P) - 1;
+
+			printf("South\n");
+		}
+	}
+	else if (X == 3)
+	{
+		if (!IsWall(PosX(P) + 1,PosY(P)))
+		{
+			PosX(P)	= PosX(P) + 1;
+			PosY(P)	= PosY(P);
+
+			printf("East\n");
+		}
+		
+	}
+}
 
 // ================================================================
 void generateAllConstant()
@@ -285,10 +325,42 @@ void undo()
 	printf("Undo\n");
 }
 
-void execute()
+void execute(StackAction *S)
 {
 	printf("Execute\n");
-	MAINPHASE = true;
+	
+	 /* Kamus lokal */
+    Stack StackExecute;
+    Action A;
+
+    /*Algoritma*/
+    if (!IsEmpty(*S))
+    {
+        while (!IsEmpty(*S))
+        {
+            Pop(S, &A);
+            Push(&StackExecute, A);
+        }
+        while (!IsEmpty(StackExecute))
+        {
+            Pop(&StackExecute, &A);
+            if (KataSama(ACTION_BUILD, TYPE(A)))
+            {
+                executeBuild(A);
+            }
+            else if (KataSama(ACTION_UPGRADE, TYPE(A)))
+            {
+                executeUpgrade(A);
+            }
+            else
+            {
+                executeBuy(A);
+            }
+            
+        }
+
+    }
+    maen();
 }
 
 void prepareToMain()
@@ -322,4 +394,21 @@ void office()
 void mainToPrepare()
 {
 	MAINPHASE = false;
+}
+
+
+
+void EXIT(int x)
+{
+	if (x == 0)
+	{
+		// Exit Office
+		OFFICE_MODE = false;
+	}
+	else if(x == 1)
+	{
+		RUN = false;
+		RUN_NEWGAME = false;
+		OFFICE_MODE = false;
+	}
 }
