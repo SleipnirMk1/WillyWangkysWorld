@@ -2,7 +2,7 @@
 
 JAM Current_Time;
 
-void main(Stack S)
+void maen(Stack S)
 {
 	while (!IsStackEmpty(S))
 	{
