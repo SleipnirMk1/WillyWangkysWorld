@@ -9,15 +9,17 @@
 typedef struct {
 	float X; /* absis   */
 	float Y; /* ordinat */
+   int A;
 } POINT;
 
 /* *** Notasi Akses: Selektor POINT *** */
 #define Absis(P) (P).X
 #define Ordinat(P) (P).Y
+#define Area(P) (P).A
 
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
-POINT MakePOINT (float X, float Y);
+POINT MakePOINT (float X, float Y, int A);
 /* Membentuk sebuah POINT dari komponen-komponennya */
 
 /* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */
@@ -41,8 +43,10 @@ void TulisPOINT (POINT P);
 /* *** Kelompok operasi relasional terhadap POINT *** */
 boolean EQ (POINT P1, POINT P2);
 /* Mengirimkan true jika P1 = P2 : absis dan ordinatnya sama */
+/* Serta Area nya sama */
 boolean NEQ (POINT P1, POINT P2);
 /* Mengirimkan true jika P1 tidak sama dengan P2 */
+/* Sudah memperhitungkan area */
 
 /* *** Kelompok menentukan di mana P berada *** */
 boolean IsOrigin (POINT P);
@@ -61,8 +65,11 @@ POINT NextX (POINT P);
 /* Mengirim salinan P dengan absis ditambah satu */
 POINT NextY (POINT P);
 /* Mengirim salinan P dengan ordinat ditambah satu */
-POINT PlusDelta (POINT P, float deltaX, float deltaY);
+POINT NextA (POINT P);
+/* Mengirim salinan P dengan Area ditambah satu */
+POINT PlusDelta (POINT P, float deltaX, float deltaY, int deltaP);
 /* Mengirim salinan P yang absisnya adalah Absis(P) + deltaX dan ordinatnya adalah Ordinat(P) + deltaY */
+/* serta Area(P) + deltaA (Bisa negatif) */
 POINT MirrorOf (POINT P, boolean SbX);
 /* Menghasilkan salinan P yang dicerminkan terhadap salah satu sumbu */
 /* Jika SbX bernilai true, maka dicerminkan terhadap sumbu X */
@@ -71,11 +78,12 @@ float Jarak0 (POINT P);
 /* Menghitung jarak P ke (0,0) */
 float Panjang (POINT P1, POINT P2);
 /* Menghitung panjang garis yang dibentuk P1 dan P2 */
-/* Perhatikanlah bahwa di sini spec fungsi kurang baik sebab menyangkut ADT Garis. */
-/* Tuliskan spec fungsi yang lebih tepat. */
-void Geser (POINT *P, float deltaX, float deltaY);
+/* Hanya digunakan untuk mengukur panjang dalam satu area yang sama, tidak berbeda area */
+/* Jika digunakan untuk mengukur panjang 2 point beda area, akan mengembalikan hasil seolah-olah satu area */
+void Geser (POINT *P, float deltaX, float deltaY, int deltaA);
 /* I.S. P terdefinisi */
 /* F.S. P digeser, absisnya sebesar deltaX dan ordinatnya sebesar deltaY */
+/* Serta menggeser Area sebesar deltaA (Bisa negatif) */
 void GeserKeSbX (POINT *P);
 /* I.S. P terdefinisi */
 /* F.S. P berada pada sumbu X dengan absis sama dengan absis semula. */
