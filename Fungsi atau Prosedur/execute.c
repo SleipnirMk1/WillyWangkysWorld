@@ -4,13 +4,36 @@
 
 void execute (StackAction *S)
 {
-    if (IsEmpty(*S))
+    /* Kamus lokal */
+    Stack StackExecute;
+    infotype Command;
+
+    /*Algoritma*/
+    if (!IsEmpty(*S))
     {
-        main(*S);
+        while (!IsEmpty(*S))
+        {
+            Pop(&S, &Command);
+            Push(&StackExecute, &Command);
+        }
+        while (!IsEmpty(StackExecute))
+        {
+            Pop(&StackExecute, &cmd);
+            if (cmd == "build")
+            {
+                build;
+            }
+            else if (cmd == "updgrade")
+            {
+                upgrade;
+            }
+            else
+            {
+                buy;
+            }
+            
+        }
+
     }
-    else
-    {
-        
-    }
-    
+    main(*S);
 }
