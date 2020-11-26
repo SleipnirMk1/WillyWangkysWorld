@@ -1,0 +1,4 @@
+Wahana :
+(FerrisWheel(MagicCircle(EyeofWanky()())(FortuneWheel()()))(FastBall(CurveBall()())(Fireball()()))
+(Funhouse(HouseofTricks(CandyFactory()())(LokisPalace()()))(HauntedMansion(CountsManor()())(Cursed Castle()()))
+(LogRide(AdventureBoat(PiratesCove()())(TunnelofLove()())(LogCoaster(Waterfall()())(RiverRapids()()))
