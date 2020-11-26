@@ -5,7 +5,7 @@
 
 Kata BUILDTYPE;
 
-void Build (Stack*S, Wahana *W, ListWahana W1)
+void Build (StackAction *S, Wahana *W, ListWahana W1)
 {
 	boolean build = true;
 	while(build)
