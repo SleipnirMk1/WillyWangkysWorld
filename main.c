@@ -233,9 +233,9 @@ int main()
 
 
 
-boolean IsWall(float X, float Y)
+boolean IsWall(float X, float Y, int A)
 {
-	return (X == 0)|(X == 19)|(Y == 19)|(Y == 0);
+	return ((X == 0)|(X == 19)|(Y == 19)|(Y == 0))&&(!IsGerbang(X, Y, A));
 }
 boolean IsGerbang(float X, float Y, int A)
 {
