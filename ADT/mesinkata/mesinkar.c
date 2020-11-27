@@ -4,7 +4,7 @@
 #include "mesinkar.h"
 #include <stdio.h>
 
-#define MAX 200
+#define MAX 250
 
 char CC;
 boolean EOP;

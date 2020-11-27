@@ -117,10 +117,10 @@ void SetKata(Kata *K, char arr[])
   (*K).Length = n;
 }
 
-QueueKata SetQueueKata(char arr[])
+Kalimat SetKalimat(char arr[])
 {
-  QueueKata kalimat;
-  CreateEmpty(&kalimat);
+  Kalimat kalimat;
+  CreateEmptyKalimat(&kalimat);
 
   STARTWITH(arr);
   IgnoreBlank();
@@ -138,23 +138,23 @@ QueueKata SetQueueKata(char arr[])
 
   while(!EndKata)
   {
-    EnqueueKata(&kalimat, CKata);
+    EnqueueKalimat(&kalimat, CKata);
     ADVKATA();
   }
 
   return kalimat;
 }
 
-QueueKata GetQueueKata()
+Kalimat GetKalimat()
 {
-  QueueKata kalimat;
-  CreateEmpty(&kalimat);
+  Kalimat kalimat;
+  CreateEmptyKalimat(&kalimat);
 
   STARTKATA();
 
   while(!EndKata)
   {
-    EnqueueKata(&kalimat, CKata);
+    EnqueueKalimat(&kalimat, CKata);
     ADVKATA();
   }
 
@@ -170,20 +170,20 @@ void PrintKata(Kata K)
   }
 }
 
-boolean IsEmpty(QueueKata S)
+boolean IsEmptyKalimat(Kalimat S)
 {
   return IdxMin(S) == IDXNIL && IdxMax(S) == IDXNIL;
 }
 
-void CreateEmpty(QueueKata *S)
+void CreateEmptyKalimat(Kalimat *S)
 {
   IdxMin(*S) = IDXNIL;
   IdxMax(*S) = IDXNIL;
 }
 
-void EnqueueKata(QueueKata *S, Kata K)
+void EnqueueKalimat(Kalimat *S, Kata K)
 {
-  if (IsEmpty(*S))
+  if (IsEmptyKalimat(*S))
   {
     IdxMin(*S) = 0;
     IdxMax(*S) = 0;
@@ -196,9 +196,9 @@ void EnqueueKata(QueueKata *S, Kata K)
   }
 }
 
-void DequeueKata(QueueKata *S, Kata *K)
+void DequeueKalimat(Kalimat *S, Kata *K)
 {
-  if (NbElmt(*S) == 1)
+  if (NbKata(*S) == 1)
   {
     *K = (*S).Elmt[IdxMin(*S)];
     IdxMin(*S) = IDXNIL;
@@ -215,7 +215,7 @@ void DequeueKata(QueueKata *S, Kata *K)
   }
 }
 
-int NbElmt(QueueKata S)
+int NbKata(Kalimat S)
 {
   if (IsEmpty(S))
     return 0;
@@ -223,13 +223,13 @@ int NbElmt(QueueKata S)
     return IdxMax(S)-IdxMin(S) + 1;
 }
 
-void PrintQueueKata(QueueKata S)
+void PrintKalimat(Kalimat S)
 {
-  int n = NbElmt(S);
+  int n = NbKata(S);
   for(int i = 0; i < n; i++)
   {
     Kata K;
-    DequeueKata(&S, &K);
+    DequeueKalimat(&S, &K);
     PrintKata(K);
 
     if (i != n-1)
@@ -237,16 +237,16 @@ void PrintQueueKata(QueueKata S)
   }
 }
 
-boolean IsEQ(QueueKata Q1, QueueKata Q2)
+boolean IsEQKalimat(Kalimat Q1, Kalimat Q2)
 {
-  if (NbElmt(Q1) == NbElmt(Q2))
+  if (NbKata(Q1) == NbKata(Q2))
   {
     boolean same = true;
-    while(!IsEmpty(Q1) && same)
+    while(!IsEmptyKalimat(Q1) && same)
     {
       Kata K1, K2;
-      DequeueKata(&Q1, &K1);
-      DequeueKata(&Q2, &K2);
+      DequeueKalimats(&Q1, &K1);
+      DequeueKalimat(&Q2, &K2);
 
       if (!KataSama(K1, K2))
         same = false;
@@ -282,5 +282,17 @@ boolean KataSama(Kata K1, Kata K2)
   }
 }
 
+int NbHurufKalimat(Kalimat Q)
+{
+  int n = 0;
+  while(!IsEmpty(Q))
+  {
+    Kata K;
+    DequeueKata(&Q, &K);
+    n += K.Length;
+  }
+
+  return n;
+}
 
 

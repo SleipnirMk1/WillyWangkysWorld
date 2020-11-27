@@ -28,7 +28,7 @@ typedef struct
   Kata Elmt[MAXSTACK];
   int IdxMin;
   int IdxMax;
-} QueueKata;
+} Kalimat;
 
 
 
@@ -63,17 +63,18 @@ void SalinKata();
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
 void SetKata(Kata *K, char arr[]);
-boolean IsEmpty(QueueKata S);
-void CreateEmpty(QueueKata *S);
-void EnqueueKata(QueueKata *S, Kata K);
-void DequeueKata(QueueKata *S, Kata *K);
-int NbElmt(QueueKata S);
+boolean IsEmptyKalimat(Kalimat S);
+void CreateEmptyKalimat(Kalimat *S);
+void EnqueueKalimat(Kalimat *S, Kata K);
+void DequeueKalimat(Kalimat *S, Kata *K);
+int NbKata(Kalimat S);
 void PrintKata(Kata K);
-void PrintQueueKata(QueueKata S);
-QueueKata GetQueueKata();
-boolean IsEQ(QueueKata Q1, QueueKata Q2);
+void PrintKalimat(Kalimat S);
+Kalimat GetKalimat();
+boolean IsEQKalimat(Kalimat Q1, Kalimat Q2);
 boolean KataSama(Kata K1, Kata K2);
-QueueKata SetQueueKata(char arr[]);
+Kalimat SetKalimat(char arr[]);
+int NbHurufKalimat(Kalimat Q);
 
 
 #endif
