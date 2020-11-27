@@ -3,6 +3,8 @@
 #include "ADT\mesinkata\mesinkata.h"
 #include "ADT\graph\graph.h"
 
+#define MAXSTACKACTION 100
+
 typedef struct
 {
 	int Wood;
@@ -28,6 +30,24 @@ typedef struct
 } Wahana;
 
 
+typedef struct 
+{
+	Kalimat Name;
+	Kata Type;
+	int Time;
+	int Amount;
+	Point Pos;
+} Action;
+
+typedef struct
+{
+	Action A[MAXSTACKACTION];
+	int TOP;
+} StackAction;
+
+
+
+
 boolean MAINPHASE = false;
 boolean RUN_NEWGAME = true;
 boolean RUN = true;
@@ -46,6 +66,13 @@ Graph G;
 Wahana W;
 Player P;
 
+Point officePoint;
+
+StackAction A;
+
+
+// Defenition
+// ============================================
 void generateAllConstant();
 void generateLoadGame();
 void generateNewGame();
@@ -66,6 +93,8 @@ void office();
 void mainToPrepare();
 
 void move(int dir);
+
+// ==============================================
 
 int main()
 {
@@ -464,7 +493,7 @@ void loadPlayer(char dir[])
 					content[j++] = '\0';
 					if (x == 0)
 					{
-						P.Name = SetQueueKata(content);
+						P.Name = SetKalimat(content);
 					}
 					else if (x == 1)
 					{
@@ -554,7 +583,7 @@ void loadWahana(char dir[])
 					content[j++] = '\0';
 					if (x == 0)
 					{
-						W[cnt].Name = SetQueueKata(content);
+						W[cnt].Name = SetKalimat(content);
 					}
 					else if (x == 1)
 					{
@@ -707,7 +736,7 @@ void build (StackAction *S, Wahana *W, ListWahana W1)
 					Push(S, A);
 
 					printf("Perintah Build ");
-					PrintQueue(K);
+					PrintKalimat(K);
 					printf(" dimasukkan ke dalam Stack\n");
 
 					build = false;
@@ -923,4 +952,63 @@ void WriteMaterial(char addressFile[], int wood, int stone, int iron, int mamank
     fprintf(fp, "mamank %d\n", mamank);
 
     fclose(fp);
+}
+
+void geneateMapMain(Player P, Stack Aksi)
+{
+    JAM buka, tutup;
+    buka = MakeJAM(9,0,0);
+    tutup = MakeJam(21,0,0);
+    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+        printf("Main phase Day %d\n",Day(P));
+    }
+    else{
+        printf("Preparation phase Day %d\n",Day(P));
+    }
+    /*generating map */
+    printMap(P);
+
+    printf("Legend :\n");
+    printf("A = Antrian\n");
+    printf("P = Player\n");
+    printf("W = Wahana\n");
+    printf("O = Office\n");
+    printf("<, ^, v, > = Gerbang\n");
+    printf("\n");
+    printf("Name : %s \n",Name(P));
+    printf("Money : %d \n",Money(P));
+    printf("Current time : ")
+    TulisJAM(Time(P));
+    printf('\n');
+
+    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+        printf("Closing time : ");
+        TulisJAM(tutup);
+        printf("\n");
+        printf("Time remaining : ");
+        cetakDurasi(Durasi(Time(P),tutup));
+        printf("\n");
+        /* buat prosedur print antrian */
+    }
+    else{
+        printf("Opening time : ");
+        TulisJAM(buka);
+        printf("\n");
+        printf("Time remaining : ");
+        cetakDurasi(Durasi(Time(P),buka));
+        printf("\n");
+        printf("Jumlah aksi yang akan dilakukan : %d\n",(Top(Aksi)+1));
+        printf("Total waktu yang dibutuhkan : "); TulisJAM(HitungTime(Aksi));
+        printf("\n");
+        printf("Total uang yang dibutuhkan : ",HitungMoney(Aksi));
+    }
+    
+    
+    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+        printf("Closing time : ");
+        TulisJAM(tutup);
+        printf("\n")
+    }
+
+    printf("Masukkan perintah : \n");
 }
