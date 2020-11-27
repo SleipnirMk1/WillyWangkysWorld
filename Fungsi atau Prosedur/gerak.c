@@ -21,7 +21,7 @@ boolean IsGerbang(float X, float Y, int A)
 		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 0));
 	}
 }
-void gerak(char X, P)
+void gerak(char X, Point P)
 {
 	if (X == 0)
 	{
