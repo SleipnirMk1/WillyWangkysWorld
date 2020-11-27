@@ -8,23 +8,22 @@
 #include "boolean.h"
 #include "jam.h"
 
-#define Nil -1
 #define MaxElStack 10
 /* Nil adalah stack dengan elemen kosong . */
 
-typedef char[20] jenis;
+typedef char jenis[20];
 typedef struct{
   jenis jenisAksi;
   JAM lamaAksi;
   int uangYangDibutuhkan;
 } infotype;
-typedef int address;   /* indeks tabel */
+typedef int indeksTop;   /* indeks tabel */
 
 /* Contoh deklarasi variabel bertype stack dengan ciri TOP : */
 /* Versi I : dengan menyimpan tabel dan alamat top secara eksplisit*/
 typedef struct {
   infotype T[MaxElStack]; /* tabel penyimpan elemen */
-  address TOP;  /* alamat TOP: elemen puncak */
+  indeksTop TOP;  /* alamat TOP: elemen puncak */
 } Stack;
 /* Definisi stack S kosong : S.TOP = Nil */
 /* Elemen yang dipakai menyimpan nilai Stack T[0]..T[MaxElStack-1] */
@@ -37,8 +36,8 @@ typedef struct {
 #define Top(S) (S).TOP
 #define InfoTop(S) (S).T[(S).TOP]
 #define InfoJenisAksi(I) (I).jenisAksiS
-#define InfoLamaAksi(I) (I)I.lamaAksi
-#define InfoUangYangDibutuhkan(I) (I)I.uangYangDibutuhkan
+#define InfoLamaAksi(I) (I).lamaAksi
+#define InfoUangYangDibutuhkan(I) (I).uangYangDibutuhkan
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
@@ -65,5 +64,9 @@ void Pop (Stack * S, infotype* X);
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
+
+int HitungMoney(Stack S);
+
+JAM HitungTime(Stack S);
 
 #endif

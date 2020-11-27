@@ -17,7 +17,7 @@ void CreateEmpty (Stack *S)
 /* jadi indeksnya antara 0.. MaxEl */
 /* Ciri stack kosong : TOP bernilai Nil */
 {
-    Top(*S) = Nil;
+    Top(*S) = -1;
 }
 
 
@@ -25,7 +25,7 @@ void CreateEmpty (Stack *S)
 boolean IsEmpty (Stack S)
 /* Mengirim true jika Stack kosong: lihat definisi di atas */
 {
-    return (Top(S)== Nil);
+    return (Top(S)== -1);
 }
 boolean IsFull (Stack S)
 /* Mengirim true jika tabel penampung nilai elemen stack penuh */
@@ -60,9 +60,29 @@ void InversStack (Stack * S)
     Stack temp;
     infotype x;
     CreateEmpty(&temp);
-    while !(IsEmpty(*S)){
+    while (!IsEmpty(*S)){
         Pop(S,&x);
         Push(&temp,x);
     }
     *S = temp;
+}
+
+int HitungMoney(Stack S)
+{
+    int count = 0;
+    int i = Top(S);
+    while(i >= 0){
+        count = count + (S.T[i]).uangYangDibutuhkan;
+    }
+    return count;
+}
+
+JAM HitungTime(Stack S)
+{
+    long count = 0;
+    int i = Top(S);
+    while(i >=0){
+        count = count + JAMToDetik((S.T[i].lamaAksi));
+    }
+    return DetikToJAM(count);
 }
