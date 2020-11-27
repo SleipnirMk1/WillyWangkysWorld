@@ -368,7 +368,7 @@ void conti()
 // ==================================================================
 void saveGame()
 {
-	printf("Saving...\n")
+	printf("Saving...\n");
 	savePlayer("save/playerSave.txt"); 
 	saveWahana("save/wahanaSave.txt");
 }
