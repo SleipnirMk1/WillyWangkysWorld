@@ -10,8 +10,6 @@ typedef struct
 	int Ruby;
 } Material;
 
-
-
 typedef struct
 {
 	Kalimat Name;
@@ -252,13 +250,13 @@ void gerak(int X)
 {
 	if (X == 0)
 	{
-		if (!IsWall(Absis(P),Ordinat(P) + 1))
+		if (!IsWall(Absis(P),Ordinat(P) + 1, Area(P.Pos))
 		{
 			Geser (P, 0, 1, 0);
 			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
 			{
 				Point V;
-				GetVEdge(G, (P).Pos, &V);
+				GetVEdge(G, P.Pos, &V);
 
 				(P).Pos = V;
 			}
@@ -266,7 +264,7 @@ void gerak(int X)
 	}
 	else if (X == 1)
 	{
-		if (!IsWall(Absis(P)-1,Ordinat(P)))
+		if (!IsWall(Absis(P)-1,Ordinat(P), Area(P.Pos)))
 		{
 			Geser (P, -1, 0, 0);
 			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
@@ -280,7 +278,7 @@ void gerak(int X)
 	}
 	else if (X == 2)
 	{
-		if (!IsWall(Absis(P),Ordinat(P) - 1))
+		if (!IsWall(Absis(P),Ordinat(P) - 1, Area(P.Pos)))
 		{
 			Geser (P, 0, -1, 0);
 			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
@@ -294,7 +292,7 @@ void gerak(int X)
 	}
 	else if (X == 3)
 	{
-		if (!IsWall(Absis(P) + 1,Ordinat(P)))
+		if (!IsWall(Absis(P) + 1,Ordinat(P), Area(P.Pos)))
 		{
 			Geser (P, 1, 0, 0);
 			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))

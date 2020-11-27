@@ -16,19 +16,17 @@
 #define V2Edge(G, i) (G).E[(i)].V2
 
 #define Area(V) (V).Area
-#define Pos(V) (V).Pos
+#define PosX(V) (V).x
+#define PosY(V) (V).y
 
 typedef struct 
 {
 	int x;
 	int y;
+	int Area;
 } Point;
 
-typedef struct 
-{
-	Point Pos;
-	int Area;
-} Vertex;
+typedef Point Vertex;
 
 typedef struct 
 {
