@@ -4,6 +4,7 @@
 // file mesinkata.c
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "boolean.h"
 #include "mesinkar.h"
 #include "mesinkata.h"
@@ -97,7 +98,7 @@ void SalinKata()
 
         ADV();
     }
-
+    CKata.TabKata[i] = '\0';
     CKata.Length = i;
 }
 
@@ -293,6 +294,11 @@ int NbHurufKalimat(Kalimat Q)
   }
 
   return n;
+}
+
+int KataToInteger(Kata K)
+{
+  return atoi(K.TabKata);
 }
 
 

@@ -61,6 +61,10 @@ WAHANA ListWahanaTersedia[100];
 int NbAvailableWahana = 0;
 
 
+Kata ListNamaMaterial[10];
+int ListHargaMaterial[10];
+int NbMaterial = 0;
+
 
 boolean MAINPHASE = false;
 boolean RUN_NEWGAME = true;
@@ -82,6 +86,9 @@ Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
 void generateAllConstant();
 void generatePlayer();
 void generateWahanaTersedia();
+void generateListMaterial();
+void PrintListMaterial();
+int SearchListMaterial(Kata Name);
 void EXITGAME(int x);
 void generateLoadGame();
 void generateNewGame();
@@ -118,6 +125,9 @@ int main()
 
 	generatePlayer();
 	generateWahanaTersedia();
+
+	generateListMaterial();
+
 	//printf("%f\n", P.Position.Y);
 	// generatePosFromFile();
 	// generateMatFromFile();
@@ -213,7 +223,7 @@ int main()
 				}
 				else if (KataSama(K, BUY))
 				{
-					//buy();
+					buy();
 				}
 				else if (KataSama(K, UNDO))
 				{
@@ -377,6 +387,8 @@ void generatePlayer()
 	Area(P.Position) = 3;
  	Absis(P.Position) = 4;
 	Ordinat(P.Position) = 5;
+
+	P.Money = 99999;
 }
 
 void generateAllConstant()
@@ -814,10 +826,94 @@ void build ()
 // 	printf("Upgrade\n");
 // }
 
-// void buy()
-// {
-// 	printf("Buy\n");
-// }
+
+void generateListMaterial()
+{
+	printf("Dari .txt harusnya");
+
+	SetKata(&ListNamaMaterial[0], "wood");
+	SetKata(&ListNamaMaterial[1], "stone");
+	SetKata(&ListNamaMaterial[2], "iron");
+
+	ListHargaMaterial[0] = 50;
+	ListHargaMaterial[1] = 23;
+	ListHargaMaterial[2] = 100;
+
+	NbMaterial = 3;
+}
+
+void PrintListMaterial()
+{
+	for (int i = 0; i < NbMaterial; i++)
+	{
+		PrintKata(ListNamaMaterial[i]);
+		printf(" - ");
+		printf("%d\n", ListHargaMaterial[i]);
+	}
+}
+
+int SearchListMaterial(Kata Nama)
+{
+	boolean found = false;
+	int i = 0;
+	while (i < NbMaterial && !found)
+		if (KataSama(ListNamaMaterial[i], Nama))
+			found = true;
+		else
+			i++;
+	
+	if (!found)
+		return -1;
+	else
+		return i;
+}
+
+
+void buy()
+{
+	printf("Buy\n");
+
+	printf("Material Yang ingin dibeli : \n");
+	PrintListMaterial();
+
+	Kalimat input = GetKalimat();
+	Kata banyak;
+	Kata nama;
+	DequeueKalimat(&input, &banyak);
+	DequeueKalimat(&input, &nama);
+    /* kalo kondisi input valid : */
+    int i = SearchListMaterial(nama);
+	int totalHarga = 0;
+	if (i != -1)
+    	totalHarga = ListHargaMaterial[i]* KataToInteger(banyak);
+
+	if (i != -1 && P.Money >= P.Debt + totalHarga)
+	{
+		/* memasukkan ke stack */
+		Action X;
+		//JAM J;
+		/* (masih pemisalan) membeli 1 material membutuhkan waktu 5 menit */
+		int lama = 5*KataToInteger(banyak);
+		ActionName(X) = SetKalimat(nama.TabKata);
+		SetKata(&ActionType(X), "buy");
+		ActionTime(X)= lama;
+		ActionAmount(X) = KataToInteger(banyak);
+		P.Debt = totalHarga;
+
+		PushAction(&S,X);
+
+		printf("Perintah Buy ");
+		PrintKata(banyak);
+		printf(" ");
+		PrintKata(nama);
+		printf(" dimasukkan ke dalam Stack\n");
+	}
+	else
+	{
+		printf("Tidak dapat melakukan pembelian!!!\n");
+	}
+    
+}
 
 // void Undo (StackAction *S)
 // {

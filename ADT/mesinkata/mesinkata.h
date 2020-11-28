@@ -75,5 +75,7 @@ boolean KataSama(Kata K1, Kata K2);
 Kalimat SetKalimat(char arr[]);
 int NbHurufKalimat(Kalimat Q);
 
+int KataToInteger(Kata K);
+
 
 #endif
