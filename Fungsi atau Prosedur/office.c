@@ -1,18 +1,33 @@
-#include "arraywahana.h"
-#include "boolean.h"
-#include "wahana.h"
+#include "../ADT/custom_adt/arraywahana.h"
+#include "../ADT/custom_adt/wahana.h"
+#include "../ADT/custom_adt/boolean.h"
+#include "../ADT/mesinkata/mesinkata.h"
 
-void office(ArrayWahana list_of_built_wahana)
+void office()
 {
-    char in[128];
     printf("Detail wahana apa yang ingin Anda lihat: \n");
-    scanf("%s\n", &in);
 
-    Idxtype p = Search1Wahana(list_of_built_wahana, in);
-
-    if (p != IdxUndef)
+    Kalimat nama = GetKalimat();
+    WAHANA Wahana;
+    found = false;
+    while (!found && i <= 100)
     {
-        Detail(Elmt(list_of_built_wahana, p));
+        if (IsEQKalimat(nama, ListWahanaYandDimiliki[int n].Name))
+        {
+            found = true;
+            Wahana = ListWahanaYandDimiliki[i];
+        }
+        else
+        {
+            i++;
+        }
+        
+    }
+    
+    if (found)
+    {
+        Detail(Wahana));
+        Report(Wahana);
     }
     else
     {
@@ -49,7 +64,10 @@ void Detail(WAHANA Wahana)
 
 void Report(WAHANA Wahana)
 {
-    
+    printf("Total Jumlah Pengunjung: %d\n", TotalNaik(Wahana));
+    printf("Total Penghasilan: %d\n", TotalProfit(Wahana));
+    printf("Total Jumlah Pengunjung Hari Ini: %d\n", TodayNaik(Wahana));
+    printf("Total Jumlah Pengunjung Hari Ini: %d\n", TodayProfit(Wahana));
 }
 
 

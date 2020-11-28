@@ -15,6 +15,11 @@
 
 // #define MAXSTACKACTION 100
 
+// Dalam Satuan menit
+int TIME_BUILD = 120;
+int TIME_BUY = 40;
+int TIME_UPGRADE = 120;
+int TIME_MOVE = 1;
 
 
 Player P;
@@ -50,6 +55,7 @@ Kata MoveW, MoveA, MoveS, MoveD;
 Kata DETAILS, REPORT, EXITS;
 
 Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
+Kata MATERIAL_WOOD, MATERIAL_IRON, MATERIAL_STONE;
 
 
 // Defenition
@@ -71,7 +77,7 @@ void generateMapMain();
 void PrintMap();
 void PrintBrokenWahana();
 boolean IsAdaBroken();
-
+boolean IsWahanaPosition(POINT P);
 boolean IsAntrianPosition(POINT P);
 
 void buy();
@@ -161,9 +167,9 @@ int main()
 	{
 		generateMapMain();
 
-		printf("\n\n");
-		PrintVertex(P.Position);
-		printf("\n\n");
+		// printf("\n\n");
+		// PrintVertex(P.Position);
+		// printf("\n\n");
 
 
 		Kalimat input = GetKalimat();
@@ -301,19 +307,24 @@ boolean IsGerbang(float X, float Y, int A)
 }
 void gerak(int X)
 {
+	POINT segment; 
 	if (X == 0)
 	{
 		//printf("WW\n");
 		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
 		{
-			Geser (&P.Position, 0, -1, 0);
-			
-			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				POINT V;
-				GetVEdge(G, P.Position, &V);
+				Geser (&P.Position, 0, -1, 0);
+				
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, P.Position, &V);
 
-				(P).Position = V;
+					(P).Position = V;
+				}
 			}
 		}
 	}
@@ -322,13 +333,17 @@ void gerak(int X)
 		//printf("AA\n");
 		if (!IsWall(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position)))
 		{
-			Geser (&P.Position, -1, 0, 0);
-			if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
+			segment = MakePOINT(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				POINT V;
-				GetVEdge(G, (P).Position, &V);
+				Geser (&P.Position, -1, 0, 0);
+				if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
 
-				(P).Position = V;
+					(P).Position = V;
+				}
 			}
 		}
 	}
@@ -337,14 +352,18 @@ void gerak(int X)
 		//printf("SS\n");
 		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
 		{
-			Geser (&P.Position, 0, 1, 0);
-			
-			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				POINT V;
-				GetVEdge(G, (P).Position, &V);
+				Geser (&P.Position, 0, 1, 0);
+				
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
 
-				(P).Position = V;
+					(P).Position = V;
+				}
 			}
 		}
 	}
@@ -353,13 +372,17 @@ void gerak(int X)
 		//printf("DD\n");
 		if (!IsWall(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position)))
 		{
-			Geser (&P.Position, 1, 0, 0);
-			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+			segment = MakePOINT(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				POINT V;
-				GetVEdge(G, (P).Position, &V);
+				Geser (&P.Position, 1, 0, 0);
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
 
-				(P).Position = V;
+					(P).Position = V;
+				}
 			}
 		}
 		
@@ -450,6 +473,10 @@ void generateAllConstant()
 	SetKata(&ACTION_BUILD, "build");
 	SetKata(&ACTION_UPGRADE, "upgrade");
 	SetKata(&ACTION_BUY, "buy");
+
+	SetKata(&MATERIAL_WOOD, "wood");
+	SetKata(&MATERIAL_IRON, "iron");
+	SetKata(&MATERIAL_STONE, "stone");
 }
 
 void generateWahanaYangDimiliki()
@@ -784,9 +811,20 @@ void generateLoadGame()
 
 // // PREPARATION PHASE
 // // ================================================================
+boolean IsMasihAdaWaktu(int t)
+{
+	long duration = JAMToDetik(P.CurrentTime) + (long)(t + TotalTimeAction(S)) * 60;
+	return (duration < JAMToDetik(MakeJAM(9,0,0)) && duration > JAMToDetik(MakeJAM(21, 0, 0)));
+}
+
+
 boolean CanBuild(WAHANA W)
 {
-	return (P.Money >= W.PriceCost && P.Material.wood >= W.MaterialCost.wood && P.Material.stone >= W.MaterialCost.stone && P.Material.iron >= W.MaterialCost.iron);
+	boolean can = (P.Money >= W.PriceCost && P.Material.wood >= W.MaterialCost.wood && P.Material.stone >= W.MaterialCost.stone && P.Material.iron >= W.MaterialCost.iron);
+
+	can = can && IsMasihAdaWaktu(TIME_BUILD);
+
+	return can;
 }
 
 void PrintListWahanaTersedia()
@@ -1244,7 +1282,7 @@ void buy()
 	if (i != -1)
     	totalHarga = ListHargaMaterial[i]* KataToInteger(banyak);
 
-	if (i != -1 && P.Money >= P.Debt + totalHarga)
+	if (i != -1 && P.Money >= P.Debt + totalHarga && IsMasihAdaWaktu(TIME_BUY))
 	{
 		/* memasukkan ke stack */
 		Action X;
@@ -1302,6 +1340,9 @@ void execute()
     StackAction StackExecute;
     Action A;
 
+	P.Money -= P.Debt;
+	P.Debt = 0;
+	
     /*Algoritma*/
     if (!IsEmptyStackAction(S))
     {
@@ -1337,7 +1378,7 @@ void execute()
 
 void executeBuild(Action A)
 {
-
+	printf("Execute Build...\n");
 	
 	boolean found = false;
 	int i = 0;
@@ -1355,7 +1396,6 @@ void executeBuild(Action A)
 	ListWahanaYandDimiliki[n].Condition = true;
 	ListWahanaYandDimiliki[n].Position = ActionPosition(A);
 
-	P.CurrentTime = DetikToJAM(JAMToDetik(P.CurrentTime) + ActionTime(A) * 60);
 	P.Material.wood -= ActionMaterialCost(A).wood;
 	P.Material.iron -= ActionMaterialCost(A).iron;
 	P.Material.stone -= ActionMaterialCost(A).stone;
@@ -1368,20 +1408,58 @@ void executeBuild(Action A)
 		move(3);
 	else
 		move(2);
-	
-	P.Money -= ActionPrice(A);
-	P.Debt -= ActionPrice(A);
 }
 
 void executeUpgrade(Action A)
 {
+	printf("Execute Upgrade...\n");
+
+	// boolean found = false;
+	// int i = 0;
+	// while(i < NbAvailableWahana && !found)
+	// {
+	// 	if (IsEQKalimat(ListWahanaTersedia[i].Name, ActionName(A)))
+	// 		found = true;
+	// 	else
+	// 		i++;
+	// }
+
+	// found = false;
+	// int n = 0;
+	// while(n < NbWahanaYangDimiliki && !found)
+	// {
+	// }
 
 }
 
 void executeBuy(Action A)
 {
+	printf("Execute Buy...\n");
 	
+	Kalimat NameOfAction = ActionName(A);
+	Kata mat;
+	DequeueKalimat(&NameOfAction, &mat);
+	
+	if (KataSama(mat, MATERIAL_WOOD))
+		P.Material.wood += ActionAmount(A);
+	else if(KataSama(mat, MATERIAL_IRON))
+		P.Material.iron += ActionAmount(A);
+	else
+		P.Material.stone += ActionAmount(A);
+
+	P.Material.iron -= ActionMaterialCost(A).iron;
+	P.Material.stone -= ActionMaterialCost(A).stone;
+
+	if (!IsWall(P.Position.X-1, P.Position.Y, P.Position.A))
+		move(1);
+	else if (!IsWall(P.Position.X, P.Position.Y-1, P.Position.A))
+		move(0);
+	else if (!IsWall(P.Position.X+1, P.Position.Y, P.Position.A))
+		move(3);
+	else
+		move(2);
 }
+
 
 void prepareToMain()
 {
@@ -1391,6 +1469,9 @@ void prepareToMain()
 		PopAction(&S, &A); /*Kosongkan stack*/
 	}
 	printf ("// Tidak mengeksekusi perintah dari stack //\n");
+
+	P.CurrentTime = MakeJAM(9, 0, 0);
+	P.Day += 1;
 
 	MAINPHASE = true;
 	P.Debt = 0;
@@ -1457,12 +1538,7 @@ void office()
 {
 	printf("Office\n");
 	POINT tmp = P.Position;
-	if (
-		IsOfficePosition(Area(tmp), Absis(tmp), Ordinat(tmp)-1) || 
-		IsOfficePosition(Area(tmp), Absis(tmp), Ordinat(tmp)+1) ||
-		IsOfficePosition(Area(tmp), Absis(tmp)-1, Ordinat(tmp)) ||
-		IsOfficePosition(Area(tmp), Absis(tmp)+1, Ordinat(tmp))
-		)
+	if (EQ(P.Position, officePosition))
 	{
 		OFFICE_MODE = true;
 		InOffice();
@@ -1553,8 +1629,6 @@ void RandomAntrian()
 
 		EnqueueAntrian(&A, Q);
 	}
-
-	PrintQueueAntrian(A);
 }
 
 // void RandomBroken(int idxWahana)
@@ -1746,14 +1820,23 @@ void generateMapMain()
         printf("\n");
     }
 
+	if (MAINPHASE)
+	{
+		printf("\n");
+		PrintQueueAntrian(A);
+		printf("\n");
+	}
 
+	printf("\n");
 	if (IsAdaBroken())
 	{
 		PrintBrokenWahana();
 	}
-
-
-    printf("Masukkan perintah : ");
+	printf("\n");
+	if (IsOfficePosition(Area(P.Position), Absis(P.Position), Ordinat(P.Position)))
+		printf("Masukkan Perintah (Masukkan 'office' untuk mengakses office) : ");
+	else
+		printf("Masukkan perintah : ");   
 }
 
 

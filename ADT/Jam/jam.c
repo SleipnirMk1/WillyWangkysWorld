@@ -75,7 +75,7 @@ void TulisJAM (JAM J)
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.
    Jika jam / menit / detik hanya satu digit, tuliskan satu digit tanpa 0 di depannya. */
 {
-    printf("%d:%d:%d", Hour(J),Minute(J),Second(J));
+    printf("%d:%d", Hour(J),Minute(J));
 }
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -183,6 +183,6 @@ void CetakDurasi(long Durasi)
 	x = x/3600;
 	y = x % 3600;
 	y = y / 60;
-	printf ("X = %d  Y = %d \n", x, y);
+	printf("%d hour(s) %d minute(s)", x, y);
 }
 #endif
