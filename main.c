@@ -1,50 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "boolean.h"
 #include "ADT\mesinkata\mesinkata.h"
+#include "ADT\mesinkata\mesinkar.h"
 #include "ADT\graph\graph.h"
+#include "ADT\custom_adt\player.h"
+#include "ADT\point\point.h"
 
-#define MAXSTACKACTION 100
+// #define MAXSTACKACTION 100
 
-typedef struct
-{
-	int Wood;
-	int Stone;
-	int Ruby;
-} Material;
+// typedef struct
+// {
+// 	int Wood;
+// 	int Stone;
+// 	int Ruby;
+// } Material;
 
-typedef struct
-{
-	Kalimat Name;
-	int Money;
-	Material Mat;
-	Point Pos;
-} Player;
+// typedef struct
+// {
+// 	Kalimat Name;
+// 	int Money;
+// 	Material Mat;
+// 	Point Pos;
+// } Player;
 
-typedef struct
-{
-	Kalimat Name;
-	int Cost;
-	Material Mat;
-	Point Pos;
-	boolean BrokenStatus;
-} Wahana;
+// typedef struct
+// {
+// 	Kalimat Name;
+// 	int Cost;
+// 	Material Mat;
+// 	Point Pos;
+// 	boolean BrokenStatus;
+// } Wahana;
 
 
-typedef struct 
-{
-	Kalimat Name;
-	Kata Type;
-	int Time;
-	int Amount;
-	Point Pos;
-} Action;
+// typedef struct 
+// {
+// 	Kalimat Name;
+// 	Kata Type;
+// 	int Time;
+// 	int Amount;
+// 	Point Pos;
+// } Action;
 
-typedef struct
-{
-	Action A[MAXSTACKACTION];
-	int TOP;
-} StackAction;
+// typedef struct
+// {
+// 	Action A[MAXSTACKACTION];
+// 	int TOP;
+// } StackAction;
 
+
+Player P;
+Graph G;
 
 
 
@@ -62,43 +69,46 @@ Kata DETAILS;
 
 Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
 
-Graph G;
-Wahana W;
-Player P;
+// Graph G;
+// Wahana W;
+// Player P;
 
-Point officePoint;
+// Point officePoint;
 
-StackAction A;
+// StackAction A;
 
 
 // Defenition
 // ============================================
 void generateAllConstant();
-void generateLoadGame();
-void generateNewGame();
-void saveGame();
-void conti();
+void generatePlayer();
+// void generateLoadGame();
+// void generateNewGame();
+// void saveGame();
+// void conti();
 
-void buy();
-void undo();
-void build();
-void execute();
-void upgrade();
-void prepareToMain();
+// void buy();
+// void undo();
+// void build();
+// void execute();
+// void upgrade();
+// void prepareToMain();
 
-void serve();
-void repair();
-void detail();
-void office();
-void mainToPrepare();
+// void serve();
+// void repair();
+// void detail();
+// void office();
+// void mainToPrepare();
 
-void move(int dir);
+// void move(int dir);
 
 // ==============================================
 
 int main()
 {
 	generateAllConstant();
+
+	generatePlayer();
 
 	// generatePosFromFile();
 	// generateMatFromFile();
@@ -140,12 +150,15 @@ int main()
 
 	while(RUN)
 	{
+		PrintVertex(P.Position);
+		printf("\n");
 		printf("Masukkan Perintah : ");
 
+	
 		Kalimat input = GetKalimat();
 		Kata K;
 		DequeueKalimat(&input, &K);
-		
+
 		if (KataSama(K, EXIT))
 		{
 			RUN = false;
@@ -279,57 +292,58 @@ void gerak(int X)
 {
 	if (X == 0)
 	{
-		if (!IsWall(Absis(P),Ordinat(P) + 1, Area(P.Pos))
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
 		{
-			Geser (P, 0, 1, 0);
-			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
+			Geser (&P.Position, 0, 1, 0);
+			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
-				Point V;
-				GetVEdge(G, P.Pos, &V);
+				POINT V;
+				GetVEdge(G, P.Position, &V);
 
-				(P).Pos = V;
+				(P).Position = V;
 			}
 		}
 	}
 	else if (X == 1)
 	{
-		if (!IsWall(Absis(P)-1,Ordinat(P), Area(P.Pos)))
+		if (!IsWall(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position)))
 		{
-			Geser (P, -1, 0, 0);
-			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
+			Geser (&P.Position, -1, 0, 0);
+			if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
 			{
-				Point V;
-				GetVEdge(G, (P).Pos, &V);
+				POINT V;
+				GetVEdge(G, (P).Position, &V);
 
-				(P).Pos = V;
+				(P).Position = V;
 			}
 		}
 	}
 	else if (X == 2)
 	{
-		if (!IsWall(Absis(P),Ordinat(P) - 1, Area(P.Pos)))
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
 		{
-			Geser (P, 0, -1, 0);
-			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
+			Geser (&P.Position, 0, -1, 0);
+			
+			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
-				Point V;
-				GetVEdge(G, (P).Pos, &V);
+				POINT V;
+				GetVEdge(G, (P).Position, &V);
 
-				(P).Pos = V;
+				(P).Position = V;
 			}
 		}
 	}
 	else if (X == 3)
 	{
-		if (!IsWall(Absis(P) + 1,Ordinat(P), Area(P.Pos)))
+		if (!IsWall(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position)))
 		{
-			Geser (P, 1, 0, 0);
-			if(IsGerbang(Absis((P).Pos),Ordinat((P).Pos), Area((P).Pos)))
+			Geser (&P.Position, 1, 0, 0);
+			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
-				Point V;
-				GetVEdge(G, (P).Pos, &V);
+				POINT V;
+				GetVEdge(G, (P).Position, &V);
 
-				(P).Pos = V;
+				(P).Position = V;
 			}
 		}
 		
@@ -343,6 +357,13 @@ void move(int dir)
 }
 
 // ================================================================
+void generatePlayer()
+{
+	Area(P.Position) = 1;
+ 	Absis(P.Position) = 1;
+	Ordinat(P.Position) = 1;
+}
+
 void generateAllConstant()
 {
 	SetKata(&NEW, "new");
@@ -388,627 +409,627 @@ void generateLoadGame()
 }
 
 
-void conti()
-{
-	printf("Continue\n");
-}
+// void conti()
+// {
+// 	printf("Continue\n");
+// }
 
-// SAVE LOAD
-// ==================================================================
-void saveGame()
-{
-	printf("Saving...\n");
-	savePlayer("save/playerSave.txt"); 
-	saveWahana("save/wahanaSave.txt");
-}
+// // SAVE LOAD
+// // ==================================================================
+// void saveGame()
+// {
+// 	printf("Saving...\n");
+// 	savePlayer("save/playerSave.txt"); 
+// 	saveWahana("save/wahanaSave.txt");
+// }
 
-void loadGame()
-{
-	loadPlayer("save/playerSave.txt");
-	loadWahana("save/wahanaSave.txt");
-}
+// void loadGame()
+// {
+// 	loadPlayer("save/playerSave.txt");
+// 	loadWahana("save/wahanaSave.txt");
+// }
 
-void savePlayer(char dir[])
-{
-	FILE *f;
-	f = fopen(dir, "w");
+// void savePlayer(char dir[])
+// {
+// 	FILE *f;
+// 	f = fopen(dir, "w");
 
-	char wr[300];
-	int c = 0;
+// 	char wr[300];
+// 	int c = 0;
 	
-	QtoS(wr, P.Name, &c);
-	ItoS(wr, P.Money, &c);
-	ItoS(wr, P.Mat.Wood, &c);
-	ItoS(wr, P.Mat.Stone, &c);
-	ItoS(wr, P.Mat.Ruby, &c);
-	ItoS(wr, P.Pos.Area, &c);
-	ItoS(wr, P.Pos.x, &c);
-	ItoS(wr, P.Pos.y, &c);
+// 	QtoS(wr, P.Name, &c);
+// 	ItoS(wr, P.Money, &c);
+// 	ItoS(wr, P.Mat.Wood, &c);
+// 	ItoS(wr, P.Mat.Stone, &c);
+// 	ItoS(wr, P.Mat.Ruby, &c);
+// 	ItoS(wr, P.Pos.Area, &c);
+// 	ItoS(wr, P.Pos.x, &c);
+// 	ItoS(wr, P.Pos.y, &c);
 
 	
-	printf("Saving Player Data...\n");
-	if (c > 0 && f != NULL) 
-	{ 
-		fputs(wr, f);
-		fputs("\n", f);
-	}
+// 	printf("Saving Player Data...\n");
+// 	if (c > 0 && f != NULL) 
+// 	{ 
+// 		fputs(wr, f);
+// 		fputs("\n", f);
+// 	}
 
-	fclose(f);
-}
+// 	fclose(f);
+// }
 
-void saveWahana(char dir[])
-{
-	FILE *f;
-	f = fopen(dir, "w");
-	printf("Saving Wahana Data...\n");
-	for(int i = 0; i < NbWahana; i++)
-	{
-		char wr[300];
-		int c = 0;
+// void saveWahana(char dir[])
+// {
+// 	FILE *f;
+// 	f = fopen(dir, "w");
+// 	printf("Saving Wahana Data...\n");
+// 	for(int i = 0; i < NbWahana; i++)
+// 	{
+// 		char wr[300];
+// 		int c = 0;
 
-		QtoS(wr, W[i].Name, &c);
-		ItoS(wr, W[i].Type, &c);
-		ItoS(wr, W[i].Level, &c);
-		ItoS(wr, W[i].Cost, &c);
-		ItoS(wr, W[i].Pos.Area, &c);
-		ItoS(wr, W[i].Pos.x, &c);
-		ItoS(wr, W[i].Pos.y, &c);
+// 		QtoS(wr, W[i].Name, &c);
+// 		ItoS(wr, W[i].Type, &c);
+// 		ItoS(wr, W[i].Level, &c);
+// 		ItoS(wr, W[i].Cost, &c);
+// 		ItoS(wr, W[i].Pos.Area, &c);
+// 		ItoS(wr, W[i].Pos.x, &c);
+// 		ItoS(wr, W[i].Pos.y, &c);
 
-		wr[c++] = '\0';
+// 		wr[c++] = '\0';
 
 
-		if (c > 0 && f != NULL) 
-		{ 
-			fputs(wr, f);
-			fputs("\n", f);
-		}
-	}
+// 		if (c > 0 && f != NULL) 
+// 		{ 
+// 			fputs(wr, f);
+// 			fputs("\n", f);
+// 		}
+// 	}
 
-	fclose(f);
-}
+// 	fclose(f);
+// }
 
-void loadPlayer(char dir[])
-{
-	FILE *f;
-	f = fopen(dir, "r");
+// void loadPlayer(char dir[])
+// {
+// 	FILE *f;
+// 	f = fopen(dir, "r");
 
-	if (f != NULL)
-	{
-		printf("Getting Player Data...\n");
+// 	if (f != NULL)
+// 	{
+// 		printf("Getting Player Data...\n");
 
-		char wr[200];
-		while( fgets ( wr, 200, f ) != NULL ) 
-        { 
-			char content[20];
-			int x = 0;
-			int j = 0;
-			for (int i = 0; i < NB(wr); i++)
-			{
-				if (wr[i] != ',')
-				{
-					content[j++] = wr[i];
-				}
-				else
-				{
-					content[j++] = '\0';
-					if (x == 0)
-					{
-						P.Name = SetKalimat(content);
-					}
-					else if (x == 1)
-					{
-						int money;
-						sscanf(content, "%d", &money);
-						P.Money = money;
-					}
-					else if (x == 2)
-					{
-						int wood;
-						sscanf(content, "%d", &wood);
-						P.Mat.Wood = wood;
-					}
-					else if (x == 3)
-					{
-						int stone;
-						sscanf(content, "%d", &stone);
-						P.Mat.Stone = stone;
-					}
-					else if (x == 4)
-					{
-						int ruby;
-						sscanf(content, "%d", &ruby);
-						P.Mat.Ruby = ruby;
-					}
-					else if (x == 5)
-					{
-						int area;
-						sscanf(content, "%d", &area);
-						P.Pos.Area = area;
-					}
-					else if (x == 6)
-					{
-						int posx;
-						sscanf(content, "%d", &posx);
-						P.Pos.x = posx;
-					}
-					else if (x == 7)
-					{
-						int posy;
-						sscanf(content, "%d", &posy);
-						P.Pos.y = posy;
-					}
+// 		char wr[200];
+// 		while( fgets ( wr, 200, f ) != NULL ) 
+//         { 
+// 			char content[20];
+// 			int x = 0;
+// 			int j = 0;
+// 			for (int i = 0; i < NB(wr); i++)
+// 			{
+// 				if (wr[i] != ',')
+// 				{
+// 					content[j++] = wr[i];
+// 				}
+// 				else
+// 				{
+// 					content[j++] = '\0';
+// 					if (x == 0)
+// 					{
+// 						P.Name = SetKalimat(content);
+// 					}
+// 					else if (x == 1)
+// 					{
+// 						int money;
+// 						sscanf(content, "%d", &money);
+// 						P.Money = money;
+// 					}
+// 					else if (x == 2)
+// 					{
+// 						int wood;
+// 						sscanf(content, "%d", &wood);
+// 						P.Mat.Wood = wood;
+// 					}
+// 					else if (x == 3)
+// 					{
+// 						int stone;
+// 						sscanf(content, "%d", &stone);
+// 						P.Mat.Stone = stone;
+// 					}
+// 					else if (x == 4)
+// 					{
+// 						int ruby;
+// 						sscanf(content, "%d", &ruby);
+// 						P.Mat.Ruby = ruby;
+// 					}
+// 					else if (x == 5)
+// 					{
+// 						int area;
+// 						sscanf(content, "%d", &area);
+// 						P.Pos.Area = area;
+// 					}
+// 					else if (x == 6)
+// 					{
+// 						int posx;
+// 						sscanf(content, "%d", &posx);
+// 						P.Pos.x = posx;
+// 					}
+// 					else if (x == 7)
+// 					{
+// 						int posy;
+// 						sscanf(content, "%d", &posy);
+// 						P.Pos.y = posy;
+// 					}
 
-					x++;
-					j = 0;
-				}
-			}
+// 					x++;
+// 					j = 0;
+// 				}
+// 			}
 			
-		}
+// 		}
 
-		fclose(f);
-	}
-	else
-	{
-		printf("File Not Found\n");
-	}
+// 		fclose(f);
+// 	}
+// 	else
+// 	{
+// 		printf("File Not Found\n");
+// 	}
 
-	fclose(f);
-}
+// 	fclose(f);
+// }
 
-void loadWahana(char dir[])
-{
-	FILE *f;
-	f = fopen(dir, "r");
+// void loadWahana(char dir[])
+// {
+// 	FILE *f;
+// 	f = fopen(dir, "r");
 
-	if (f != NULL)
-	{
-		printf("Getting Wahana Data...\n");
+// 	if (f != NULL)
+// 	{
+// 		printf("Getting Wahana Data...\n");
 
-		char wr[200];
-		int cnt = 0;
-		int banyakwahana = 0;
-		while( fgets ( wr, 200, f ) != NULL ) 
-        { 
-			char content[20];
-			int x = 0;
-			int j = 0;
-			for (int i = 0; i < NB(wr); i++)
-			{
-				if (wr[i] != ',')
-				{
-					content[j++] = wr[i];
-				}
-				else
-				{
-					content[j++] = '\0';
-					if (x == 0)
-					{
-						W[cnt].Name = SetKalimat(content);
-					}
-					else if (x == 1)
-					{
-						int type;
-						sscanf(content, "%d", &type);
-						W[cnt].Type = type;
-					}
-					else if (x == 2)
-					{
-						int level;
-						sscanf(content, "%d", &level);
-						W[cnt].Level = level;
-					}
-					else if (x == 3)
-					{
-						int cost;
-						sscanf(content, "%d", &cost);
-						W[cnt].Cost = cost;
-					}
-					else if (x == 4)
-					{
-						int area;
-						sscanf(content, "%d", &area);
-						W[cnt].Pos.Area = area;
-					}
-					else if (x == 5)
-					{
-						int posx;
-						sscanf(content, "%d", &posx);
-						W[cnt].Pos.x = posx;
-					}
-					else if (x == 6)
-					{
-						int posy;
-						sscanf(content, "%d", &posy);
-						W[cnt].Pos.y = posy;
-					}
+// 		char wr[200];
+// 		int cnt = 0;
+// 		int banyakwahana = 0;
+// 		while( fgets ( wr, 200, f ) != NULL ) 
+//         { 
+// 			char content[20];
+// 			int x = 0;
+// 			int j = 0;
+// 			for (int i = 0; i < NB(wr); i++)
+// 			{
+// 				if (wr[i] != ',')
+// 				{
+// 					content[j++] = wr[i];
+// 				}
+// 				else
+// 				{
+// 					content[j++] = '\0';
+// 					if (x == 0)
+// 					{
+// 						W[cnt].Name = SetKalimat(content);
+// 					}
+// 					else if (x == 1)
+// 					{
+// 						int type;
+// 						sscanf(content, "%d", &type);
+// 						W[cnt].Type = type;
+// 					}
+// 					else if (x == 2)
+// 					{
+// 						int level;
+// 						sscanf(content, "%d", &level);
+// 						W[cnt].Level = level;
+// 					}
+// 					else if (x == 3)
+// 					{
+// 						int cost;
+// 						sscanf(content, "%d", &cost);
+// 						W[cnt].Cost = cost;
+// 					}
+// 					else if (x == 4)
+// 					{
+// 						int area;
+// 						sscanf(content, "%d", &area);
+// 						W[cnt].Pos.Area = area;
+// 					}
+// 					else if (x == 5)
+// 					{
+// 						int posx;
+// 						sscanf(content, "%d", &posx);
+// 						W[cnt].Pos.x = posx;
+// 					}
+// 					else if (x == 6)
+// 					{
+// 						int posy;
+// 						sscanf(content, "%d", &posy);
+// 						W[cnt].Pos.y = posy;
+// 					}
 
-					x++;
-					j = 0;
-				}
-			}
+// 					x++;
+// 					j = 0;
+// 				}
+// 			}
 
-			cnt++;
-		}
+// 			cnt++;
+// 		}
 
-		NbWahana = cnt;
-	}
-	else
-	{
-		printf("File Not Found\n");
-	}
+// 		NbWahana = cnt;
+// 	}
+// 	else
+// 	{
+// 		printf("File Not Found\n");
+// 	}
 
-	fclose(f);
-}
+// 	fclose(f);
+// }
 
-void ItoS(char *S, int X, int *c)
-{
-	Kata K;
-	char tmp[20]; 
-    sprintf(tmp, "%d", X);
-	SetKata(&K, tmp);
+// void ItoS(char *S, int X, int *c)
+// {
+// 	Kata K;
+// 	char tmp[20]; 
+//     sprintf(tmp, "%d", X);
+// 	SetKata(&K, tmp);
 
-	for (int i = 0; i < K.Length; i++)
-		S[(*c)++] = K.TabKata[i];
+// 	for (int i = 0; i < K.Length; i++)
+// 		S[(*c)++] = K.TabKata[i];
 	
-	S[(*c)++] = ',';
-}
+// 	S[(*c)++] = ',';
+// }
 
-void QtoS(char *S, Kalimat Q, int *c)
-{
-	while(!IsEmptyKalimat(Q))
-	{
-		Kata K;
-		DequeueKalimat(&Q, &K);
-		for (int i = 0; i < K.Length; i++)
-			S[(*c)++] = K.TabKata[i];	
+// void QtoS(char *S, Kalimat Q, int *c)
+// {
+// 	while(!IsEmptyKalimat(Q))
+// 	{
+// 		Kata K;
+// 		DequeueKalimat(&Q, &K);
+// 		for (int i = 0; i < K.Length; i++)
+// 			S[(*c)++] = K.TabKata[i];	
 
-		if (!IsEmptyKalimat(Q))
-			S[(*c)++] = ' ';
-	}
-	S[(*c)++] = ',';
-}
+// 		if (!IsEmptyKalimat(Q))
+// 			S[(*c)++] = ' ';
+// 	}
+// 	S[(*c)++] = ',';
+// }
 
-int NB(char S[])
-{
-	int n = 0;
-	while(S[n] != '\0')
-		n++;
+// int NB(char S[])
+// {
+// 	int n = 0;
+// 	while(S[n] != '\0')
+// 		n++;
 
-	return n;
-}
+// 	return n;
+// }
 
 
 
-// PREPARATION PHASE
-// ================================================================
-boolean CanBuild(Wahana W)
-{
-	return (P.Mat.Wood >= W.Mat.Wood && P.Mat.Stone >= W.Mat.Stone && P.Mat.Ruby >= W.Mat.Ruby);
-}
+// // PREPARATION PHASE
+// // ================================================================
+// boolean CanBuild(Wahana W)
+// {
+// 	return (P.Mat.Wood >= W.Mat.Wood && P.Mat.Stone >= W.Mat.Stone && P.Mat.Ruby >= W.Mat.Ruby);
+// }
 
-void build (StackAction *S, Wahana *W, ListWahana W1)
-{
-	printf("Build\n");
+// void build (StackAction *S, Wahana *W, ListWahana W1)
+// {
+// 	printf("Build\n");
 
-	boolean build = true;
-	while(build)
-	{
-		printf("Ingin Membangun apa?\n");
-		PrintListWahana();
-		Kalimat K = GetKalimat();
-		Kalimat K2 = K;
-		Kata exitKata;
-		DequeueKalimat(&K2, &exitKata);
+// 	boolean build = true;
+// 	while(build)
+// 	{
+// 		printf("Ingin Membangun apa?\n");
+// 		PrintListWahana();
+// 		Kalimat K = GetKalimat();
+// 		Kalimat K2 = K;
+// 		Kata exitKata;
+// 		DequeueKalimat(&K2, &exitKata);
 		
-		if(KataSama(exitKata, EXIT))
-		{
-			build = false;
-			printf("Pembangunan dibatalkan!!\n");
-		}
-		else
-		{
-			boolean available = false;
-			int i = 0;
-			while(i < NbWahana(W1) && !available)
-			{
-				if (IsEQKalimat(K, W1[i]))
-					available = true;
-				else
-					i++;
-			}
+// 		if(KataSama(exitKata, EXIT))
+// 		{
+// 			build = false;
+// 			printf("Pembangunan dibatalkan!!\n");
+// 		}
+// 		else
+// 		{
+// 			boolean available = false;
+// 			int i = 0;
+// 			while(i < NbWahana(W1) && !available)
+// 			{
+// 				if (IsEQKalimat(K, W1[i]))
+// 					available = true;
+// 				else
+// 					i++;
+// 			}
 
-			if (!available)
-			{
-				printf("Wahana yang dipilih tidak tersedia!!\n");
-			}
-			else
-			{
+// 			if (!available)
+// 			{
+// 				printf("Wahana yang dipilih tidak tersedia!!\n");
+// 			}
+// 			else
+// 			{
 
-				if (CanBuild(W1[i]))
-				{
-					Action A;
-					ActionName(A) = K;
-					ActioneType(A) = BUILDTYPE;
-					ActionTime(A) = BUILDTIME;
-					ActionAmount(A) = 1;
-					ActionPos(A) = Player.Pos;
+// 				if (CanBuild(W1[i]))
+// 				{
+// 					Action A;
+// 					ActionName(A) = K;
+// 					ActioneType(A) = BUILDTYPE;
+// 					ActionTime(A) = BUILDTIME;
+// 					ActionAmount(A) = 1;
+// 					ActionPos(A) = Player.Pos;
 
-					Push(S, A);
+// 					Push(S, A);
 
-					printf("Perintah Build ");
-					PrintKalimat(K);
-					printf(" dimasukkan ke dalam Stack\n");
+// 					printf("Perintah Build ");
+// 					PrintKalimat(K);
+// 					printf(" dimasukkan ke dalam Stack\n");
 
-					build = false;
-				}
-				else
-				{
-					printf("Tidak dapat melakukan pembangunan ");
-					PrintKalimat(K);
-					printf("\n");
-				}
-			}
-		}
-	}
+// 					build = false;
+// 				}
+// 				else
+// 				{
+// 					printf("Tidak dapat melakukan pembangunan ");
+// 					PrintKalimat(K);
+// 					printf("\n");
+// 				}
+// 			}
+// 		}
+// 	}
 	
-}
+// }
 
-void upgrade()
-{
-	printf("Upgrade\n");
-}
+// void upgrade()
+// {
+// 	printf("Upgrade\n");
+// }
 
-void buy()
-{
-	printf("Buy\n");
-}
+// void buy()
+// {
+// 	printf("Buy\n");
+// }
 
-void Undo (StackAction *S)
-{
-	Action A;
-	Pop(S, &A);
+// void Undo (StackAction *S)
+// {
+// 	Action A;
+// 	Pop(S, &A);
 
-	printf("Menghapus Perintah ");
-	PrintKata(ActionType(A));
-	printf(" ");
-	PrintKata(ActionName(A));
-	printf(" dari Stack!!\n");
-}
+// 	printf("Menghapus Perintah ");
+// 	PrintKata(ActionType(A));
+// 	printf(" ");
+// 	PrintKata(ActionName(A));
+// 	printf(" dari Stack!!\n");
+// }
 
-void execute(StackAction *S)
-{
-	printf("Execute\n");
+// void execute(StackAction *S)
+// {
+// 	printf("Execute\n");
 	
-	 /* Kamus lokal */
-    Stack StackExecute;
-    Action A;
+// 	 /* Kamus lokal */
+//     Stack StackExecute;
+//     Action A;
 
-    /*Algoritma*/
-    if (!IsEmpty(*S))
-    {
-        while (!IsEmpty(*S))
-        {
-            Pop(S, &A);
-            Push(&StackExecute, A);
-        }
-        while (!IsEmpty(StackExecute))
-        {
-            Pop(&StackExecute, &A);
-            if (KataSama(ACTION_BUILD, TYPE(A)))
-            {
-                executeBuild(A);
-            }
-            else if (KataSama(ACTION_UPGRADE, TYPE(A)))
-            {
-                executeUpgrade(A);
-            }
-            else
-            {
-                executeBuy(A);
-            }
+//     /*Algoritma*/
+//     if (!IsEmpty(*S))
+//     {
+//         while (!IsEmpty(*S))
+//         {
+//             Pop(S, &A);
+//             Push(&StackExecute, A);
+//         }
+//         while (!IsEmpty(StackExecute))
+//         {
+//             Pop(&StackExecute, &A);
+//             if (KataSama(ACTION_BUILD, TYPE(A)))
+//             {
+//                 executeBuild(A);
+//             }
+//             else if (KataSama(ACTION_UPGRADE, TYPE(A)))
+//             {
+//                 executeUpgrade(A);
+//             }
+//             else
+//             {
+//                 executeBuy(A);
+//             }
             
-        }
+//         }
 
-    }
-    maen();
-}
+//     }
+//     maen();
+// }
 
-void prepareToMain()
-{
-	MAINPHASE = true;
-}
+// void prepareToMain()
+// {
+// 	MAINPHASE = true;
+// }
 
 
-// MAIN PHASE
-// ================================================================
-void Serve(Player *Player, Queue *Q, Kalimat Namawahana)
-{
-    printf("//\tServing Costumer\t//\n");
-    infotype del;
-    Dequeue(Q,&del);
-    *Player.money = *Player.money + Namawahana.cost // ??
-    // Time nya maju
+// // MAIN PHASE
+// // ================================================================
+// void Serve(Player *Player, Queue *Q, Kalimat Namawahana)
+// {
+//     printf("//\tServing Costumer\t//\n");
+//     infotype del;
+//     Dequeue(Q,&del);
+//     *Player.money = *Player.money + Namawahana.cost // ??
+//     // Time nya maju
 
-	boolean found = false;
-	int i = 0;
-	while (i < NBWahana(W) && !found)
-		if (IsEQKalimat(W[i].Name, Namawahana))
-			found = true;
-		else
-			i++;
+// 	boolean found = false;
+// 	int i = 0;
+// 	while (i < NBWahana(W) && !found)
+// 		if (IsEQKalimat(W[i].Name, Namawahana))
+// 			found = true;
+// 		else
+// 			i++;
 	
 
-	RandomBroken(i);
-}
+// 	RandomBroken(i);
+// }
 
-void repair()
-{
-	printf("Repair\n");
-}
+// void repair()
+// {
+// 	printf("Repair\n");
+// }
 
-void detail()
-{
-	printf("Detail\n");
-}
+// void detail()
+// {
+// 	printf("Detail\n");
+// }
 
-void office()
-{
-	printf("Office\n");
-}
+// void office()
+// {
+// 	printf("Office\n");
+// }
 
-void mainToPrepare()
-{
-	MAINPHASE = false;
-}
-
-
-
-void EXITGAME(int x)
-{
-	if (x == 0)
-	{
-		// Exit Office
-		OFFICE_MODE = false;
-	}
-	else if(x == 1)
-	{
-		RUN = false;
-		RUN_NEWGAME = false;
-		OFFICE_MODE = false;
-	}
-}
+// void mainToPrepare()
+// {
+// 	MAINPHASE = false;
+// }
 
 
 
-
-void RandomAntrian(Antrian *A, Wahana W)
-{
-	for (int i = 0; i < MaxAntrian; ++i)
-	{
-		idxWahana = random(0, NbWahana(W));
-
-		Antri Q;
-		AntriName(Q) = W[idxWahana].Name;
-		AntriPrio(Q) = 5;
-
-		Enqueue(A, Q);
-	}
-}
-
-void RandomBroken(int idxWahana)
-{
-	int broke = random(0, 5);
-
-	if (broke >=4 && broke <= 5)
-	{
-		(*W)[idxWahana].Status = BROKESTATUS;
-		printf("Wahana ");
-		PrintKalimat((W)[idxWahana].Name)
-		printf(" Telah Rusak!!");
-	}
-}
+// void EXITGAME(int x)
+// {
+// 	if (x == 0)
+// 	{
+// 		// Exit Office
+// 		OFFICE_MODE = false;
+// 	}
+// 	else if(x == 1)
+// 	{
+// 		RUN = false;
+// 		RUN_NEWGAME = false;
+// 		OFFICE_MODE = false;
+// 	}
+// }
 
 
-void ReadMaterial(char addressFile[], int *wood, int *stone, int *iron, int *mamank) {
 
-    FILE *fp = fopen(addressFile,"r");
 
-    if (fp == NULL) {
-        printf("Error, could not load .txt file!\n");
-        exit(1);
-    }
+// void RandomAntrian(Antrian *A, Wahana W)
+// {
+// 	for (int i = 0; i < MaxAntrian; ++i)
+// 	{
+// 		idxWahana = random(0, NbWahana(W));
 
-    char charA[128];
-    char charB[128];
-    int temp[4];
-    int i = 0;
-    int countLine = 1;
+// 		Antri Q;
+// 		AntriName(Q) = W[idxWahana].Name;
+// 		AntriPrio(Q) = 5;
 
-    while(fscanf(fp, "%s %s", &charA, &charB) != EOF) {
-        if (countLine >= 2) {
-            temp[i] = atoi(charB);
-            ++i;
-        } else {
-            ++countLine;
-        }
-    }
+// 		Enqueue(A, Q);
+// 	}
+// }
 
-    *wood = temp[0];
-    *stone = temp[1];
-    *iron = temp[2];
-    *mamank = temp[3];
+// void RandomBroken(int idxWahana)
+// {
+// 	int broke = random(0, 5);
 
-    fclose(fp);
-}
+// 	if (broke >=4 && broke <= 5)
+// 	{
+// 		(*W)[idxWahana].Status = BROKESTATUS;
+// 		printf("Wahana ");
+// 		PrintKalimat((W)[idxWahana].Name)
+// 		printf(" Telah Rusak!!");
+// 	}
+// }
 
-void WriteMaterial(char addressFile[], int wood, int stone, int iron, int mamank) {
 
-    FILE *fp = fopen(addressFile,"w");
+// void ReadMaterial(char addressFile[], int *wood, int *stone, int *iron, int *mamank) {
 
-    fprintf(fp, "Material Harga\n");
-    fprintf(fp, "Wood %d\n", wood);
-    fprintf(fp, "Stone %d\n", stone);
-    fprintf(fp, "Iron %d\n", iron);
-    fprintf(fp, "mamank %d\n", mamank);
+//     FILE *fp = fopen(addressFile,"r");
 
-    fclose(fp);
-}
+//     if (fp == NULL) {
+//         printf("Error, could not load .txt file!\n");
+//         exit(1);
+//     }
 
-void geneateMapMain(Player P, Stack Aksi)
-{
-    JAM buka, tutup;
-    buka = MakeJAM(9,0,0);
-    tutup = MakeJam(21,0,0);
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-        printf("Main phase Day %d\n",Day(P));
-    }
-    else{
-        printf("Preparation phase Day %d\n",Day(P));
-    }
-    /*generating map */
-    printMap(P);
+//     char charA[128];
+//     char charB[128];
+//     int temp[4];
+//     int i = 0;
+//     int countLine = 1;
 
-    printf("Legend :\n");
-    printf("A = Antrian\n");
-    printf("P = Player\n");
-    printf("W = Wahana\n");
-    printf("O = Office\n");
-    printf("<, ^, v, > = Gerbang\n");
-    printf("\n");
-    printf("Name : %s \n",Name(P));
-    printf("Money : %d \n",Money(P));
-    printf("Current time : ")
-    TulisJAM(Time(P));
-    printf('\n');
+//     while(fscanf(fp, "%s %s", &charA, &charB) != EOF) {
+//         if (countLine >= 2) {
+//             temp[i] = atoi(charB);
+//             ++i;
+//         } else {
+//             ++countLine;
+//         }
+//     }
 
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-        printf("Closing time : ");
-        TulisJAM(tutup);
-        printf("\n");
-        printf("Time remaining : ");
-        cetakDurasi(Durasi(Time(P),tutup));
-        printf("\n");
-        /* buat prosedur print antrian */
-    }
-    else{
-        printf("Opening time : ");
-        TulisJAM(buka);
-        printf("\n");
-        printf("Time remaining : ");
-        cetakDurasi(Durasi(Time(P),buka));
-        printf("\n");
-        printf("Jumlah aksi yang akan dilakukan : %d\n",(Top(Aksi)+1));
-        printf("Total waktu yang dibutuhkan : "); TulisJAM(HitungTime(Aksi));
-        printf("\n");
-        printf("Total uang yang dibutuhkan : ",HitungMoney(Aksi));
-    }
+//     *wood = temp[0];
+//     *stone = temp[1];
+//     *iron = temp[2];
+//     *mamank = temp[3];
+
+//     fclose(fp);
+// }
+
+// void WriteMaterial(char addressFile[], int wood, int stone, int iron, int mamank) {
+
+//     FILE *fp = fopen(addressFile,"w");
+
+//     fprintf(fp, "Material Harga\n");
+//     fprintf(fp, "Wood %d\n", wood);
+//     fprintf(fp, "Stone %d\n", stone);
+//     fprintf(fp, "Iron %d\n", iron);
+//     fprintf(fp, "mamank %d\n", mamank);
+
+//     fclose(fp);
+// }
+
+// void geneateMapMain(Player P, Stack Aksi)
+// {
+//     JAM buka, tutup;
+//     buka = MakeJAM(9,0,0);
+//     tutup = MakeJam(21,0,0);
+//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+//         printf("Main phase Day %d\n",Day(P));
+//     }
+//     else{
+//         printf("Preparation phase Day %d\n",Day(P));
+//     }
+//     /*generating map */
+//     printMap(P);
+
+//     printf("Legend :\n");
+//     printf("A = Antrian\n");
+//     printf("P = Player\n");
+//     printf("W = Wahana\n");
+//     printf("O = Office\n");
+//     printf("<, ^, v, > = Gerbang\n");
+//     printf("\n");
+//     printf("Name : %s \n",Name(P));
+//     printf("Money : %d \n",Money(P));
+//     printf("Current time : ")
+//     TulisJAM(Time(P));
+//     printf('\n');
+
+//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+//         printf("Closing time : ");
+//         TulisJAM(tutup);
+//         printf("\n");
+//         printf("Time remaining : ");
+//         cetakDurasi(Durasi(Time(P),tutup));
+//         printf("\n");
+//         /* buat prosedur print antrian */
+//     }
+//     else{
+//         printf("Opening time : ");
+//         TulisJAM(buka);
+//         printf("\n");
+//         printf("Time remaining : ");
+//         cetakDurasi(Durasi(Time(P),buka));
+//         printf("\n");
+//         printf("Jumlah aksi yang akan dilakukan : %d\n",(Top(Aksi)+1));
+//         printf("Total waktu yang dibutuhkan : "); TulisJAM(HitungTime(Aksi));
+//         printf("\n");
+//         printf("Total uang yang dibutuhkan : ",HitungMoney(Aksi));
+//     }
     
     
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-        printf("Closing time : ");
-        TulisJAM(tutup);
-        printf("\n")
-    }
+//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+//         printf("Closing time : ");
+//         TulisJAM(tutup);
+//         printf("\n")
+//     }
 
-    printf("Masukkan perintah : \n");
-}
+//     printf("Masukkan perintah : \n");
+// }

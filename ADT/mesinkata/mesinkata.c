@@ -217,7 +217,7 @@ void DequeueKalimat(Kalimat *S, Kata *K)
 
 int NbKata(Kalimat S)
 {
-  if (IsEmpty(S))
+  if (IsEmptyKalimat(S))
     return 0;
   else
     return IdxMax(S)-IdxMin(S) + 1;
@@ -245,7 +245,7 @@ boolean IsEQKalimat(Kalimat Q1, Kalimat Q2)
     while(!IsEmptyKalimat(Q1) && same)
     {
       Kata K1, K2;
-      DequeueKalimats(&Q1, &K1);
+      DequeueKalimat(&Q1, &K1);
       DequeueKalimat(&Q2, &K2);
 
       if (!KataSama(K1, K2))
@@ -285,10 +285,10 @@ boolean KataSama(Kata K1, Kata K2)
 int NbHurufKalimat(Kalimat Q)
 {
   int n = 0;
-  while(!IsEmpty(Q))
+  while(!IsEmptyKalimat(Q))
   {
     Kata K;
-    DequeueKata(&Q, &K);
+    DequeueKalimat(&Q, &K);
     n += K.Length;
   }
 

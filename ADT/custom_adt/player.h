@@ -5,8 +5,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "jam.h"
-#include "point.h"
+#include "../Jam/jam.h"
+#include "../point/point.h"
+#include "../mesinkata/mesinkata.h"
 
 typedef struct{
     int wood;
@@ -16,13 +17,22 @@ typedef struct{
 }Material;
 
 typedef struct{
-  char Name[40];
+  Kalimat Name;
   JAM CurrentTime;
   int Day;
   POINT Position;
   int Money;
   Material Material;
 } Player;
+
+
+// typedef struct
+// {
+// 	Kalimat Name;
+// 	int Money;
+// 	Material Mat;
+// 	Point Pos;
+// } Player;
 
 /* P adalah player, M adalah Material */
 #define Name(P) (P).Name

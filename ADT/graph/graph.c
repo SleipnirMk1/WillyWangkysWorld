@@ -93,7 +93,7 @@ boolean IsExistVertex(Graph G, Vertex V)
 
 boolean IsEQVertex(Vertex V1, Vertex V2)
 {
-	return Area(V1) == Area(V2) && Pos(V1).x == Pos(V2).x && Pos(V1).y == Pos(V2).y;
+	return Area(V1) == Area(V2) && Absis(V1) == Absis(V2) && Ordinat(V1) == Ordinat(V2);
 }
 
 boolean IsEQEdge(Edge E1, Edge E2)
@@ -126,12 +126,12 @@ Edge CreateEdge(Vertex V1, Vertex V2)
 	return E;
 }
 
-Vertex CreateVertex(int area, int x, int y)
+Vertex CreateVertex(int area, float x, float y)
 {
 	Vertex V;
 	Area(V) = area;
-	Pos(V).x = x;
-	Pos(V).y = y;
+	Absis(V) = x;
+	Ordinat(V) = y;
 
 	return V;
 }
@@ -187,7 +187,7 @@ void GetVEdge(Graph G, Vertex V1, Vertex *V2)
 
 void PrintVertex(Vertex V)
 {
-	printf("<%d,%d,%d>", Area(V), Pos(V).x, Pos(V).y);
+	printf("<%.2f,%.2f,%.2f>", Area(V), Absis(V), Ordinat(V));
 }
 
 void PrintEdge(Edge E)

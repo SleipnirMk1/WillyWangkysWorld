@@ -2,6 +2,7 @@
 #define __GRAPH_H__
 
 #include "boolean.h"
+#include "..\point\point.h"
 
 #define Nil -1
 
@@ -15,18 +16,11 @@
 #define V1Edge(G, i) (G).E[(i)].V1
 #define V2Edge(G, i) (G).E[(i)].V2
 
-#define Area(V) (V).Area
-#define PosX(V) (V).x
-#define PosY(V) (V).y
+// #define Area(V) (V).Area
+// #define PosX(V) (V).x
+// #define PosY(V) (V).y
 
-typedef struct 
-{
-	int x;
-	int y;
-	int Area;
-} Point;
-
-typedef Point Vertex;
+typedef POINT Vertex;
 
 typedef struct 
 {
@@ -61,7 +55,7 @@ Edge CreateEdge(Vertex V1, Vertex V2);
 // V1 merupakan nomor area yang lebih kecil, sedangkan
 // V2 merupakan nomor area yang lebih besar
 
-Vertex CreateVertex(int area, int x, int y);
+Vertex CreateVertex(int area, float x, float y);
 
 void AddEdge(Graph *G, Edge E);
 // Edge *G tidak penuh

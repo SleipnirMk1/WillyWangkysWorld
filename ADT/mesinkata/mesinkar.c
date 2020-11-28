@@ -2,6 +2,7 @@
 /* Implementasi Mesin Karakter */
 
 #include "mesinkar.h"
+#include "boolean.h"
 #include <stdio.h>
 
 #define MAX 250
