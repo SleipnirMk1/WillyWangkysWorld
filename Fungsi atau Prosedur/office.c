@@ -1,31 +1,18 @@
-#include "listlinierwahana.h"
+#include "arraywahana.h"
 #include "boolean.h"
 #include "wahana.h"
 
-void office(ListWahana list_of_built_wahana)
+void office(ArrayWahana list_of_built_wahana)
 {
     char in[128];
     printf("Detail wahana apa yang ingin Anda lihat: \n");
     scanf("%s\n", &in);
 
-    boolean found = false;
-    address Elmt = First(list_of_built_wahana);
-    while (Elmt != Nil && !found)
-    {
-        if (NamaW(Info(Elmt)) == in)
-        {
-            found = true;
-        }
-        else
-        {
-            Elmt = Next(Elmt);
-        }
-        
-    }
+    Idxtype p = Search1Wahana(list_of_built_wahana, in);
 
-    if (found)
+    if (p != IdxUndef)
     {
-        Detail(Info(Elmt));
+        Detail(Elmt(list_of_built_wahana, p));
     }
     else
     {

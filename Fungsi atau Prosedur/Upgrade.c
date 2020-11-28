@@ -1,66 +1,105 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolean.h"
-#include "../mesinkata/mesinkata.h"
-#include "../tree/tree.h"
-#include "../point/point.h"
-#include "../custom_adt/listlinierwahana.h"
-#include "../custom_adt/player.h"
-#include "../custom_adt/stackaction.h"
-#include "../custom_adt/wahana.h"
+#include "mesinkata.h"
+#include "tree.h"
+#include "point.h"
+#include "arraywahana.h"
+#include "player.h"
+#include "stackaction.h"
+#include "wahana.h"
 #include "ReadWrite.c"
 
-// Memperoleh wahana yang ada di sekitar pemain
-ListWahana GetNearbyWahana (POINT posisi_player, ListWahana list_of_built_wahana)
+// Mengecek material dan uang
+boolean IsMaterialEnough(Material MOwn, Material MCost, ArrayWahana L, IdxType P, Player player)
 {
-	ListWahana Lout;
-	CreateEmptyW(&Lout);
+	return(Money(player) >= Price(Elmt(L,P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(MCost) && Iron(MOwn) >= Iron(MCost) && Mamank(MOwn) >= Mamank(MCost))
+}
 
-	if (IsEmpty(list_of_built_wahana)){
-        return Nil;
-    }
-    else
+// Mengecek apakah dapat upgrade dan menyatakan bisa dengan CanUpgrade
+void CheckCanUpgrade(Tree W1, ArrayWahana L, Player player, boolean * CanUpgrade, IdxType * Cost)
+{
+	IdxType P = Search1Wahana(L, W1);
+	Material MCost = MaterialCost(Elmt(L, P));
+	Material MOwn = Material(player);
+	if (IsMaterialEnough(MOwn, MCost, L, P, player))	// Cek resource
+	{
+		*CanUpgrade = true;
+		*Cost = P;
+	}
+}
+
+// Melayani Input jenis upgrade dengan melihat pohon upgrade
+void CheckTreeUpgrade(Tree W1, QueueKata K, ArrayWahana L, Player player, boolean * CanUpgrade, IdxType * Cost)
+{
+	QueueKata Q;
+
+	if (IsEQKalimat(K, Info(W1)))
+	{
+		if (Left(W1) != Nil && Right(W1) != Nil)
+		{
+			printf("%s\n", Left(W1));
+			printf("%s\n", Right(W1));
+			Q = GetQueueKata();
+
+			if (IsEQWahana(Q, Left(W1)))
+			{
+				CheckCanUpgrade(Left(W1), L, player, CanUpgrade, Cost);
+			}
+			else if (IsEQWahana(Q, Right(W1)))
+			{
+				CheckCanUpgrade(Right(W1), L, player, CanUpgrade, Cost);
+			}
+		}
+	}
+}
+
+// Memperoleh wahana yang ada di sekitar pemain
+ArrayWahana GetNearbyWahana (POINT posisi_player, ArrayWahana array_of_built_wahana)
+{
+	ArrayWahana Lout;
+	MakeEmptyWahana(&Lout);
+
+    if (!IsEmptyWahana(array_of_built_wahana))
 	{
 		float X, Y;
-		int A;
-		address Elmt = First(list_of_built_wahana);
-        while (Elmt != Nil)
+		int i, A;
+        for (i = GetFirstIdxWahana(array_of_built_wahana); i <= GetLastIdxWahana(array_of_built_wahana); ++i)
 		{
-			X = Absis(Lokasi(Info(Elmt)));
-			Y = Ordinat(Lokasi(Info(Elmt)));
-			A = Area(Lokasi(Info(Elmt)));
+			X = Absis(Lokasi(Elmt(array_of_built_wahana, i)));
+			Y = Ordinat(Lokasi(Elmt(array_of_built_wahana, i)));
+			A = Area(Lokasi(Elmt(array_of_built_wahana, i)));
 
 			if (Area(posisi_player) == A)
 			{
 				if ((X + 1) == Absis(posisi_player) && Y == Ordinat(posisi_player))
 				{
-					InsVLast(&Lout, Info(Elmt));
+					AddAsLastElWahana(&Lout, Elmt(array_of_built_wahana, i))
 				}
 				else if ((X - 1) == Absis(posisi_player) && Y == Ordinat(posisi_player))
 				{
-					InsVLast(&Lout, Info(Elmt));
+					AddAsLastElWahana(&Lout, Elmt(array_of_built_wahana, i))
 				}
 				else if (X  == Absis(posisi_player) && (Y + 1) == Ordinat(posisi_player))
 				{
-					InsVLast(&Lout, Info(Elmt));
+					AddAsLastElWahana(&Lout, Elmt(array_of_built_wahana, i))
 				}
 				else if (X  == Absis(posisi_player) && (Y - 1) == Ordinat(posisi_player))
 				{
-					InsVLast(&Lout, Info(Elmt));
+					AddAsLastElWahana(&Lout, Elmt(array_of_built_wahana, i))
 				}
 			}
-
-			Elmt = Next(Elmt);
 		}
     }
 
 	return Lout;
 }
 
+// Melayani fungsi upgrade
 void Upgrade (StackAction *S, WAHANA *W, Player player)
 {
-	ListWahana L;
-	CreateEmptyW(&L);
+	ArrayWahana L;
+	MakeEmptyWahana(&L);
 	
 	L = ReadWahanaInfo("wahanainfo.txt");
 
@@ -71,9 +110,9 @@ void Upgrade (StackAction *S, WAHANA *W, Player player)
 
 	while(upgrade)
 	{
-		ListWahana arr = GetNearbyWahana(Position(player));	// Masukkan data posisi pemain
+		ArrayWahana arr = GetNearbyWahana(Position(player), array_of_built_wahana);	// Masukkan data posisi pemain
 
-		if (IsEmpty(arr))
+		if (IsEmptyWahana(arr))
 		{
 			printf("Tidak ada wahana yang bisa di upgrade di sekitar\n");
 			upgrade = false;
@@ -82,14 +121,14 @@ void Upgrade (StackAction *S, WAHANA *W, Player player)
 		printf("Ingin upgrade wahana apa?\n");
 
         int i;
-		for (i = 0; i < NbElmt(arr); ++i)
+		for (i = 0; i < NbElmtWahana(arr); ++i)
         {
-            printf("%s\n", Elmt(arr, i));     // Print nama wahana yang tersedia
+            printf("%s\n", Nama(Elmt(arr, i)));     // Print nama wahana yang tersedia
         }
 
 		QueueKata K = GetQueueKata();
 		
-		if(IsEQ(K, EXIT))
+		if(IsEQKalimat(K, EXIT))
 		{
 			upgrade = false;
 			printf("Upgrade dibatalkan\n");
@@ -97,9 +136,9 @@ void Upgrade (StackAction *S, WAHANA *W, Player player)
 		else
 		{
 			boolean inReach = false;
-			for (i = 0; i < NbElmt(arr); ++i)
+			for (i = 0; i < NbElmtWahana(arr); ++i)
 			{
-				if (IsEQ(K, Elmt(arr, i)))
+				if (IsEQKalimat(K, Nama(Elmt(arr, i))))
                 {
                     inReach = true;
                 }
@@ -113,119 +152,35 @@ void Upgrade (StackAction *S, WAHANA *W, Player player)
 			{
 				boolean CanUpgrade = false;
 				printf("Ingin upgrade menjadi apa?\n");
-				QueueKata Q;
-				address P;
-				Material MOwn, MCost;
 
-				int Durasi;
-				int Uang, Wood, Stone, Iron;
+				IdxType Cost;
+				
+				CheckTreeUpgrade(W1, K, L, player, &CanUpgrade, &Cost);
 
-				// Bagian bawahnya nantinya mau dibuat fungsi lagi biar lebih rapi
+				CheckTreeUpgrade(W2, K, L, player, &CanUpgrade, &Cost);
 
-				if (IsEQ(K, Info(W1)))
-				{
-					printf("%s\n", Left(W1));
-					printf("%s\n", Right(W1));
-					Q = GetQueueKata();
+				CheckTreeUpgrade(W3, K, L, player, &CanUpgrade, &Cost);
 
-					if (IsEQ(Q, Left(W1)))
-					{
-						P = Search(L, Left(W1));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-					else if (IsEQ(Q, Right(W1)))
-					{
-						P = Search(L, Right(W1));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-				}
-				else if (IsEQ(K, Info(W2)))
-				{
-					printf("%s\n", Left(W2));
-					printf("%s\n", Right(W2));
-					Q = GetQueueKata();
-
-					if (IsEQ(Q, Left(W2)))
-					{
-						P = Search(L, Left(W2));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-					else if (IsEQ(Q, Right(W2)))
-					{
-						P = Search(L, Right(W2));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-				}
-				else if (IsEQ(K, Info(W3)))
-				{
-					printf("%s\n", Left(W3));
-					printf("%s\n", Right(W3));
-					Q = GetQueueKata();
-
-					if (IsEQ(Q, Left(W3)))
-					{
-						P = Search(L, Left(W3));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-					else if (IsEQ(Q, Right(W3)))
-					{
-						P = Search(L, Right(W3));	// Mungkin fungsi search nya perlu di ubah
-						MCost = MaterialCost(Info(P));
-						MOwn = Material(player);
-						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-						{
-							boolean CanUpgrade = true;
-						}
-					}
-				}
-				else
-				{
-					printf("Tidak ada upgrade untuk wahana ini\n");
-				}
-
-				Durasi = Durasi(Info(P));
-				Uang = Price(Info(P));
-				Wood = Wood(MCost);
-				Stone = Stone(MCost);
-				Iron = Iron(MCost);
+				
 
 				if (CanUpgrade)
 				{
+					Durasi = Durasi(Info(P));
+					Uang = Price(Info(P));
+					Wood = Wood(MCost);
+					Stone = Stone(MCost);
+					Iron = Iron(MCost);
+
 					Action A;
 					ActionName(A) = "Upgrade";
 					ActionType(A) = UPGRADETYPE;
-					ActionTime(A) = Durasi;
+					ActionTime(A) = Durasi(Elmt(L,Cost));
 					ActionAmount(A) = 1;
-					ActionPrice(A) = Uang;
-					ActionPosition(A) = Lokasi(Info(P));
-					Wood(ActionMaterialCost(A)) = Wood;
-					Stone(ActionMaterialCost(A)) = Stone;
-					Iron(ActionMaterialCost(A)) = Iron;
+					ActionPrice(A) = Price(Elmt(L,Cost));
+					ActionPosition(A) = Lokasi(Elmt(L,Cost));
+					Wood(ActionMaterialCost(A)) = Wood(MaterialCost(Elmt(L,Cost)));
+					Stone(ActionMaterialCost(A)) = Stone(MaterialCost(Elmt(L,Cost)));
+					Iron(ActionMaterialCost(A)) = Iron(MaterialCost(Elmt(L,Cost)));
 
 					Push(S, A);
 

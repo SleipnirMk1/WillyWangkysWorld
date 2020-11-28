@@ -2,8 +2,16 @@
 #include <stdlib.h>
 #include "tree.h"
 #include "wahana.h"
-#include "listlinierwahana.h"
+#include "arraywahana.h"
 #include "point.h"
+#include "mesinkata.h"
+
+#include "tree.c"
+#include "wahana.h"
+#include "arraywahana.c"
+#include "point.c"
+#include "mesinkata.c"
+
 
 void ReadMaterial(char addressFile[], int *wood, int *stone, int *iron, int *mamank) {
 
@@ -73,11 +81,11 @@ void ReadWahana(char addressFile[], Tree *t1, Tree* t2, Tree* t3)
         }
         else if (count == 2)
         {
-            BuildTreeFromString(t2, singleLine, &idx)
+            BuildTreeFromString(t2, singleLine, &idx);
         }
         else if (count == 3)
         {
-            BuildTreeFromString(t3, singleLine, &idx)
+            BuildTreeFromString(t3, singleLine, &idx);
         }
         ++count;
     }
@@ -86,7 +94,7 @@ void ReadWahana(char addressFile[], Tree *t1, Tree* t2, Tree* t3)
     
 }
 
-ListWahana ReadWahanaInfo(char addressFile[])
+ArrayWahana ReadWahanaInfo(char addressFile[])
 {
     FILE *fp = fopen(addressFile,"r");
 
@@ -95,37 +103,40 @@ ListWahana ReadWahanaInfo(char addressFile[])
         exit(1);
     }
 
-    ListWahana W;
-    CreateEmptyW(&W);
+    ArrayWahana W;
+    MakeEmptyWahana(&W);
     wahanatype X;
 
-    char Nama[64];
+    Kalimat Nama;
     char Uang[16];
     char Wood[16];
     char Stone[16];
     char Iron[16];
+    char Mamank[16];
     char Kapasitas[16];
     char Durasi[32];
     char Profit[16];
-    char Deskripsi[128];
+    Kalimat Deskripsi;
     
     int countLine = 1;
     int tipeCount = 1;
 
-    while(fscanf(fp, "%s %s %s %s %s %s %s %s %s", &Nama, &Uang, &Wood, &Stone, &Iron, &Kapasitas, &Durasi, &Profit, &Deskripsi) != EOF) {
+    while(fscanf(fp, "%s %s %s %s %s %s %s %s %s %s", &Nama, &Uang, &Wood, &Stone, &Iron, &Mamank, &Kapasitas, &Durasi, &Profit, &Deskripsi) != EOF) {
         if (countLine >= 2)
         {
-            NamaW(X) = Nama;
+            Nama(X) = Nama;
             Tipe(X) = tipeCount;
-            Biaya(X) = atoi(Uang);
-            Wood(X) = atoi(Wood);
-            Stone(X) = atoi(Stone);
-            Iron(X) = atoi(Iron);
+            Price(X) = atoi(Uang);
+            Wood(MaterialCost(X)) = atoi(Wood);
+            Stone(MaterialCost(X)) = atoi(Stone);
+            Iron(MaterialCost(X)) = atoi(Iron);
+            Mamank(MaterialCost(X)) = atoi(Mamank);
             Kapasitas(X) = atoi(Kapasitas);
-            Durasi(X) = atoi(Durasi);       // Konversi ke detik dulu mungkin, sekarang baru konversi ke integer, value di file detik
+            //Durasi(X) = atoi(Durasi);       // Konversi ke detik dulu mungkin, sekarang baru konversi ke integer, value di file detik
             Profit(X) = atoi(Profit);
             Deskripsi(X) = Deskripsi;
-            Lokasi(X) = MakePOINT(-1,-1,0) // Value Null utk lokasi wahana
+            
+            Lokasi(X) = MakePOINT(-1,-1,0); // Value Null utk lokasi wahana
             TotalNaik(X) = 0;
             TotalProfit(X) = 0;
             TodayNaik(X) = 0;
@@ -142,4 +153,16 @@ ListWahana ReadWahanaInfo(char addressFile[])
 
     return W;
     fclose(fp);
+}
+
+int main()
+{
+    ArrayWahana L;
+    MakeEmptyWahana(&L);
+
+    L = ReadWahanaInfo("wahanainfo.txt");
+
+    TulisIsiTabWahana(L);
+
+    return 0;
 }
