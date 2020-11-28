@@ -16,8 +16,8 @@ void geneateMapMain(Player P, Stack Aksi)
     else{
         printf("Preparation phase Day %d\n",Day(P));
     }
-    /*generating map */
-    printMap(P);
+    /*generating map */ /* tergantung di area mana */
+    TulisMATRIKS(P);
 
     printf("Legend :\n");
     printf("A = Antrian\n");
