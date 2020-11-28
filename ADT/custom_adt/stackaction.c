@@ -1,12 +1,12 @@
 /* File : stack.c */
 
 #include <stdio.h>
-#include "stacktaction.h"
+#include "stackaction.h"
 #include "boolean.h"
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
-void CreateEmpty (StackAction *S)
+void CreateEmptyStackAction (StackAction *S)
 /* I.S. sembarang; */
 /* F.S. Membuat sebuah stack S yang kosong berkapasitas MaxEl */
 /* jadi indeksnya antara 0.. MaxEl */
@@ -17,7 +17,7 @@ void CreateEmpty (StackAction *S)
 
 
 /* ************ Predikat Untuk test keadaan KOLEKSI ************ */
-boolean IsEmpty (StackAction S)
+boolean IsEmptyStackAction (StackAction S)
 /* Mengirim true jika Stack kosong: lihat definisi di atas */
 {
     return (Top(S)== Nil);
@@ -29,7 +29,7 @@ boolean IsFull (StackAction S)
 }
 
 /* ************ Menambahkan sebuah elemen ke Stack ************ */
-void Push (StackAction * S, actiontype X)
+void PushAction (StackAction * S, Action X)
 /* Menambahkan X sebagai elemen Stack S. */
 /* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 /* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
@@ -38,7 +38,7 @@ void Push (StackAction * S, actiontype X)
     InfoTop(*S)=X;
 }
 /* ************ Menghapus sebuah elemen Stack ************ */
-void Pop (StackAction * S, actiontype * X)
+void PopAction (StackAction * S, Action * X)
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
@@ -53,11 +53,11 @@ void InversStack (StackAction * S)
 /*F.S : Stack menjadi terbalik */
 {
     StackAction temp;
-    actiontype x;
-    CreateEmpty(&temp);
-    while !(IsEmpty(*S)){
-        Pop(S,&x);
-        Push(&temp,x);
+    Action x;
+    CreateEmptyStackAction(&temp);
+    while (!IsEmptyStackAction(*S)){
+        PopAction(S,&x);
+        PushAction(&temp,x);
     }
     *S = temp;
 }

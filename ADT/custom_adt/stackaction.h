@@ -6,8 +6,9 @@
 #define stackt_H
 
 #include "boolean.h"
-#include "jam.h"
-#include "point.h"
+// #include "/jam.h"
+#include "../point/point.h"
+#include "../mesinkata/mesinkata.h"
 
 #define Nil -1
 #define MaxElStack 10
@@ -20,20 +21,18 @@
 
 /* *** Definisi TYPE PLAYER DATA *** */
 typedef struct {
-    int TipeAksi;
-	  JAM Waktu;
-    int Uang;
-    int Wood;
-    int Stone;
-    int Iron;
-    POINT LokasiBuild;
-} actiontype;
+    Kalimat Name;
+    Kata Type;
+    int Time;
+    int Amount;
+    POINT Position;
+} Action;
 typedef int address;   /* indeks tabel */
 
 /* Contoh deklarasi variabel bertype stack dengan ciri TOP : */
 /* Versi I : dengan menyimpan tabel dan alamat top secara eksplisit*/
 typedef struct {
-  actiontype T[MaxElStack]; /* tabel penyimpan elemen */
+  Action T[MaxElStack]; /* tabel penyimpan elemen */
   address TOP;  /* alamat TOP: elemen puncak */
 } StackAction;
 /* Definisi stack S kosong : S.TOP = Nil */
@@ -46,35 +45,40 @@ typedef struct {
 /* S merupakan Stackt, I merupakan Infotype Stackt */
 #define Top(S) (S).TOP
 #define InfoTop(S) (S).T[(S).TOP]
-#define InfoTopTipe(S) (S).T[(S).TOP].TipeAksi
-#define InfoTopWaktu(S) (S).T[(S).TOP].Waktu
-#define InfoTopWood(S) (S).T[(S).TOP].Wood
-#define InfoTopStone(S) (S).T[(S).TOP].Stone
-#define InfoTopIron(S) (S).T[(S).TOP].Iron
-#define InfoTopLokasi(S) (S).T[(S).TOP].LokasiBuild
+#define InfoTopName(S) (S).T[(S).TOP].Name
+#define InfoTopTipe(S) (S).T[(S).TOP].Type
+#define InfoTopWaktu(S) (S).T[(S).TOP].Time
+#define InfoTopAmount(S) (S).T[(S).TOP].Amount
+#define InfoTopLokasi(S) (S).T[(S).TOP].Position
+
+#define ActionName(A) (A).Name
+#define ActionType(A) (A).Type
+#define ActionTime(A) (A).Time
+#define ActionAmount(A) (A).Amount
+#define ActionPosition(A) (A).Position
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
-void CreateEmpty (StackAction *S);
+void CreateEmptyStackAction (StackAction *S);
 /* I.S. sembarang; */
 /* F.S. Membuat sebuah stack S yang kosong berkapasitas MaxElStack */
 /* jadi indeksnya antara 0.. MaxElStack */
 /* Ciri stack kosong : TOP bernilai Nil */
 
 /* ************ Predikat Untuk test keadaan KOLEKSI ************ */
-boolean IsEmpty (StackAction S);
+boolean IsEmptyStackAction (StackAction S);
 /* Mengirim true jika Stack kosong: lihat definisi di atas */
-boolean IsFull (StackAction S);
+boolean IsFullStackAction (StackAction S);
 /* Mengirim true jika tabel penampung nilai elemen stack penuh */
 
 /* ************ Menambahkan sebuah elemen ke Stack ************ */
-void Push (StackAction * S, actiontype X);
+void PushAction (StackAction * S, Action X);
 /* Menambahkan X sebagai elemen Stack S. */
 /* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 /* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
 
 /* ************ Menghapus sebuah elemen Stack ************ */
-void Pop (StackAction * S, actiontype * X);
+void PopAction (StackAction * S, Action * X);
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */

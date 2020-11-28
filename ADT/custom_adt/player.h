@@ -23,6 +23,7 @@ typedef struct{
   POINT Position;
   int Money;
   Material Material;
+  int Debt;
 } Player;
 
 
@@ -41,6 +42,8 @@ typedef struct{
 #define Position(P) (P).Position
 #define Money(P) (P).Money
 #define Material(P) (P).Material
+#define Debt(P) (P).Debt
+
 #define Wood(M) (M).wood
 #define Stone(M) (M).stone
 #define Iron(M) (M).iron

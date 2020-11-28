@@ -188,8 +188,8 @@ void GetVEdge(Graph G, Vertex V1, Vertex *V2)
 
 void PrintVertex(Vertex V)
 {
-	// printf("<%f,%f,%f>", Area(V), Absis(V), Ordinat(V));
-	printf("Vertex");
+	printf("<%d,%f,%f>", Area(V), Absis(V), Ordinat(V));
+	//printf("Vertex");
 }
 
 void PrintEdge(Edge E)

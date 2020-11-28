@@ -6,6 +6,8 @@
 #include "ADT\graph\graph.h"
 #include "ADT\custom_adt\player.h"
 #include "ADT\point\point.h"
+#include "ADT\custom_adt\stackaction.h"
+#include "ADT\custom_adt\wahana.h"
 
 // #define MAXSTACKACTION 100
 
@@ -52,6 +54,11 @@
 
 Player P;
 Graph G;
+StackAction S;
+WAHANA ListWahanaYandDimiliki[100];
+int NbWahana = 0;
+WAHANA ListWahanaTersedia[100];
+int NbAvailableWahana = 0;
 
 
 
@@ -64,24 +71,17 @@ Kata NEW, LOAD, EXIT;
 Kata BUILD, UPGRADE, BUY, UNDO, EXECUTE, MAIN;
 Kata SERVE, REPAIR, DETAIL, OFFICE, PREPARE;
 Kata SAVE, CONTINUE;
-Kata W, A, S, D;
+Kata MoveW, MoveA, MoveS, MoveD;
 Kata DETAILS;
 
 Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
-
-// Graph G;
-// Wahana W;
-// Player P;
-
-// Point officePoint;
-
-// StackAction A;
 
 
 // Defenition
 // ============================================
 void generateAllConstant();
 void generatePlayer();
+void generateWahanaTersedia();
 void EXITGAME(int x);
 void generateLoadGame();
 void generateNewGame();
@@ -105,14 +105,20 @@ boolean IsWall(float X, float Y, int A);
 boolean IsGerbang(float X, float Y, int A);
 void move(int dir);
 
+
+void PrintListWahanaTersedia();
+
 // ==============================================
 
 int main()
 {
+	CreateEmptyStackAction(&S);
+
 	generateAllConstant();
 
 	generatePlayer();
-
+	generateWahanaTersedia();
+	//printf("%f\n", P.Position.Y);
 	// generatePosFromFile();
 	// generateMatFromFile();
 	// generateWahFromFile();
@@ -153,7 +159,9 @@ int main()
 
 	while(RUN)
 	{
-		PrintVertex(P.Position);
+		if(!IsEmptyStackAction(S))
+			PrintKalimat(InfoTopName(S));
+
 		printf("\n");
 		printf("Masukkan Perintah : ");
 
@@ -166,19 +174,19 @@ int main()
 		{
 			RUN = false;
 		}
-		else if (KataSama(K, W))
+		else if (KataSama(K, MoveW))
 		{
 			move(0);
 		}
-		else if (KataSama(K, A))
+		else if (KataSama(K, MoveA))
 		{
 			move(1);
 		}
-		else if (KataSama(K, S))
+		else if (KataSama(K, MoveS))
 		{
 			move(2);
 		}
-		else if (KataSama(K, D))
+		else if (KataSama(K, MoveD))
 		{
 			move(3);
 		}
@@ -197,7 +205,7 @@ int main()
 			{
 				if (KataSama(K, BUILD))
 				{
-					//build();
+					build();
 				}
 				else if (KataSama(K, UPGRADE))
 				{
@@ -260,14 +268,14 @@ int main()
 	}
 
 
-	if (runned)
-	{
-		printf("Masukkan 'y' jika ingin melakukan SAVE GAME : ");
-		char yy;
-		scanf("%c", &yy);
-		if (yy == 'y');
-			//saveGame();
-	}
+	// if (runned)
+	// {
+	// 	printf("Masukkan 'y' jika ingin melakukan SAVE GAME : ");
+	// 	char yy;
+	// 	scanf("%c", &yy);
+	// 	if (yy == 'y');
+	// 		//saveGame();
+	// }
 
 	printf("Thanks for playing... :D");
 
@@ -295,9 +303,10 @@ void gerak(int X)
 {
 	if (X == 0)
 	{
-		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
+		//printf("WW\n");
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
 		{
-			Geser (&P.Position, 0, 1, 0);
+			Geser (&P.Position, 0, -1, 0);
 			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
 				POINT V;
@@ -309,6 +318,7 @@ void gerak(int X)
 	}
 	else if (X == 1)
 	{
+		//printf("AA\n");
 		if (!IsWall(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position)))
 		{
 			Geser (&P.Position, -1, 0, 0);
@@ -323,9 +333,10 @@ void gerak(int X)
 	}
 	else if (X == 2)
 	{
-		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
+		//printf("SS\n");
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
 		{
-			Geser (&P.Position, 0, -1, 0);
+			Geser (&P.Position, 0, 1, 0);
 			
 			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
@@ -338,6 +349,7 @@ void gerak(int X)
 	}
 	else if (X == 3)
 	{
+		//printf("DD\n");
 		if (!IsWall(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position)))
 		{
 			Geser (&P.Position, 1, 0, 0);
@@ -362,9 +374,9 @@ void move(int dir)
 // ================================================================
 void generatePlayer()
 {
-	Area(P.Position) = 1;
- 	Absis(P.Position) = 1;
-	Ordinat(P.Position) = 1;
+	Area(P.Position) = 3;
+ 	Absis(P.Position) = 4;
+	Ordinat(P.Position) = 5;
 }
 
 void generateAllConstant()
@@ -390,15 +402,23 @@ void generateAllConstant()
 	SetKata(&CONTINUE, "continue");
 	SetKata(&DETAILS, "details");
 
-	SetKata(&W, "w");
-	SetKata(&A, "a");
-	SetKata(&S, "s");
-	SetKata(&D, "d");
+	SetKata(&MoveW, "w");
+	SetKata(&MoveA, "a");
+	SetKata(&MoveS, "s");
+	SetKata(&MoveD, "d");
 
 
 	SetKata(&ACTION_BUILD, "build");
 	SetKata(&ACTION_UPGRADE, "upgrade");
 	SetKata(&ACTION_BUY, "buy");
+}
+
+void generateWahanaTersedia()
+{
+	ListWahanaTersedia[0].Name = SetKalimat("Roller Coster");
+	ListWahanaTersedia[1].Name = SetKalimat("Biang Lala");
+	ListWahanaTersedia[2].Name = SetKalimat("Arum Jerang");
+	NbAvailableWahana = 3;
 }
 
 void generateNewGame()
@@ -705,77 +725,89 @@ void generateLoadGame()
 
 // // PREPARATION PHASE
 // // ================================================================
-// boolean CanBuild(Wahana W)
-// {
-// 	return (P.Mat.Wood >= W.Mat.Wood && P.Mat.Stone >= W.Mat.Stone && P.Mat.Ruby >= W.Mat.Ruby);
-// }
+boolean CanBuild(WAHANA W)
+{
+	return (P.Money >= W.PriceCost && P.Material.wood >= W.MaterialCost.wood && P.Material.stone >= W.MaterialCost.stone && P.Material.iron >= W.MaterialCost.iron);
+}
 
-// void build (StackAction *S, Wahana *W, ListWahana W1)
-// {
-// 	printf("Build\n");
-
-// 	boolean build = true;
-// 	while(build)
-// 	{
-// 		printf("Ingin Membangun apa?\n");
-// 		PrintListWahana();
-// 		Kalimat K = GetKalimat();
-// 		Kalimat K2 = K;
-// 		Kata exitKata;
-// 		DequeueKalimat(&K2, &exitKata);
-		
-// 		if(KataSama(exitKata, EXIT))
-// 		{
-// 			build = false;
-// 			printf("Pembangunan dibatalkan!!\n");
-// 		}
-// 		else
-// 		{
-// 			boolean available = false;
-// 			int i = 0;
-// 			while(i < NbWahana(W1) && !available)
-// 			{
-// 				if (IsEQKalimat(K, W1[i]))
-// 					available = true;
-// 				else
-// 					i++;
-// 			}
-
-// 			if (!available)
-// 			{
-// 				printf("Wahana yang dipilih tidak tersedia!!\n");
-// 			}
-// 			else
-// 			{
-
-// 				if (CanBuild(W1[i]))
-// 				{
-// 					Action A;
-// 					ActionName(A) = K;
-// 					ActioneType(A) = BUILDTYPE;
-// 					ActionTime(A) = BUILDTIME;
-// 					ActionAmount(A) = 1;
-// 					ActionPos(A) = Player.Pos;
-
-// 					Push(S, A);
-
-// 					printf("Perintah Build ");
-// 					PrintKalimat(K);
-// 					printf(" dimasukkan ke dalam Stack\n");
-
-// 					build = false;
-// 				}
-// 				else
-// 				{
-// 					printf("Tidak dapat melakukan pembangunan ");
-// 					PrintKalimat(K);
-// 					printf("\n");
-// 				}
-// 			}
-// 		}
-// 	}
+void PrintListWahanaTersedia()
+{
+	for (int i = 0; i < NbAvailableWahana; i++)
+	{
+		PrintKalimat(ListWahanaTersedia[i].Name);
+		printf("\n");
+	}
 	
-// }
+}
+
+void build ()
+{
+	printf("Build\n");
+
+	boolean build = true;
+	while(build)
+	{
+		printf("Ingin Membangun apa?\n");
+		PrintListWahanaTersedia();
+		Kalimat K = GetKalimat();
+		Kalimat K2 = K;
+		Kata exitKata;
+		DequeueKalimat(&K2, &exitKata);
+		
+		if(KataSama(exitKata, EXIT))
+		{
+			build = false;
+			printf("Pembangunan dibatalkan!!\n");
+		}
+		else
+		{
+			boolean available = false;
+			int i = 0;
+			while(i < NbAvailableWahana && !available)
+			{
+				if (IsEQKalimat(K, ListWahanaTersedia[i].Name))
+					available = true;
+				else
+					i++;
+			}
+
+			if (!available)
+			{
+				printf("Wahana yang dipilih tidak tersedia!!\n");
+			}
+			else
+			{
+
+				if (CanBuild(ListWahanaTersedia[i]))
+				{
+					Action A;
+					ActionName(A) = ListWahanaTersedia[i].Name;
+					SetKata(&ActionType(A), "build");
+					ActionTime(A) = 100;
+					ActionAmount(A) = 1;
+					ActionPosition(A) = P.Position;
+
+					PushAction(&S, A);
+
+					P.Debt += ListWahanaTersedia[i].PriceCost;
+
+					printf("Perintah Build ");
+					PrintKalimat(K);
+					printf(" dimasukkan ke dalam Stack\n");
+
+					build = false;
+				}
+				else
+				{
+					printf("Tidak dapat melakukan pembangunan ");
+					PrintKalimat(K);
+					printf("\n");
+				}
+			}
+		}
+	}
+	
+}
 
 // void upgrade()
 // {
