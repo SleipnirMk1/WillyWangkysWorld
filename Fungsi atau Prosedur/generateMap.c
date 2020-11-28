@@ -17,7 +17,24 @@ void geneateMapMain(Player P, Stack Aksi)
         printf("Preparation phase Day %d\n",Day(P));
     }
     /*generating map */ /* tergantung di area mana */
-    TulisMATRIKS(Map1);
+    /* catatan : mungkin 4 Matriks map ini di buat jadi variabel global ?? */
+    switch (Area(POINT(P)))
+    {
+    case(1):
+        TulisMATRIKS(Map1);
+        break;
+    case(2):
+        TulisMATRIKS(Map2);
+        break;
+    case(3):
+        TulisMATRIKS(Map3);
+        break;
+    case(4):
+        TulisMATRIKS(Map4);
+        break;
+    default:
+        break;
+    }
 
     printf("Legend :\n");
     printf("A = Antrian\n");
