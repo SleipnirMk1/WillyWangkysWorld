@@ -11,48 +11,10 @@
 #include "ADT\custom_adt\wahana.h"
 #include "ADT\queue\queueAntrian.h"
 #include "ADT\jam\jam.h"
+//#include "ADT\custom_adt\listlinierwahana.h"
 
 // #define MAXSTACKACTION 100
 
-// typedef struct
-// {
-// 	int Wood;
-// 	int Stone;
-// 	int Ruby;
-// } Material;
-
-// typedef struct
-// {
-// 	Kalimat Name;
-// 	int Money;
-// 	Material Mat;
-// 	Point Pos;
-// } Player;
-
-// typedef struct
-// {
-// 	Kalimat Name;
-// 	int Cost;
-// 	Material Mat;
-// 	Point Pos;
-// 	boolean BrokenStatus;
-// } Wahana;
-
-
-// typedef struct 
-// {
-// 	Kalimat Name;
-// 	Kata Type;
-// 	int Time;
-// 	int Amount;
-// 	Point Pos;
-// } Action;
-
-// typedef struct
-// {
-// 	Action A[MAXSTACKACTION];
-// 	int TOP;
-// } StackAction;
 
 
 Player P;
@@ -72,6 +34,7 @@ int NbMaterial = 0;
 
 
 POINT officePosition;
+POINT AntrianPosition;
 
 
 boolean MAINPHASE = false;
@@ -105,6 +68,8 @@ void saveGame();
 void conti();
 
 void generateMapMain();
+void PrintMap();
+boolean IsAntrianPosition(POINT P);
 
 void buy();
 void undo();
@@ -188,9 +153,8 @@ int main()
 	{
 		generateMapMain();
 
-
 		printf("\n\n");
-		printf("%d", P.Debt);
+		PrintVertex(P.Position);
 		printf("\n\n");
 
 
@@ -319,9 +283,9 @@ boolean IsWall(float X, float Y, int A)
 boolean IsGerbang(float X, float Y, int A)
 {
 	if (A == 1)
-		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 9));
+		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 19));
 	else if (A == 2)
-		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 9));
+		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 19));
 	else if (A == 3)
 		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 0));
 	else if (A == 4)
@@ -335,6 +299,7 @@ void gerak(int X)
 		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
 		{
 			Geser (&P.Position, 0, -1, 0);
+			
 			if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 			{
 				POINT V;
@@ -402,9 +367,29 @@ void move(int dir)
 // ================================================================
 void PERSIAPANGAME()
 {
-	Area(officePosition) = 1;
-	Absis(officePosition) = 7;
-	Ordinat(officePosition) = 6;
+	officePosition = MakePOINT(12, 3, 1);
+	AntrianPosition = MakePOINT(1, 10, 1);
+
+	POINT GB1_1 = MakePOINT(19,4,1);
+	POINT GB1_2 = MakePOINT(0,4,2);
+	Edge E1 = CreateEdge(GB1_1, GB1_2);
+
+	POINT GB2_1 = MakePOINT(9,19,2);
+	POINT GB2_2 = MakePOINT(9,0,4);
+	Edge E2 = CreateEdge(GB2_1, GB2_2);
+
+	POINT GB3_1 = MakePOINT(0,4,4);
+	POINT GB3_2 = MakePOINT(19,4,3);
+	Edge E3 = CreateEdge(GB3_1, GB3_2);
+
+	POINT GB4_1 = MakePOINT(9,0,3);
+	POINT GB4_2 = MakePOINT(9,19,1);
+	Edge E4 = CreateEdge(GB4_1, GB4_2);
+
+	AddEdge(&G, E1);
+	AddEdge(&G, E2);
+	AddEdge(&G, E3);
+	AddEdge(&G, E4);
 }
 
 
@@ -478,6 +463,8 @@ void generateWahanaTersedia()
 	ListWahanaTersedia[2].PriceCost = 30;
 
 	NbAvailableWahana = 3;
+
+
 }
 
 void generateNewGame()
@@ -1264,6 +1251,7 @@ void prepareToMain()
 	printf ("// Tidak mengeksekusi perintah dari stack //\n");
 
 	MAINPHASE = true;
+	P.Debt = 0;
 
 	RandomAntrian();
 }
@@ -1469,64 +1457,73 @@ void RandomAntrian()
 //     fclose(fp);
 // }
 
-// void geneateMapMain(Player P, Stack Aksi)
+
+
+// ListWahana ReadWahanaInfo()
 // {
-//     JAM buka, tutup;
-//     buka = MakeJAM(9,0,0);
-//     tutup = MakeJam(21,0,0);
-//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-//         printf("Main phase Day %d\n",Day(P));
-//     }
-//     else{
-//         printf("Preparation phase Day %d\n",Day(P));
-//     }
-//     /*generating map */
-//     printMap(P);
+// 	char addressFile[] = "file/wahanainfo.txt";
 
-//     printf("Legend :\n");
-//     printf("A = Antrian\n");
-//     printf("P = Player\n");
-//     printf("W = Wahana\n");
-//     printf("O = Office\n");
-//     printf("<, ^, v, > = Gerbang\n");
-//     printf("\n");
-//     printf("Name : %s \n",Name(P));
-//     printf("Money : %d \n",Money(P));
-//     printf("Current time : ")
-//     TulisJAM(Time(P));
-//     printf('\n');
+//     FILE *fp = fopen(addressFile,"r");
 
-//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-//         printf("Closing time : ");
-//         TulisJAM(tutup);
-//         printf("\n");
-//         printf("Time remaining : ");
-//         cetakDurasi(Durasi(Time(P),tutup));
-//         printf("\n");
-//         /* buat prosedur print antrian */
+//     if (fp == NULL) {
+//         printf("Error, could not load .txt file!\n");
+//         exit(1);
 //     }
-//     else{
-//         printf("Opening time : ");
-//         TulisJAM(buka);
-//         printf("\n");
-//         printf("Time remaining : ");
-//         cetakDurasi(Durasi(Time(P),buka));
-//         printf("\n");
-//         printf("Jumlah aksi yang akan dilakukan : %d\n",(Top(Aksi)+1));
-//         printf("Total waktu yang dibutuhkan : "); TulisJAM(HitungTime(Aksi));
-//         printf("\n");
-//         printf("Total uang yang dibutuhkan : ",HitungMoney(Aksi));
-//     }
+
+//     ListWahana W;
+//     CreateEmptyW(&W);
+//     wahanatype X;
+
+//     char Nama[64];
+//     char Uang[16];
+//     char Wood[16];
+//     char Stone[16];
+//     char Iron[16];
+//     char Kapasitas[16];
+//     char Durasi[32];
+//     char Profit[16];
+//     char Deskripsi[128];
     
-    
-//     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-//         printf("Closing time : ");
-//         TulisJAM(tutup);
-//         printf("\n")
+//     int countLine = 1;
+//     int tipeCount = 1;
+
+//     while(fscanf(fp, "%s %s %s %s %s %s %s %s %s", &Nama, &Uang, &Wood, &Stone, &Iron, &Kapasitas, &Durasi, &Profit, &Deskripsi) != EOF) {
+//         if (countLine >= 2)
+//         {
+//             Nama(X) = SetKalimat(Nama);
+//             Tipe(X) = tipeCount;
+//             Price(X) = atoi(Uang);
+//             Wood(X.MaterialCost) = atoi(Wood);
+//             Stone(X.MaterialCost) = atoi(Stone);
+//             Iron(X.MaterialCost) = atoi(Iron);
+//             Kapasitas(X) = atoi(Kapasitas);
+//             PlayTime(X) = atoi(Durasi);       // Konversi ke detik dulu mungkin, sekarang baru konversi ke integer, value di file detik
+//             Profit(X) = atoi(Profit);
+//             Deskripsi(X) = SetKalimat(Deskripsi);
+//             //X.Position = MakePOINT(-1, -1, 1) // Value Null utk lokasi wahana
+            
+// 			X.Position.A = -1;
+// 			X.Position.X = -1;
+// 			X.Position.Y = -1;
+
+// 			TotalNaik(X) = 0;
+//             TotalProfit(X) = 0;
+//             TodayNaik(X) = 0;
+//             TodayProfit(X) = 0;
+            
+//             InsVLast(&W, X);
+//             ++tipeCount;
+//         }
+//         else
+//         {
+//             ++countLine;
+//         }
 //     }
 
-//     printf("Masukkan perintah : \n");
+//     return W;
+//     fclose(fp);
 // }
+
 
 
 void generateMapMain()
@@ -1543,9 +1540,11 @@ void generateMapMain()
     }
 
     /*generating map */
-    //printMap(P);
+    PrintMap(P);
 
-    printf("Legend :\n");
+    printf("\n\n");
+	
+	printf("Legend :\n");
     printf("A = Antrian\n");
     printf("P = Player\n");
     printf("W = Wahana\n");
@@ -1591,4 +1590,89 @@ void generateMapMain()
     }
 
     printf("Masukkan perintah : ");
+}
+
+
+boolean IsAntrianPosition(POINT P)
+{
+	return EQ(AntrianPosition, P);
+}
+
+
+boolean IsWahanaPosition(POINT P)
+{
+	boolean found = false;
+	int i = 0;
+	while (i < NbWahanaYangDimiliki && !found)
+	{
+		if (EQ(P, ListWahanaYandDimiliki[i].Position))
+			found = true;
+		else
+			i++;
+	}
+		
+	return found;
+}
+
+void PrintMap()
+{
+	int area = Area(P.Position);
+	
+	// Y
+	for (int i = 0; i < 20; i++)
+	{
+		// X
+		for (int j = 0; j < 20; j++)
+		{
+			POINT segment = MakePOINT((float)j, (float)i, area);
+
+			if (EQ(segment, P.Position))
+				printf("P");
+			else if (IsWahanaPosition(segment))
+			{
+				printf("W");
+			}
+			else if (IsOfficePosition(Area(segment), Absis(segment), Ordinat(segment)))
+			{
+				printf("O");
+			}
+			else if (IsAntrianPosition(segment))
+			{
+				printf("A");
+			}
+			else if (IsWall(Absis(segment), Ordinat(segment), Area(segment)))
+			{
+				printf("*");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && i == 0)
+			{
+				printf("^");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && j == 0)
+			{
+				printf("<");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && i == 19)
+			{
+				printf("v");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && j == 19)
+			{
+				printf(">");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && i == 19)
+			{
+				printf("v");
+			}
+			else if (IsGerbang(Absis(segment), Ordinat(segment), Area(segment)) && j == 19)
+			{
+				printf(">");
+			}
+			else
+			{
+				printf("-");
+			}
+		}
+		printf("\n");
+	}	
 }

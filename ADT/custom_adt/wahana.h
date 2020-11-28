@@ -19,7 +19,7 @@ typedef struct {
     POINT Position;
     Kalimat Deskripsi;
     int Capacity;
-    //int Duration;
+    int PlayTime;
     int Profit;
     int UsedAmount;
     int TotalProfit;
@@ -35,7 +35,7 @@ typedef struct {
 #define Lokasi(P) (P).Position
 #define Deskripsi(P) (P).Deskripsi
 #define Kapasitas(P) (P).Capacity
-//#define Durasi(P) (P).Duration
+#define PlayTime(P) (P).PlayTime
 #define Profit(P) (P).Profit
 #define TotalNaik(P) (P).UsedAmount
 #define TotalProfit(P) (P).TotalProfit

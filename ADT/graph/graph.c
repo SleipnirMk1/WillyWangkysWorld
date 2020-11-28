@@ -46,7 +46,7 @@
 
 
 
-boolean IsEmpty(Graph G)
+boolean IsEmptyGraph(Graph G)
 {
 	return NbVertex(G) == 0;
 }
