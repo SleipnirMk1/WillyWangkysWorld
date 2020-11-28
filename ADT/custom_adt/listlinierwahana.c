@@ -9,14 +9,14 @@
 
 /* PROTOTYPE */
 /****************** TEST LIST KOSONG ******************/
-boolean IsEmpty (List L)
+boolean IsEmpty (ListWahana L)
 /* Mengirim true jika list kosong */
 {
     return First(L) == Nil;
 }
 
 /****************** PEMBUATAN LIST KOSONG ******************/
-void CreateEmpty (List *L)
+void CreateEmptyW (ListWahana *L)
 /* I.S. sembarang             */
 /* F.S. Terbentuk list kosong */
 {
@@ -52,7 +52,7 @@ void Dealokasi (address *P)
 }
 
 /****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
-address Search (List L, wahanatype X)
+address Search (ListWahana L, wahanatype X)
 /* Mencari apakah ada elemen list dengan Info(P)= X */
 /* Jika ada, mengirimkan address elemen tersebut. */
 /* Jika tidak ada, mengirimkan Nil */
@@ -77,7 +77,7 @@ address Search (List L, wahanatype X)
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
-void InsVFirst (List *L, wahanatype X)
+void InsVFirst (ListWahana *L, wahanatype X)
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen pertama dengan nilai X jika alokasi berhasil */
@@ -89,7 +89,7 @@ void InsVFirst (List *L, wahanatype X)
     }
 }
 
-void InsVLast (List *L, wahanatype X)
+void InsVLast (ListWahana *L, wahanatype X)
 /* I.S. L mungkin kosong */
 /* F.S. Melakukan alokasi sebuah elemen dan */
 /* menambahkan elemen list di akhir: elemen terakhir yang baru */
@@ -104,7 +104,7 @@ void InsVLast (List *L, wahanatype X)
 }
 
 /*** PENGHAPUSAN ELEMEN ***/
-void DelVFirst (List *L, wahanatype *X)
+void DelVFirst (ListWahana *L, wahanatype *X)
 /* I.S. List L tidak kosong  */
 /* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen pertama di-dealokasi */
@@ -115,7 +115,7 @@ void DelVFirst (List *L, wahanatype *X)
     Dealokasi(&Elmt);
 }
 
-void DelVLast (List *L, wahanatype *X)
+void DelVLast (ListWahana *L, wahanatype *X)
 /* I.S. list tidak kosong */
 /* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
 /*      dan alamat elemen terakhir di-dealokasi */
@@ -128,7 +128,7 @@ void DelVLast (List *L, wahanatype *X)
 
 /****************** PRIMITIF BERDASARKAN ALAMAT ******************/
 /*** PENAMBAHAN ELEMEN BERDASARKAN ALAMAT ***/
-void InsertFirst (List *L, address P)
+void InsertFirst (ListWahana *L, address P)
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. Menambahkan elemen ber-address P sebagai elemen pertama */
 {
@@ -136,7 +136,7 @@ void InsertFirst (List *L, address P)
     First(*L) = P;
 }
 
-void InsertAfter (List *L, address P, address Prec)
+void InsertAfter (ListWahana *L, address P, address Prec)
 /* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
 /*      P sudah dialokasi  */
 /* F.S. Insert P sebagai elemen sesudah elemen beralamat Prec */
@@ -145,7 +145,7 @@ void InsertAfter (List *L, address P, address Prec)
     Next(Prec) = P;
 }
 
-void InsertLast (List *L, address P)
+void InsertLast (ListWahana *L, address P)
 /* I.S. Sembarang, P sudah dialokasi  */
 /* F.S. P ditambahkan sebagai elemen terakhir yang baru */
 {
@@ -163,7 +163,7 @@ void InsertLast (List *L, address P)
 }
 
 /*** PENGHAPUSAN SEBUAH ELEMEN ***/
-void DelFirst (List *L, address *P)
+void DelFirst (ListWahana *L, address *P)
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen pertama list sebelum penghapusan */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
@@ -175,7 +175,7 @@ void DelFirst (List *L, address *P)
     *P = Elmt;
 }
 
-void DelP (List *L, wahanatype X)
+void DelP (ListWahana *L, wahanatype X)
 /* I.S. Sembarang */
 /* F.S. Jika ada elemen list beraddress P, dengan Info(P)=X  */
 /* Maka P dihapus dari list dan di-dealokasi */
@@ -202,7 +202,7 @@ void DelP (List *L, wahanatype X)
     }
 }
 
-void DelLast (List *L, address *P)
+void DelLast (ListWahana *L, address *P)
 /* I.S. List tidak kosong */
 /* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */
 /*      Elemen list berkurang satu (mungkin menjadi kosong) */
@@ -228,7 +228,7 @@ void DelLast (List *L, address *P)
     }
 }
 
-void DelAfter (List *L, address *Pdel, address Prec)
+void DelAfter (ListWahana *L, address *Pdel, address Prec)
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */
 /*      Pdel adalah alamat elemen list yang dihapus  */
@@ -242,7 +242,7 @@ void DelAfter (List *L, address *Pdel, address Prec)
 }
 
 /****************** PROSES SEMUA ELEMEN LIST ******************/
-void PrintInfo (List L)
+void PrintInfo (ListWahana L)
 /* I.S. List mungkin kosong */
 /* F.S. Jika list tidak kosong, iai list dicetak ke kanan: [e1,e2,...,en] */
 /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
@@ -263,7 +263,7 @@ void PrintInfo (List L)
     }
 }
 
-int NbElmt (List L)
+int NbElmt (ListWahana L)
 /* Mengirimkan banyaknya elemen list; mengirimkan 0 jika list kosong */
 {
 
@@ -277,7 +277,7 @@ int NbElmt (List L)
 }
 
 /****************** PROSES TERHADAP LIST ******************/
-void Konkat1 (List *L1, List *L2, List *L3)
+void Konkat1 (ListWahana *L1, ListWahana *L2, ListWahana *L3)
 /* I.S. L1 dan L2 sembarang */
 /* F.S. L1 dan L2 kosong, L3 adalah hasil konkatenasi L1 & L2 */
 /* Konkatenasi dua buah list : L1 dan L2    */
@@ -285,7 +285,7 @@ void Konkat1 (List *L1, List *L2, List *L3)
 /* dan L1 serta L2 menjadi list kosong.*/
 /* Tidak ada alokasi/dealokasi pada prosedur ini */
 {
-    CreateEmpty(L3);
+    CreateEmptyW(L3);
     if (!IsEmpty(*L1)){
         address Elmt;
         Elmt = First(*L1);
@@ -298,6 +298,6 @@ void Konkat1 (List *L1, List *L2, List *L3)
     else{
         First(*L3) = First(*L2);
     }
-    CreateEmpty(L1);
-    CreateEmpty(L2);
+    CreateEmptyW(L1);
+    CreateEmptyW(L2);
 }

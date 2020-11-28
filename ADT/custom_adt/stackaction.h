@@ -9,6 +9,7 @@
 // #include "/jam.h"
 #include "../point/point.h"
 #include "../mesinkata/mesinkata.h"
+#include "player.h"
 
 #define Nil -1
 #define MaxElStack 10
@@ -19,13 +20,14 @@
 #define BUYTYPE 2
 #define UPGRADETYPE 3
 
-/* *** Definisi TYPE PLAYER DATA *** */
+/* *** Definisi TYPE StackAction *** */
 typedef struct {
     Kalimat Name;
     Kata Type;
     int Time;
     int Amount;
     int Price;
+    Material MaterialCost;
     POINT Position;
 } Action;
 typedef int address;   /* indeks tabel */
@@ -52,6 +54,7 @@ typedef struct {
 #define InfoTopAmount(S) (S).T[(S).TOP].Amount
 #define InfoTopPrice(S) (SS).TOP[(S).TOP].Price
 #define InfoTopLokasi(S) (S).T[(S).TOP].Position
+#define InfoTopMaterialCost(S) (S).T[(S).TOP].MaterialCost
 
 #define ActionName(A) (A).Name
 #define ActionType(A) (A).Type
@@ -59,6 +62,7 @@ typedef struct {
 #define ActionAmount(A) (A).Amount
 #define ActionPrice(A) (A).Price
 #define ActionPosition(A) (A).Position
+#define ActionMaterialCost(A) (A).MaterialCost
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */

@@ -30,6 +30,7 @@ typedef struct {
 /* *** Notasi Akses: WAHANA *** */
 #define Nama(P) (P).Name
 #define Tipe(P) (P).Type
+#define Price(P) (P).PriceCost
 #define MaterialCost(P) (P).MaterialCost
 #define Lokasi(P) (P).Position
 #define Deskripsi(P) (P).Deskripsi
