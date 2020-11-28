@@ -60,7 +60,7 @@ StackAction S;
 QueueAntrian A;
 
 WAHANA ListWahanaYandDimiliki[100];
-int NbWahana = 0;
+int NbWahanaYangDimiliki = 0;
 WAHANA ListWahanaTersedia[100];
 int NbAvailableWahana = 0;
 
@@ -68,6 +68,9 @@ int NbAvailableWahana = 0;
 Kata ListNamaMaterial[10];
 int ListHargaMaterial[10];
 int NbMaterial = 0;
+
+
+POINT officePosition;
 
 
 boolean MAINPHASE = false;
@@ -80,7 +83,7 @@ Kata BUILD, UPGRADE, BUY, UNDO, EXECUTE, MAIN;
 Kata SERVE, REPAIR, DETAIL, OFFICE, PREPARE;
 Kata SAVE, CONTINUE;
 Kata MoveW, MoveA, MoveS, MoveD;
-Kata DETAILS;
+Kata DETAILS, REPORT, EXITS;
 
 Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
 
@@ -111,19 +114,23 @@ void serve();
 void repair();
 void detail();
 void office();
+void InOffice();
 void mainToPrepare();
 
 boolean IsWall(float X, float Y, int A);
 boolean IsGerbang(float X, float Y, int A);
+boolean IsOfficePosition(int A, float X, float Y);
 void move(int dir);
 
 void RandomAntrian();
 void PrintListWahanaTersedia();
-
+void PERSIAPANGAME();
 // ==============================================
 
 int main()
 {
+	PERSIAPANGAME();
+
 	CreateEmptyStackAction(&S);
 	MakeEmptyQueueAntrian(&A, 100);
 
@@ -266,11 +273,11 @@ int main()
 				}
 				else if (KataSama(K, OFFICE))
 				{
-					//office();
+					office();
 				}
 				else if (KataSama(K, PREPARE))
 				{
-					//mainToPrepare();
+					mainToPrepare();
 				}
 				else
 				{
@@ -389,15 +396,25 @@ void move(int dir)
 }
 
 // ================================================================
+void PERSIAPANGAME()
+{
+	Area(officePosition) = 1;
+	Absis(officePosition) = 7;
+	Ordinat(officePosition) = 6;
+}
+
+
 void generatePlayer()
 {
-	Area(P.Position) = 3;
- 	Absis(P.Position) = 4;
-	Ordinat(P.Position) = 5;
+	Area(P.Position) = 1;
+ 	Absis(P.Position) = 6;
+	Ordinat(P.Position) = 6;
 
 	P.Money = 99999;
 	P.Debt = 0;
 }
+
+
 
 void generateAllConstant()
 {
@@ -420,7 +437,10 @@ void generateAllConstant()
 
 	SetKata(&SAVE, "save");
 	SetKata(&CONTINUE, "continue");
-	SetKata(&DETAILS, "details");
+
+	SetKata(&DETAILS, "Details");
+	SetKata(&REPORT, "Report");
+	SetKata(&EXITS, "Exit");
 
 	SetKata(&MoveW, "w");
 	SetKata(&MoveA, "a");
@@ -438,7 +458,7 @@ void generateWahanaYangDimiliki()
 	ListWahanaYandDimiliki[0].Name = SetKalimat("Roller Coster");
 	ListWahanaYandDimiliki[1].Name = SetKalimat("Biang Lala");
 	ListWahanaYandDimiliki[2].Name = SetKalimat("Uwu Coster");
-	NbWahana = 3;
+	NbWahanaYangDimiliki = 3;
 }
 
 void generateWahanaTersedia()
@@ -1008,7 +1028,7 @@ void prepareToMain()
 
 // // MAIN PHASE
 // // ================================================================
-// void Serve(Player *Player, Queue *Q, Kalimat Namawahana)
+// void Serve(Kalimat Namawahana)
 // {
 //     printf("//\tServing Costumer\t//\n");
 //     infotype del;
@@ -1038,15 +1058,75 @@ void prepareToMain()
 // 	printf("Detail\n");
 // }
 
-// void office()
-// {
-// 	printf("Office\n");
-// }
+boolean IsOfficePosition(int A, float X, float Y)
+{
+	return Area(officePosition) == A && Absis(officePosition) == X && Ordinat(officePosition) == Y;
+}
 
-// void mainToPrepare()
-// {
-// 	MAINPHASE = false;
-// }
+void office()
+{
+	printf("Office\n");
+	POINT tmp = P.Position;
+	if (
+		IsOfficePosition(Area(tmp), Absis(tmp), Ordinat(tmp)-1) || 
+		IsOfficePosition(Area(tmp), Absis(tmp), Ordinat(tmp)+1) ||
+		IsOfficePosition(Area(tmp), Absis(tmp)-1, Ordinat(tmp)) ||
+		IsOfficePosition(Area(tmp), Absis(tmp)+1, Ordinat(tmp))
+		)
+	{
+		OFFICE_MODE = true;
+		InOffice();
+	}
+	else
+	{
+		printf("Tidak Berada di sekitar Office!!\n");
+	}
+}
+
+void InOffice()
+{
+	while(OFFICE_MODE)
+	{
+		printf("Masukkan perintah (Details/ Report / Exit) : ");
+		Kalimat input = GetKalimat();
+
+		Kata K;
+		DequeueKalimat(&input, &K);
+
+		if (KataSama(K, EXITS))
+		{	
+			printf("Exit dari Office");
+			OFFICE_MODE= false;
+		}
+		else if (KataSama(K, DETAILS))
+		{
+			printf("Details dari Office\n");
+		}
+		else if (KataSama(K, REPORT))
+		{
+			printf("Report dari office\n");
+		}
+		else
+		{
+			printf("Perintah tidak ada!!\n");
+		}
+	}
+}
+
+
+void mainToPrepare()
+{
+	MAINPHASE = false;
+	CreateEmptyStackAction(&S);
+	
+	while(!IsEmptyQueueAntrian(A))
+	{
+		Antrian X;
+		DequeueAntrian(&A, &X);
+	}
+
+	printf("Preparation Phase!!\n");	
+}
 
 
 
@@ -1070,7 +1150,7 @@ void EXITGAME(int x)
 
 void RandomAntrian()
 {
-	int minimum_number = 0, max_number = NbWahana-1;
+	int minimum_number = 0, max_number = NbWahanaYangDimiliki-1;
 	srand(time(0));
 
 	for (int i = 0; i < 5; ++i)
