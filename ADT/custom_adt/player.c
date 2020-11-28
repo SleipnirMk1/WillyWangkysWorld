@@ -26,5 +26,5 @@ void createEmptyMaterial(Material *Mat)
     Wood(*Mat) = 0;
     Stone(*Mat) = 0;
     Iron(*Mat) = 0;
-    Mamank(*Mat) = 0;
+    // Mamank(*Mat) = 0;
 }

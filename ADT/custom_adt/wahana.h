@@ -25,6 +25,7 @@ typedef struct {
     int TotalProfit;
     int UsedToday;
     int ProfitToday;
+    boolean Status;
 } WAHANA;
 
 /* *** Notasi Akses: WAHANA *** */
@@ -41,5 +42,6 @@ typedef struct {
 #define TotalProfit(P) (P).TotalProfit
 #define TodayNaik(P) (P).UsedToday
 #define TodayProfit(P) (P).ProfitToday
+#define Status(P) (P).Status
 
 #endif

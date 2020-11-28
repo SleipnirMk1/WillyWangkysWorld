@@ -237,7 +237,7 @@ int main()
 				}
 				else if (KataSama(K, DETAIL))
 				{
-					//detail();
+					detail();
 				}
 				else if (KataSama(K, OFFICE))
 				{
@@ -449,6 +449,11 @@ void generateWahanaYangDimiliki()
 	ListWahanaYandDimiliki[0].Name = SetKalimat("Roller Coster");
 	ListWahanaYandDimiliki[1].Name = SetKalimat("Biang Lala");
 	ListWahanaYandDimiliki[2].Name = SetKalimat("Uwu Coster");
+
+	ListWahanaYandDimiliki[0].Position = MakePOINT(5, 6, 1);
+	ListWahanaYandDimiliki[1].Position = MakePOINT(2, 15, 2);
+	ListWahanaYandDimiliki[2].Position = MakePOINT(9, 10, 1);
+
 	NbWahanaYangDimiliki = 3;
 }
 
@@ -901,19 +906,53 @@ void build ()
 // 	return Lout;
 // }
 
-// void Upgrade (StackAction *S, WAHANA *W, Player player)
-// {
-// 	ListWahana L;
-// 	CreateEmptyW(&L);
-	
-// 	L = ReadWahanaInfo("wahanainfo.txt");
 
-// 	Tree W1, W2, W3;
-// 	ReadWahana("wahana.txt", &W1, &W2, &W3);
+int IdxWahanaSekitar(POINT P)
+{
+	boolean found = false;
+	int i = 0;
+	while (i < NbWahanaYangDimiliki && !found)
+	{
+		POINT P1 = MakePOINT(Absis(P), Ordinat(P)-1, Area(P));
+		POINT P2 = MakePOINT(Absis(P)+1, Ordinat(P), Area(P));
+		POINT P3 = MakePOINT(Absis(P), Ordinat(P)+1, Area(P));
+		POINT P4 = MakePOINT(Absis(P)-1, Ordinat(P), Area(P));
+
+		POINT PW = ListWahanaYandDimiliki[i].Position;
+
+		if (EQ(PW, P1))
+			found = true;
+		else if (EQ(PW, P2))
+			found = true;
+		else if (EQ(PW, P3))
+			found = true;
+		else if (EQ(PW, P4))
+			found = true;
+		else
+			i++;
+	}
+
+	if (!found)
+		return -1;
+	else
+		return i;
+}
+
+
+// void Upgrade ()
+// {
+// 	int IsAdaWahanaSekitar = IdxWahanaSekitar(P.Position);
+
+// 	if (IsAdaWahanaSekitar == -1)
+// 	{
+// 		printf("Tidak ada wahana yang tersedia!!\n");
+// 		return;
+// 	}
+
 
 // 	boolean upgrade = true;
 
-// 	while(upgrade)
+// 	while(upgrade && !IsAdaWahanaSekitar != -1)
 // 	{
 // 		ListWahana arr = GetNearbyWahana(Position(player));	// Masukkan data posisi pemain
 
@@ -1284,10 +1323,27 @@ void prepareToMain()
 // 	printf("Repair\n");
 // }
 
-// void detail()
-// {
-// 	printf("Detail\n");
-// }
+void detail()
+{
+	int idx = IdxWahanaSekitar(P.Position);
+
+	if (idx == -1)
+	{
+		printf("Tidak Ada Wahana di sekitar player!!\n");
+		return;
+	}
+
+    printf("Nama Wahana: ");
+	PrintKalimat(ListWahanaYandDimiliki[idx].Name);
+	printf("\n");
+    printf("Lokasi Wahana: ");
+	PrintVertex(ListWahanaYandDimiliki[idx].Position);
+	printf("\n");
+    if(Status(ListWahanaYandDimiliki[idx]))
+		printf("Status : Berfungsi\n");
+	else
+		printf("Status : Rusak\n");
+}
 
 boolean IsOfficePosition(int A, float X, float Y)
 {
@@ -1542,7 +1598,7 @@ void generateMapMain()
     /*generating map */
     PrintMap(P);
 
-    printf("\n\n");
+    printf("\n");
 	
 	printf("Legend :\n");
     printf("A = Antrian\n");
