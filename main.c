@@ -1224,17 +1224,35 @@ int IdxWahanaSekitar(POINT P)
 
 void generateListMaterial()
 {
-	printf("Dari .txt harusnya\n\n");
+	FILE *material;
+	material = fopen(".\\file\\material.txt");
 
-	SetKata(&ListNamaMaterial[0], "wood");
-	SetKata(&ListNamaMaterial[1], "stone");
-	SetKata(&ListNamaMaterial[2], "iron");
+	while(fgetc(material) != '\n') //skip first line	baris pertama isinya "Material Harga"
+        ;
 
-	ListHargaMaterial[0] = 50;
-	ListHargaMaterial[1] = 23;
-	ListHargaMaterial[2] = 100;
+	char mat[10];
+	int harga;
+	int i =0;
+	Kata mater;
+	while(feof(material) == 0){
+		fscanf(material,"%s %d",&mat,&harga);
+		SetKata(&mater,mat);
+		ListNamaMaterial[i] = mater;
+		ListHargaMaterial[i] = harga;
+		i++;
+	}
 
-	NbMaterial = 3;
+	// printf("Dari .txt harusnya\n\n");
+
+	// SetKata(&ListNamaMaterial[0], "wood");
+	// SetKata(&ListNamaMaterial[1], "stone");
+	// SetKata(&ListNamaMaterial[2], "iron");
+
+	// ListHargaMaterial[0] = 50;
+	// ListHargaMaterial[1] = 23;
+	// ListHargaMaterial[2] = 100;
+
+	// NbMaterial = 3;
 }
 
 void PrintListMaterial()

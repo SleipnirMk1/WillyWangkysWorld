@@ -36,7 +36,7 @@ void Map1(MATRIKS *Map1)
 
 
 /* Prosedur mengisi matriks Map2 dengan map2.txt */
-void Map1(MATRIKS *Map2)
+void Map2(MATRIKS *Map2)
 {
     FILE *maptxt;
     maptxt = fopen("map2.txt","r");
@@ -67,7 +67,7 @@ void Map1(MATRIKS *Map2)
 
 
 /* Prosedur mengisi matriks Map3 dengan map3.txt */
-void Map1(MATRIKS *Map3)
+void Map3(MATRIKS *Map3)
 {
     FILE *maptxt;
     maptxt = fopen("map3.txt","r");
@@ -98,7 +98,7 @@ void Map1(MATRIKS *Map3)
 
 
 /* Prosedur mengisi matriks Map4 dengan map4.txt */
-void Map1(MATRIKS *Map4)
+void Map4(MATRIKS *Map4)
 {
     FILE *maptxt;
     maptxt = fopen("map4.txt","r");
