@@ -183,6 +183,6 @@ void CetakDurasi(long Durasi)
 	x = x/3600;
 	y = x % 3600;
 	y = y / 60;
-	printf (x, ' hour(s) ', y, 'minute(s)');
+	//printf (x, ' hour(s) ', y, 'minute(s)');
 }
 #endif

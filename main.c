@@ -82,25 +82,28 @@ Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
 // ============================================
 void generateAllConstant();
 void generatePlayer();
-// void generateLoadGame();
-// void generateNewGame();
-// void saveGame();
-// void conti();
+void EXITGAME(int x);
+void generateLoadGame();
+void generateNewGame();
+void saveGame();
+void conti();
 
-// void buy();
-// void undo();
-// void build();
-// void execute();
-// void upgrade();
-// void prepareToMain();
+void buy();
+void undo();
+void build();
+void execute();
+void upgrade();
+void prepareToMain();
 
-// void serve();
-// void repair();
-// void detail();
-// void office();
-// void mainToPrepare();
+void serve();
+void repair();
+void detail();
+void office();
+void mainToPrepare();
 
-// void move(int dir);
+boolean IsWall(float X, float Y, int A);
+boolean IsGerbang(float X, float Y, int A);
+void move(int dir);
 
 // ==============================================
 
@@ -132,13 +135,13 @@ int main()
 		}
 		else if (KataSama(K, NEW))
 		{
-			generateNewGame();
+			//generateNewGame();
 			RUN_NEWGAME = false;
 			runned = true;
 		}
 		else if (KataSama(K, LOAD))
 		{
-			generateLoadGame();
+			//generateLoadGame();
 			RUN_NEWGAME = false;
 			runned = true;
 		}
@@ -181,11 +184,11 @@ int main()
 		}
 		else if (KataSama(K, SAVE))
 		{
-			saveGame();
+			//saveGame();
 		}
 		else if (KataSama(K, CONTINUE))
 		{
-			conti();
+			//conti();
 		}
 		else
 		{
@@ -194,27 +197,27 @@ int main()
 			{
 				if (KataSama(K, BUILD))
 				{
-					build();
+					//build();
 				}
 				else if (KataSama(K, UPGRADE))
 				{
-					upgrade();
+					//upgrade();
 				}
 				else if (KataSama(K, BUY))
 				{
-					buy();
+					//buy();
 				}
 				else if (KataSama(K, UNDO))
 				{
-					undo();
+					//undo();
 				}
 				else if (KataSama(K, EXECUTE))
 				{
-					execute();
+					//execute();
 				}
 				else if (KataSama(K, MAIN))
 				{
-					prepareToMain();
+					//prepareToMain();
 				}
 				else
 				{
@@ -226,23 +229,23 @@ int main()
 			{
 				if (KataSama(K, SERVE))
 				{
-					serve();
+					//serve();
 				}
 				else if (KataSama(K, REPAIR))
 				{
-					repair();
+					//repair();
 				}
 				else if (KataSama(K, DETAIL))
 				{
-					detail();
+					//detail();
 				}
 				else if (KataSama(K, OFFICE))
 				{
-					office();
+					//office();
 				}
 				else if (KataSama(K, PREPARE))
 				{
-					mainToPrepare();
+					//mainToPrepare();
 				}
 				else
 				{
@@ -262,8 +265,8 @@ int main()
 		printf("Masukkan 'y' jika ingin melakukan SAVE GAME : ");
 		char yy;
 		scanf("%c", &yy);
-		if (yy == 'y')
-			saveGame();
+		if (yy == 'y');
+			//saveGame();
 	}
 
 	printf("Thanks for playing... :D");
@@ -884,20 +887,20 @@ void generateLoadGame()
 
 
 
-// void EXITGAME(int x)
-// {
-// 	if (x == 0)
-// 	{
-// 		// Exit Office
-// 		OFFICE_MODE = false;
-// 	}
-// 	else if(x == 1)
-// 	{
-// 		RUN = false;
-// 		RUN_NEWGAME = false;
-// 		OFFICE_MODE = false;
-// 	}
-// }
+void EXITGAME(int x)
+{
+	if (x == 0)
+	{
+		// Exit Office
+		OFFICE_MODE = false;
+	}
+	else if(x == 1)
+	{
+		RUN = false;
+		RUN_NEWGAME = false;
+		OFFICE_MODE = false;
+	}
+}
 
 
 

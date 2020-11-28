@@ -2,7 +2,7 @@
 #define __GRAPH_H__
 
 #include "boolean.h"
-#include "..\point\point.h"
+#include "../point/point.h"
 
 #define Nil -1
 

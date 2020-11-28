@@ -1,29 +1,30 @@
-OBJS	= main.o player.o graph.o mesinkata.o mesinkar.o
-SOURCE	= main.c player.c graph.c mesinkata.c mesinkar.c
-HEADER	= 
-OUT	= output.out
-CC	 = gcc
-FLAGS	 = -g -c -Wall
-LFLAGS	 = -lm
+CC = gcc
+CFLAGS = -c -Wall
+PROFILE_FLAGS = -fprofile-arcs -ftest-coverage
+TST_LIBS = -lcheck -lm -lpthread -lrt
+COV_LIBS = -lgcov -coverage
+SRC_DIR= ADT
+SRC_FILES = $(addprefix $(SRC_DIR)/, *.c) 
 
-all: $(OBJS)
-	gcc main.o player.o graph.o mesinkata.o mesinkar.o -o a
+all: coverage
+
+graph.o:$(addprefix $(SRC_DIR)/graph/, graph.h)
+	$(CC) $(CFLAGS) $(SRC_DIR)/graph/graph.c
+
+mesinkata.o:  $(SRC_FILES) $(addprefix $(SRC_DIR)/mesinkata/, mesinkata.h)
+	$(CC) $(CFLAGS) $(PROFILE_FLAGS) $(SRC_DIR)/mesinkata/mesinkata.c
+
+mesinkar.o:  $(SRC_FILES) $(addprefix $(SRC_DIR)/mesinkar/, mesinkar.h)
+	$(CC) $(CFLAGS) $(PROFILE_FLAGS) $(SRC_DIR)/mesinkata/mesinkar.c
 
 main.o: main.c
-	gcc -c main.c 
+	$(CC) $(CFLAGS) $(PROFILE_FLAGS) main.c
 
-player.o: player.c
-	gcc -c player.c 
+aa: graph.o main.o mesinkata.o mesinkar.o
+	$(CC) graph.o main.o mesinkata.o mesinkar.o $(TST_LIBS) $(COV_LIBS) -o aa
 
-graph.o: graph.c
-	gcc -c ADT\graph\graph.c 
 
-mesinkata.o: mesinkata.c
-	gcc -c ADT\mesinkata\mesinkata.c 
-
-mesinkar.o: mesinkar.c
-	gcc -c ADT\mesinkata\mesinkar.c 
-
+coverage: aa
 
 clean:
-	rm -f *.o output
+	-rm *.o

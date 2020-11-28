@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "boolean.h"
 #include "graph.h"
+#include "../point/point.h"
 
 // #define Nil -1
 
@@ -187,7 +188,8 @@ void GetVEdge(Graph G, Vertex V1, Vertex *V2)
 
 void PrintVertex(Vertex V)
 {
-	printf("<%.2f,%.2f,%.2f>", Area(V), Absis(V), Ordinat(V));
+	// printf("<%f,%f,%f>", Area(V), Absis(V), Ordinat(V));
+	printf("Vertex");
 }
 
 void PrintEdge(Edge E)

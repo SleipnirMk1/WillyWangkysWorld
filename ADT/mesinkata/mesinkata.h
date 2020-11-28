@@ -7,7 +7,6 @@
 #include "boolean.h"
 #include "mesinkar.h"
 
-
 #define MAXSTACK 15
 #define IdxMin(S) (S).IdxMin
 #define IdxMax(S) (S).IdxMax 
