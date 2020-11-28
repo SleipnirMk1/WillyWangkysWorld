@@ -24,6 +24,14 @@ void Detail(WAHANA Wahana)
 {
     printf("Nama Wahana: %s\n", NamaW(Wahana));
     printf("Tipe Wahana: %s\n", Tipe(Wahana));
+    if (Condition(Wahana))
+    {
+        printf("Kondisi Wahana: Tidak rusak", );
+    }
+    else
+    {
+        printf("Kondisi Wahana: Rusak", );   
+    }
     printf("Biaya Uang: %s\n", Biaya(Wahana));
     printf("Keperluan Kayu: %s\n", Wood(Wahana));
     printf("Keperluan Batuan: %s\n", Stone(Wahana));
@@ -37,6 +45,11 @@ void Detail(WAHANA Wahana)
     printf("Total keuntungan: %s\n", TotalProfit(Wahana));
     printf("Penggunaan hari ini: %s\n", TodayNaik(Wahana));
     printf("keuntungan hari ini: %s\n", TodayProfit(Wahana));
+}
+
+void Report(WAHANA Wahana)
+{
+    
 }
 
 

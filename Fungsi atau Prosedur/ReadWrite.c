@@ -1,16 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tree.h"
-#include "wahana.h"
-#include "arraywahana.h"
-#include "point.h"
-#include "mesinkata.h"
-
-#include "tree.c"
-#include "wahana.h"
-#include "arraywahana.c"
-#include "point.c"
-#include "mesinkata.c"
+#include "ADT\tree\tree.h"
+#include "ADT\custom_adt\wahana.h"
+#include "ADT\custom_adt\arraywahana.h"
+#include "ADT\point\point.h"
+#include "ADT\mesinkata\mesinkata.h"
 
 
 void ReadMaterial(char addressFile[], int *wood, int *stone, int *iron, int *mamank) {

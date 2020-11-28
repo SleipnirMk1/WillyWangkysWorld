@@ -69,12 +69,20 @@ void conti();
 
 void generateMapMain();
 void PrintMap();
+void PrintBrokenWahana();
+boolean IsAdaBroken();
+
 boolean IsAntrianPosition(POINT P);
 
 void buy();
 void undo();
 void build();
 void execute();
+void executeBuild(Action A);
+void executeUpgrade(Action A);
+void executeBuy(Action A);
+
+
 void upgrade();
 void prepareToMain();
 
@@ -938,6 +946,32 @@ int IdxWahanaSekitar(POINT P)
 		return i;
 }
 
+// int IdxWahanaSamping(POINT P, POINT PLEFT, POINT PRIGHT)
+// {
+// 	boolean found = false;
+// 	int i = 0;
+// 	while (i < NbWahanaYangDimiliki && !found)
+// 	{
+// 		POINT P2 = MakePOINT(Absis(P)+1, Ordinat(P), Area(P));
+// 		POINT P3 = MakePOINT(Absis(P), Ordinat(P)+1, Area(P));
+
+// 		POINT PW = ListWahanaYandDimiliki[i].Position;
+
+// 		if (EQ(PW, P2))
+// 			found = true;
+// 		else if (EQ(PW, P3))
+// 			found = true;
+// 		else if (EQ(PW, P4))
+// 			found = true;
+// 		else
+// 			i++;
+// 	}
+
+// 	if (!found)
+// 		return -1;
+// 	else
+// 		return i;
+// }
 
 // void Upgrade ()
 // {
@@ -1242,43 +1276,94 @@ void undo ()
 	printf(" dari Stack!!\n");
 }
 
-// void execute(StackAction *S)
-// {
-// 	printf("Execute\n");
+void execute()
+{
+	printf("Execute\n");
 	
-// 	 /* Kamus lokal */
-//     Stack StackExecute;
-//     Action A;
+	 /* Kamus lokal */
+    StackAction StackExecute;
+    Action A;
 
-//     /*Algoritma*/
-//     if (!IsEmpty(*S))
-//     {
-//         while (!IsEmpty(*S))
-//         {
-//             Pop(S, &A);
-//             Push(&StackExecute, A);
-//         }
-//         while (!IsEmpty(StackExecute))
-//         {
-//             Pop(&StackExecute, &A);
-//             if (KataSama(ACTION_BUILD, TYPE(A)))
-//             {
-//                 executeBuild(A);
-//             }
-//             else if (KataSama(ACTION_UPGRADE, TYPE(A)))
-//             {
-//                 executeUpgrade(A);
-//             }
-//             else
-//             {
-//                 executeBuy(A);
-//             }
+    /*Algoritma*/
+    if (!IsEmptyStackAction(S))
+    {
+        while (!IsEmptyStackAction(S))
+        {
+            PopAction(&S, &A);
+            PushAction(&StackExecute, A);
+        }
+
+        while (!IsEmptyStackAction(StackExecute))
+        {
+            PopAction(&StackExecute, &A);
+            if (KataSama(ACTION_BUILD, ActionType(A)))
+            {
+                executeBuild(A);
+            }
+            else if (KataSama(ACTION_UPGRADE, ActionType(A)))
+            {
+                executeUpgrade(A);
+            }
+            else
+            {
+                executeBuy(A);
+            }
             
-//         }
+        }
 
-//     }
-//     maen();
-// }
+    }
+    prepareToMain();
+}
+
+
+
+void executeBuild(Action A)
+{
+
+	
+	boolean found = false;
+	int i = 0;
+	while(i < NbAvailableWahana && !found)
+	{
+		if (IsEQKalimat(ListWahanaTersedia[i].Name, ActionName(A)))
+			found = true;
+		else
+			i++;
+	}
+
+	int n = NbWahanaYangDimiliki;
+	ListWahanaYandDimiliki[n] = ListWahanaTersedia[i];
+
+	ListWahanaYandDimiliki[n].Condition = true;
+	ListWahanaYandDimiliki[n].Position = ActionPosition(A);
+
+	P.CurrentTime = DetikToJAM(JAMToDetik(P.CurrentTime) + ActionTime(A) * 60);
+	P.Material.wood -= ActionMaterialCost(A).wood;
+	P.Material.iron -= ActionMaterialCost(A).iron;
+	P.Material.stone -= ActionMaterialCost(A).stone;
+
+	if (!IsWall(P.Position.X-1, P.Position.Y, P.Position.A))
+		move(1);
+	else if (!IsWall(P.Position.X, P.Position.Y-1, P.Position.A))
+		move(0);
+	else if (!IsWall(P.Position.X+1, P.Position.Y, P.Position.A))
+		move(3);
+	else
+		move(2);
+	
+	P.Money -= ActionPrice(A);
+	P.Debt -= ActionPrice(A);
+}
+
+void executeUpgrade(Action A)
+{
+
+}
+
+void executeBuy(Action A)
+{
+	
+}
 
 void prepareToMain()
 {
@@ -1339,7 +1424,7 @@ void detail()
     printf("Lokasi Wahana: ");
 	PrintVertex(ListWahanaYandDimiliki[idx].Position);
 	printf("\n");
-    if(Status(ListWahanaYandDimiliki[idx]))
+    if(Condition(ListWahanaYandDimiliki[idx]))
 		printf("Status : Berfungsi\n");
 	else
 		printf("Status : Rusak\n");
@@ -1580,8 +1665,6 @@ void RandomAntrian()
 //     fclose(fp);
 // }
 
-
-
 void generateMapMain()
 {
     JAM buka, tutup;
@@ -1645,7 +1728,44 @@ void generateMapMain()
         printf("\n");
     }
 
+
+	if (IsAdaBroken())
+	{
+		PrintBrokenWahana();
+	}
+
+
     printf("Masukkan perintah : ");
+}
+
+
+boolean IsAdaBroken()
+{
+	boolean found = false;
+	int i = 0;
+	while (i < NbWahanaYangDimiliki && !found)
+	{
+		if (!Condition(ListWahanaYandDimiliki[i]))
+			found = true;
+		else
+			i++;
+	}
+
+	return found;
+}
+
+void PrintBrokenWahana()
+{
+	printf("Broken : ");
+	for (int i = 0; i < NbWahanaYangDimiliki; i++)
+	{
+		if (!Condition(ListWahanaYandDimiliki[i]))
+			PrintKalimat(ListWahanaYandDimiliki[i].Name);
+
+		printf(" | ");
+	}
+
+	printf("\n");
 }
 
 

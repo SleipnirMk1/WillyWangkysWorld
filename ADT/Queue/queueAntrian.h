@@ -16,6 +16,7 @@
 #include "..\mesinkata\mesinkata.h"
 
 #define Nil -1
+#define MAXINFO 10
 /* Konstanta untuk mendefinisikan address tak terdefinisi */
 
 /* Definisi elemen dan address */
@@ -38,8 +39,8 @@ typedef struct {
 
 /* ********* AKSES (Selektor) ********* */
 /* Jika e adalah infotype dan Q adalah PrioQueueChar, maka akses elemen : */
-#define PrioAntrian(e)     (e).prio
-#define InfoAntrian(e)     (e).info
+#define PrioAntrian(e) (e).prio
+#define InfoAntrian(e) (e).info
 #define Head(Q)     (Q).HEAD
 #define Tail(Q)     (Q).TAIL
 #define InfoHead(Q) (Q).T[(Q).HEAD]
