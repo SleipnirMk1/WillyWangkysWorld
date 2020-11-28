@@ -15,11 +15,17 @@
 
 // #define MAXSTACKACTION 100
 
+#define MAX_SIZE_MAP 20
+
+
+
 // Dalam Satuan menit
 int TIME_BUILD = 120;
 int TIME_BUY = 40;
 int TIME_UPGRADE = 120;
 int TIME_MOVE = 1;
+
+int REPAIR_COST = 40;
 
 
 Player P;
@@ -249,7 +255,7 @@ int main()
 				}
 				else if (KataSama(K, REPAIR))
 				{
-					//repair();
+					repair();
 				}
 				else if (KataSama(K, DETAIL))
 				{
@@ -318,7 +324,9 @@ void gerak(int X)
 			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position));
 			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				Geser (&P.Position, 0, -1, 0);
+
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y-1 < 0))
+					Geser (&P.Position, 0, -1, 0);
 				
 				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 				{
@@ -338,7 +346,9 @@ void gerak(int X)
 			segment = MakePOINT(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position));
 			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				Geser (&P.Position, -1, 0, 0);
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X-1 < 0))
+					Geser (&P.Position, -1, 0, 0);
+				
 				if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
 				{
 					POINT V;
@@ -357,7 +367,8 @@ void gerak(int X)
 			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position));
 			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				Geser (&P.Position, 0, 1, 0);
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y+1 > 19))
+					Geser (&P.Position, 0, 1, 0);
 				
 				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 				{
@@ -377,7 +388,9 @@ void gerak(int X)
 			segment = MakePOINT(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position));
 			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
 			{
-				Geser (&P.Position, 1, 0, 0);
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X+1 > 19))
+					Geser (&P.Position, 1, 0, 0);
+					
 				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 				{
 					POINT V;
@@ -1002,33 +1015,6 @@ int IdxWahanaSekitar(POINT P)
 		return i;
 }
 
-// int IdxWahanaSamping(POINT P, POINT PLEFT, POINT PRIGHT)
-// {
-// 	boolean found = false;
-// 	int i = 0;
-// 	while (i < NbWahanaYangDimiliki && !found)
-// 	{
-// 		POINT P2 = MakePOINT(Absis(P)+1, Ordinat(P), Area(P));
-// 		POINT P3 = MakePOINT(Absis(P), Ordinat(P)+1, Area(P));
-
-// 		POINT PW = ListWahanaYandDimiliki[i].Position;
-
-// 		if (EQ(PW, P2))
-// 			found = true;
-// 		else if (EQ(PW, P3))
-// 			found = true;
-// 		else if (EQ(PW, P4))
-// 			found = true;
-// 		else
-// 			i++;
-// 	}
-
-// 	if (!found)
-// 		return -1;
-// 	else
-// 		return i;
-// }
-
 // void Upgrade ()
 // {
 // 	int IsAdaWahanaSekitar = IdxWahanaSekitar(P.Position);
@@ -1546,10 +1532,59 @@ void prepareToMain()
 // 	RandomBroken(i);
 // }
 
-// void repair()
-// {
-// 	printf("Repair\n");
-// }
+
+int IdxBrokenWahanSekitar(POINT P)
+{
+	boolean found = false;
+	int i = 0;
+	while (i < NbWahanaYangDimiliki && !found)
+	{
+		POINT P2 = MakePOINT(Absis(P)+1, Ordinat(P), Area(P));
+		POINT P4 = MakePOINT(Absis(P)-1, Ordinat(P), Area(P));
+
+		POINT PW = ListWahanaYandDimiliki[i].Position;
+
+		if (EQ(PW, P2) && !Condition(ListWahanaYandDimiliki[i]))
+			found = true;
+		else if (EQ(PW, P4) && !Condition(ListWahanaYandDimiliki[i]))
+			found = true;
+		else
+			i++;
+	}
+
+	if (!found)
+		return -1;
+	else
+		return i;
+}
+
+
+void repair()
+{
+	printf("Repair\n");
+
+	int idx = IdxBrokenWahanSekitar(P.Position);
+
+	if (idx != -1)
+    {
+		if (P.Money - REPAIR_COST < 0)
+		{
+			printf("Uang anda tidak cukup untuk melakukan repair!!\n");
+			return;
+		}
+        printf("Memperbaiki ");
+		PrintKalimat(ListWahanaYandDimiliki[idx].Name);
+		printf("\n");
+            
+        Condition(ListWahanaYandDimiliki[idx]) = true;
+		Money(P) -= REPAIR_COST;
+        
+    }
+    else
+    {
+        printf("Tidak ada wahana yang rusak disekitar anda!!\n");
+    }
+}
 
 void detail()
 {
@@ -1979,9 +2014,10 @@ void PrintBrokenWahana()
 	for (int i = 0; i < NbWahanaYangDimiliki; i++)
 	{
 		if (!Condition(ListWahanaYandDimiliki[i]))
+		{
 			PrintKalimat(ListWahanaYandDimiliki[i].Name);
-
-		printf(" | ");
+			printf(" | ");
+		}
 	}
 
 	printf("\n");
@@ -2014,10 +2050,10 @@ void PrintMap()
 	int area = Area(P.Position);
 	
 	// Y
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < MAX_SIZE_MAP; i++)
 	{
 		// X
-		for (int j = 0; j < 20; j++)
+		for (int j = 0; j < MAX_SIZE_MAP; j++)
 		{
 			POINT segment = MakePOINT((float)j, (float)i, area);
 
