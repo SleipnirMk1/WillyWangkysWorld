@@ -1225,7 +1225,7 @@ int IdxWahanaSekitar(POINT P)
 void generateListMaterial()
 {
 	FILE *material;
-	material = fopen(".\\file\\material.txt");
+	material = fopen("file/material.txt", "r");
 
 	while(fgetc(material) != '\n') //skip first line	baris pertama isinya "Material Harga"
         ;
@@ -1241,6 +1241,8 @@ void generateListMaterial()
 		ListHargaMaterial[i] = harga;
 		i++;
 	}
+
+	NbMaterial = i;
 
 	// printf("Dari .txt harusnya\n\n");
 
