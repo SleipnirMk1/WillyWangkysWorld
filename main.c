@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "boolean.h"
 #include "ADT\mesinkata\mesinkata.h"
 #include "ADT\mesinkata\mesinkar.h"
@@ -8,6 +9,7 @@
 #include "ADT\point\point.h"
 #include "ADT\custom_adt\stackaction.h"
 #include "ADT\custom_adt\wahana.h"
+#include "ADT\queue\queueAntrian.h"
 
 // #define MAXSTACKACTION 100
 
@@ -55,6 +57,8 @@
 Player P;
 Graph G;
 StackAction S;
+QueueAntrian A;
+
 WAHANA ListWahanaYandDimiliki[100];
 int NbWahana = 0;
 WAHANA ListWahanaTersedia[100];
@@ -86,6 +90,7 @@ Kata ACTION_BUILD, ACTION_UPGRADE, ACTION_BUY;
 void generateAllConstant();
 void generatePlayer();
 void generateWahanaTersedia();
+void generateWahanaYangDimiliki();
 void generateListMaterial();
 void PrintListMaterial();
 int SearchListMaterial(Kata Name);
@@ -112,7 +117,7 @@ boolean IsWall(float X, float Y, int A);
 boolean IsGerbang(float X, float Y, int A);
 void move(int dir);
 
-
+void RandomAntrian();
 void PrintListWahanaTersedia();
 
 // ==============================================
@@ -120,11 +125,13 @@ void PrintListWahanaTersedia();
 int main()
 {
 	CreateEmptyStackAction(&S);
+	MakeEmptyQueueAntrian(&A, 100);
 
 	generateAllConstant();
 
 	generatePlayer();
 	generateWahanaTersedia();
+	generateWahanaYangDimiliki();
 
 	generateListMaterial();
 
@@ -235,7 +242,7 @@ int main()
 				}
 				else if (KataSama(K, MAIN))
 				{
-					//prepareToMain();
+					prepareToMain();
 				}
 				else
 				{
@@ -424,6 +431,14 @@ void generateAllConstant()
 	SetKata(&ACTION_BUILD, "build");
 	SetKata(&ACTION_UPGRADE, "upgrade");
 	SetKata(&ACTION_BUY, "buy");
+}
+
+void generateWahanaYangDimiliki()
+{
+	ListWahanaYandDimiliki[0].Name = SetKalimat("Roller Coster");
+	ListWahanaYandDimiliki[1].Name = SetKalimat("Biang Lala");
+	ListWahanaYandDimiliki[2].Name = SetKalimat("Uwu Coster");
+	NbWahana = 3;
 }
 
 void generateWahanaTersedia()
@@ -830,7 +845,7 @@ void build ()
 
 void generateListMaterial()
 {
-	printf("Dari .txt harusnya");
+	printf("Dari .txt harusnya\n\n");
 
 	SetKata(&ListNamaMaterial[0], "wood");
 	SetKata(&ListNamaMaterial[1], "stone");
@@ -925,7 +940,7 @@ void undo ()
 		printf("Stack Kosong!!\n");
 		return;
 	}
-	
+
 	Action A;
 	PopAction(&S, &A);
 
@@ -976,10 +991,19 @@ void undo ()
 //     maen();
 // }
 
-// void prepareToMain()
-// {
-// 	MAINPHASE = true;
-// }
+void prepareToMain()
+{
+	while (!IsEmptyStackAction(S))
+	{
+		Action A;
+		PopAction(&S, &A); /*Kosongkan stack*/
+	}
+	printf ("// Tidak mengeksekusi perintah dari stack //\n");
+
+	MAINPHASE = true;
+
+	RandomAntrian();
+}
 
 
 // // MAIN PHASE
@@ -1044,19 +1068,24 @@ void EXITGAME(int x)
 
 
 
-// void RandomAntrian(Antrian *A, Wahana W)
-// {
-// 	for (int i = 0; i < MaxAntrian; ++i)
-// 	{
-// 		idxWahana = random(0, NbWahana(W));
+void RandomAntrian()
+{
+	int minimum_number = 0, max_number = NbWahana-1;
+	srand(time(0));
 
-// 		Antri Q;
-// 		AntriName(Q) = W[idxWahana].Name;
-// 		AntriPrio(Q) = 5;
+	for (int i = 0; i < 5; ++i)
+	{
+		int idxWahana = rand() % (max_number + 1 - minimum_number) + minimum_number;
+		
+		Antrian Q;
+		InfoAntrian(Q) = ListWahanaYandDimiliki[idxWahana].Name;
+		PrioAntrian(Q) = 0;
 
-// 		Enqueue(A, Q);
-// 	}
-// }
+		EnqueueAntrian(&A, Q);
+	}
+
+	PrintQueueAntrian(A);
+}
 
 // void RandomBroken(int idxWahana)
 // {
