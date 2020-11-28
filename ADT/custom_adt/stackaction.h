@@ -25,6 +25,7 @@ typedef struct {
     Kata Type;
     int Time;
     int Amount;
+    int Price;
     POINT Position;
 } Action;
 typedef int address;   /* indeks tabel */
@@ -49,12 +50,14 @@ typedef struct {
 #define InfoTopTipe(S) (S).T[(S).TOP].Type
 #define InfoTopWaktu(S) (S).T[(S).TOP].Time
 #define InfoTopAmount(S) (S).T[(S).TOP].Amount
+#define InfoTopPrice(S) (SS).TOP[(S).TOP].Price
 #define InfoTopLokasi(S) (S).T[(S).TOP].Position
 
 #define ActionName(A) (A).Name
 #define ActionType(A) (A).Type
 #define ActionTime(A) (A).Time
 #define ActionAmount(A) (A).Amount
+#define ActionPrice(A) (A).Price
 #define ActionPosition(A) (A).Position
 
 /* ************ Prototype ************ */

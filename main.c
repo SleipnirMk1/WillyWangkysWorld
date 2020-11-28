@@ -227,7 +227,7 @@ int main()
 				}
 				else if (KataSama(K, UNDO))
 				{
-					//undo();
+					undo();
 				}
 				else if (KataSama(K, EXECUTE))
 				{
@@ -389,6 +389,7 @@ void generatePlayer()
 	Ordinat(P.Position) = 5;
 
 	P.Money = 99999;
+	P.Debt = 0;
 }
 
 void generateAllConstant()
@@ -797,8 +798,8 @@ void build ()
 					SetKata(&ActionType(A), "build");
 					ActionTime(A) = 100;
 					ActionAmount(A) = 1;
+					ActionPrice(A) = ListWahanaTersedia[i].PriceCost;
 					ActionPosition(A) = P.Position;
-
 					PushAction(&S, A);
 
 					P.Debt += ListWahanaTersedia[i].PriceCost;
@@ -898,7 +899,9 @@ void buy()
 		SetKata(&ActionType(X), "buy");
 		ActionTime(X)= lama;
 		ActionAmount(X) = KataToInteger(banyak);
-		P.Debt = totalHarga;
+		ActionPrice(X) = totalHarga;
+		ActionPosition(X) = P.Position;
+		P.Debt += totalHarga;
 
 		PushAction(&S,X);
 
@@ -915,17 +918,25 @@ void buy()
     
 }
 
-// void Undo (StackAction *S)
-// {
-// 	Action A;
-// 	Pop(S, &A);
+void undo ()
+{
+	if (IsEmptyStackAction(S))
+	{
+		printf("Stack Kosong!!\n");
+		return;
+	}
+	
+	Action A;
+	PopAction(&S, &A);
 
-// 	printf("Menghapus Perintah ");
-// 	PrintKata(ActionType(A));
-// 	printf(" ");
-// 	PrintKata(ActionName(A));
-// 	printf(" dari Stack!!\n");
-// }
+	P.Debt -= ActionPrice(A);
+
+	printf("Menghapus Perintah ");
+	PrintKata(ActionType(A));
+	printf(" ");
+	PrintKalimat(ActionName(A));
+	printf(" dari Stack!!\n");
+}
 
 // void execute(StackAction *S)
 // {
