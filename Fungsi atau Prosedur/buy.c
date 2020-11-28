@@ -13,7 +13,7 @@ mesinkata.h
 */
 
 
-void Buy(Stackt *S)
+void Buy(Stack *S)
 /* Prosedur untuk membeli bahan bangunan (untuk membangun wahana */
 /* Dilaksanakan saat preparation phase */
 /* memakan waktu */
@@ -48,34 +48,50 @@ void Buy(Stackt *S)
     }
 
     /* meminta input untuk jenis bahan yang diberi dan harganya */
-    char input[20];
+    /* rule input : <jumlah> <nama> cth : 10 mamank */
     printf("Masukan pilihan :");
-    scanf("%s",&input);
-    /* Parsing perintah pengguna */
-    /* menggunakan mesin kata input di parse menjadi banyak barang dan jeni barang */
+    int jumlah;
+    scanf("%d",jumlah);     // untuk jumlah
+    QueueKata InputJenisMaterial = GetQueue()
+
 
     /* kalo kondisi input valid : */
     i = SearchList(namaMaterial,inputnama);
-    int totalHarga = hargaMaterial[i]*inputbanyak;
+    int totalHarga = hargaMaterial[i]*jumlah;
     /* memasukkan ke stack */
-    infotypeStack X;
+    infotypestack X;
     JAM J;
     /* (masih pemisalan) membeli 1 material membutuhkan waktu 5 menit */
-    long lama = 300*inputbanyak
+    /* membnetuk infotype stack yang akan di push ke stack aksi */
+    long lama = 300*jumlah;
     J = DetikToJam(lama);
     InfoJenisAksi(X)= "buy";
     InfoLamaAksi(X)= L;
-    InfoUangYangDibutuhkan = totalHarga;
+    InfoUangYangDibutuhkan(X) = totalHarga;
+    Material M;
+    CreateEmptyMaterial(&M);
+    switch (InputJenisMaterial)
+    {
+    case ('Wood'):
+        Wood(M) = Wood(M) + jumlah;
+        break;
+    case ('Stone'):
+        Stone(M) = Stone(M) + jumlah;
+        break;
+    case ('Iron'):
+        Iron(M) = Iron(M) + jumlah;
+        break;
+    case ('Mamank'):
+        Mamank(M) = Mamank(M) + jumlah;
+        break;
+    
+    default:
+        break;
+    }
+    
+    Material(X) = M;
     Push(S,X);
     fclose(material);
 
 }
 
-int main()
-{
-    Stack S;
-    CreateEmpty(&S);
-    Buy(&S);
-
-    return 0;
-}
