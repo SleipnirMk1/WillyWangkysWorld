@@ -93,6 +93,6 @@ void PopAction (StackAction * S, Action * X);
 int NbElmtStackAction(StackAction S);
 
 int TotalTimeAction(StackAction S);
-
+int TotalPrice(StackAction S);
 
 #endif

@@ -90,3 +90,17 @@ int TotalTimeAction(StackAction S)
     
     return sum;
 }
+
+int TotalPrice(StackAction S)
+{
+    int sum = 0;
+    while(!IsEmptyStackAction(S))
+    {
+        Action A;
+        PopAction(&S, &A);
+
+        sum += ActionPrice(A);
+    }
+
+    return sum;
+}

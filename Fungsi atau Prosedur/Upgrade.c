@@ -17,9 +17,10 @@ void generateWahanaUpgradeTree(Tree * W1, Tree * W2, Tree * W3)
 }
 
 // Melayani Input jenis upgrade dengan melihat pohon upgrade
-void CheckTreeUpgrade(Tree W, ArrayWahana T, IdxType i, boolean * CanUpgrade, IdxType * Cost)
+void CheckTreeUpgrade(Tree W, IdxType i, boolean * CanUpgrade, IdxType * Cost)
 {
 	Kalimat Q;
+	ArrayWahana T = generateListWahanaTujuanUpgrade();		// Perlu beda dari list wahana yg bisa dibangun
 
 	if (KalimatSama(Nama(Elmt(T,i)), Info(W)))	//Nama wahana di pohon sama dengan nama wahana dekat pemain
 	{
@@ -93,9 +94,9 @@ void Upgrade ()
 			IdxType Cost;	// Cost adalah index wahana yang tujuan upgrade
 			printf("Ingin upgrade menjadi apa?\n");
 				
-			CheckTreeUpgrade(W1, T, i, player, &CanUpgrade, &Cost);
-			CheckTreeUpgrade(W2, T, i, player, &CanUpgrade, &Cost);
-			CheckTreeUpgrade(W3, T, i, player, &CanUpgrade, &Cost);
+			CheckTreeUpgrade(W1, i, player, &CanUpgrade, &Cost);
+			CheckTreeUpgrade(W2, i, player, &CanUpgrade, &Cost);
+			CheckTreeUpgrade(W3, i, player, &CanUpgrade, &Cost);
 
 			if (CanUpgrade)
 			{
