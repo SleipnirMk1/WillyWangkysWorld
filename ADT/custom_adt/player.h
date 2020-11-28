@@ -56,5 +56,6 @@ void addMaterial(Player *P, int wood, int stone, int iron, int mamank);
 
 void nextDay(Player *P);
 
+void createEmptyMaterial (Material *Mat);
 
 #endif

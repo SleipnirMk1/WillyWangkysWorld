@@ -20,3 +20,11 @@ void nextDay(Player *P)
 {
     Day(*P) = Day(*P)+1;
 }
+
+void createEmptyMaterial(Material *Mat)
+{
+    Wood(*Mat) = 0;
+    Stone(*Mat) = 0;
+    Iron(*Mat) = 0;
+    Mamank(*Mat) = 0;
+}
