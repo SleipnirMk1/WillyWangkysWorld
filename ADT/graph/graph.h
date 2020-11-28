@@ -38,7 +38,7 @@ typedef struct
 
 
 
-boolean IsEmpty(Graph G);
+boolean IsEmptyGraph(Graph G);
 
 boolean IsFullEdge(Graph G);
 

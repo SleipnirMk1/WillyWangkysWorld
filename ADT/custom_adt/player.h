@@ -13,7 +13,7 @@ typedef struct{
     int wood;
     int stone;
     int iron;
-    int mamank;
+    //int mamank;
 }Material;
 
 typedef struct{
@@ -47,7 +47,7 @@ typedef struct{
 #define Wood(M) (M).wood
 #define Stone(M) (M).stone
 #define Iron(M) (M).iron
-#define Mamank(M) (M).mamank
+//#define Mamank(M) (M).mamank
 
 /* ************ Prototype ************ */
 void addMoney (Player *P, int X);
