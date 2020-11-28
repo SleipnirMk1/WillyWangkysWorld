@@ -23,12 +23,17 @@ void START() {
 	/* Algoritma */
 	//pita = stdin;
   idx = 0;
-  fgets(PITA, sizeof(PITA), stdin);
+
+  fgets(PITA, MAX, stdin);
+
   while(idx < MAX && PITA[idx] != '\n')
     idx++;
 
   if (idx != MAX)
-    PITA[idx] = MARK;
+  {
+    PITA[idx++] = MARK;
+    PITA[idx++] = '\0';
+  }
   else
     PITA[idx-1] = MARK;
 

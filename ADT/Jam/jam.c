@@ -75,7 +75,10 @@ void TulisJAM (JAM J)
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.
    Jika jam / menit / detik hanya satu digit, tuliskan satu digit tanpa 0 di depannya. */
 {
-    printf("%d:%d", Hour(J),Minute(J));
+    if (Hour(J) < 10)
+        printf("0%d:0%d", Hour(J),Minute(J));
+    else
+        printf("%d:0%d", Hour(J),Minute(J));
 }
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -167,12 +170,12 @@ long Durasi (JAM JAw, JAM JAkh)
     int detikAw, detikAkh, n;
     detikAw = JAMToDetik(JAw);
     detikAkh = JAMToDetik(JAkh);
-    if (detikAw > detikAkh)
-    {
-        n = 3600;
-    }else
+    if (detikAw < detikAkh)
     {
         n = detikAkh - detikAw;
+    }else
+    {
+        n = 86400 - detikAkh - detikAw;
     }
     return n;
 }

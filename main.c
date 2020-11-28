@@ -97,6 +97,8 @@ void repair();
 void detail();
 void office();
 void InOffice();
+void DetailFromWahana(WAHANA Wahana);
+void ReportFromWahana(WAHANA Wahana);
 void mainToPrepare();
 
 boolean IsWall(float X, float Y, int A);
@@ -227,7 +229,7 @@ int main()
 				}
 				else if (KataSama(K, EXECUTE))
 				{
-					//execute();
+					execute();
 				}
 				else if (KataSama(K, MAIN))
 				{
@@ -434,6 +436,9 @@ void generatePlayer()
 
 	P.Money = 99999;
 	P.Debt = 0;
+
+	P.CurrentTime = MakeJAM(21, 0, 0);
+	P.Day = 1;
 }
 
 
@@ -814,7 +819,20 @@ void generateLoadGame()
 boolean IsMasihAdaWaktu(int t)
 {
 	long duration = JAMToDetik(P.CurrentTime) + (long)(t + TotalTimeAction(S)) * 60;
-	return (duration < JAMToDetik(MakeJAM(9,0,0)) && duration > JAMToDetik(MakeJAM(21, 0, 0)));
+
+	JAM J = DetikToJAM(duration);
+
+	if (Hour(J) >= 21)
+	{
+		return true;
+	}
+	else
+	{
+		if (Hour(J) < 9)
+			return true;
+		else
+			return false;
+	}
 }
 
 
@@ -1264,6 +1282,8 @@ void buy()
 	if (i != -1)
     	totalHarga = ListHargaMaterial[i]* KataToInteger(banyak);
 
+	printf("%d\n", IsMasihAdaWaktu(TIME_BUY));
+
 	if (i != -1 && P.Money >= P.Debt + totalHarga && IsMasihAdaWaktu(TIME_BUY))
 	{
 		/* memasukkan ke stack */
@@ -1378,18 +1398,40 @@ void executeBuild(Action A)
 	ListWahanaYandDimiliki[n].Condition = true;
 	ListWahanaYandDimiliki[n].Position = ActionPosition(A);
 
+	NbWahanaYangDimiliki += 1;
+
 	P.Material.wood -= ActionMaterialCost(A).wood;
 	P.Material.iron -= ActionMaterialCost(A).iron;
 	P.Material.stone -= ActionMaterialCost(A).stone;
 
-	if (!IsWall(P.Position.X-1, P.Position.Y, P.Position.A))
-		move(1);
-	else if (!IsWall(P.Position.X, P.Position.Y-1, P.Position.A))
-		move(0);
-	else if (!IsWall(P.Position.X+1, P.Position.Y, P.Position.A))
-		move(3);
-	else
-		move(2);
+	POINT t = P.Position;
+
+	if (EQ(t, ActionPosition(A)))
+	{
+		if (
+			!IsWall(t.X-1, t.Y, t.A) && 
+			!IsWahanaPosition(MakePOINT(t.X-1, t.Y, t.A)) && 
+			!EQ(officePosition, MakePOINT(t.X-1, t.Y, t.A)) && 
+			!EQ(AntrianPosition, MakePOINT(t.X-1, t.Y, t.A))
+			)
+			move(1);
+		else if (
+			!IsWall(t.X, t.Y-1, t.A) &&
+			!IsWahanaPosition(MakePOINT(t.X, t.Y-1, t.A)) && 
+			!EQ(officePosition, MakePOINT(t.X, t.Y-1, t.A)) && 
+			!EQ(AntrianPosition, MakePOINT(t.X, t.Y-1, t.A))
+			)
+			move(0);
+		else if (
+			!IsWall(t.X+1, t.Y, t.A) &&
+			!IsWahanaPosition(MakePOINT(t.X+1, t.Y, t.A)) && 
+			!EQ(officePosition, MakePOINT(t.X+1, t.Y, t.A)) && 
+			!EQ(AntrianPosition, MakePOINT(t.X+1, t.Y, t.A))
+			)
+			move(3);
+		else
+			move(2);
+	}
 }
 
 void executeUpgrade(Action A)
@@ -1452,7 +1494,7 @@ void prepareToMain()
 	}
 	printf ("// Tidak mengeksekusi perintah dari stack //\n");
 
-	P.CurrentTime = MakeJAM(9, 0, 0);
+	P.CurrentTime = MakeJAM(9, 00, 00);
 	P.Day += 1;
 
 	MAINPHASE = true;
@@ -1546,19 +1588,91 @@ void InOffice()
 			printf("Exit dari Office");
 			OFFICE_MODE= false;
 		}
-		else if (KataSama(K, DETAILS))
+		else if (KataSama(K, DETAILS) || KataSama(K, REPORT))
 		{
-			printf("Details dari Office\n");
-		}
-		else if (KataSama(K, REPORT))
-		{
-			printf("Report dari office\n");
+			printf("\nInfo wahana apa yang ingin Anda lihat: ");
+
+			Kalimat nama = GetKalimat();
+			WAHANA Wahana;
+			int i = 0;
+			boolean found = false;
+			while (!found && i <= NbWahanaYangDimiliki)
+			{
+				if (IsEQKalimat(nama, ListWahanaYandDimiliki[i].Name))
+				{
+					found = true;
+					Wahana = ListWahanaYandDimiliki[i];
+				}
+				else
+				{
+					i++;
+				}
+				
+			}
+
+			if (!found)
+			{
+				printf("Detail Wahana tidak ditemukan!!\n");
+			}
+			else
+			{
+				if (KataSama(K, DETAILS))
+					DetailFromWahana(Wahana);
+				else
+					ReportFromWahana(Wahana);
+				
+				printf("\n");
+			}
 		}
 		else
 		{
 			printf("Perintah tidak ada!!\n");
 		}
 	}
+}
+
+
+void DetailFromWahana(WAHANA Wahana)
+{
+    printf("Nama Wahana : ");
+	PrintKalimat(Nama(Wahana));
+	printf("\n");
+    printf("Tipe Wahana: %d\n", Tipe(Wahana));
+    if (Condition(Wahana))
+    {
+        printf("Kondisi Wahana: Tidak rusak");
+    }
+    else
+    {
+        printf("Kondisi Wahana: Rusak");   
+    }
+
+    printf("Biaya Pembangunan: %d\n", Price(Wahana));
+    printf("Keperluan Kayu: %d\n", Wood(Wahana.MaterialCost));
+    printf("Keperluan Batuan: %d\n", Stone(Wahana.MaterialCost));
+    printf("Keperluan Besi: %d\n", Iron(Wahana.MaterialCost));
+    printf("Lokasi Wahana: ");
+	PrintVertex(Lokasi(Wahana));
+	printf("\n");
+    printf("Kapasitas Isi Wahana: %d\n", Kapasitas(Wahana));
+    printf("Durasi Wahana: %d\n", PlayTime(Wahana));
+    printf("Keuntungan tiap pelanggan: %d\n", Profit(Wahana));
+    printf("Deskripsi Wahana: ");
+	PrintKalimat(Deskripsi(Wahana));
+	printf("\n");
+    printf("Total penggunaan: %d\n", TotalNaik(Wahana));
+    printf("Total keuntungan: %d\n", TotalProfit(Wahana));
+    printf("Penggunaan hari ini: %d\n", TodayNaik(Wahana));
+    printf("keuntungan hari ini: %d\n", TodayProfit(Wahana));
+}
+
+
+void ReportFromWahana(WAHANA Wahana)
+{
+    printf("Total Jumlah Pengunjung: %d\n", TotalNaik(Wahana));
+    printf("Total Penghasilan: %d\n", TotalProfit(Wahana));
+    printf("Total Jumlah Pengunjung Hari Ini: %d\n", TodayNaik(Wahana));
+    printf("Total Jumlah Pengunjung Hari Ini: %d\n", TodayProfit(Wahana));
 }
 
 
@@ -1572,6 +1686,8 @@ void mainToPrepare()
 		Antrian X;
 		DequeueAntrian(&A, &X);
 	}
+
+	P.CurrentTime = MakeJAM(21, 0, 0);
 
 	printf("Preparation Phase!!\n");	
 }
@@ -1742,8 +1858,8 @@ void RandomAntrian()
 void generateMapMain()
 {
     JAM buka, tutup;
-    buka = MakeJAM(9,0,0);
-	tutup = MakeJAM(21, 0, 0);
+    buka = MakeJAM(9,00,00);
+	tutup = MakeJAM(21, 00, 00);
 
     if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
         printf("Main phase Day %d\n",Day(P));

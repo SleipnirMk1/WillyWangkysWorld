@@ -199,7 +199,11 @@ void EnqueueKalimat(Kalimat *S, Kata K)
 
 void DequeueKalimat(Kalimat *S, Kata *K)
 {
-  if (NbKata(*S) == 1)
+  if (IsEmptyKalimat(*S))
+  {
+    SetKata(K, " ");
+  }
+  else if (NbKata(*S) == 1)
   {
     *K = (*S).Elmt[IdxMin(*S)];
     IdxMin(*S) = IDXNIL;
