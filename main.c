@@ -390,7 +390,7 @@ void gerak(int X)
 			{
 				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X+1 > 19))
 					Geser (&P.Position, 1, 0, 0);
-					
+
 				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
 				{
 					POINT V;
@@ -1420,23 +1420,31 @@ void executeBuild(Action A)
 			!EQ(officePosition, MakePOINT(t.X-1, t.Y, t.A)) && 
 			!EQ(AntrianPosition, MakePOINT(t.X-1, t.Y, t.A))
 			)
+		{
 			move(1);
+		}
 		else if (
 			!IsWall(t.X, t.Y-1, t.A) &&
 			!IsWahanaPosition(MakePOINT(t.X, t.Y-1, t.A)) && 
 			!EQ(officePosition, MakePOINT(t.X, t.Y-1, t.A)) && 
 			!EQ(AntrianPosition, MakePOINT(t.X, t.Y-1, t.A))
 			)
+		{
 			move(0);
+		}
 		else if (
 			!IsWall(t.X+1, t.Y, t.A) &&
 			!IsWahanaPosition(MakePOINT(t.X+1, t.Y, t.A)) && 
 			!EQ(officePosition, MakePOINT(t.X+1, t.Y, t.A)) && 
 			!EQ(AntrianPosition, MakePOINT(t.X+1, t.Y, t.A))
 			)
+		{
 			move(3);
+		}
 		else
+		{
 			move(2);
+		}
 	}
 }
 
@@ -1479,29 +1487,22 @@ void executeBuy(Action A)
 
 	P.Material.iron -= ActionMaterialCost(A).iron;
 	P.Material.stone -= ActionMaterialCost(A).stone;
-
-	if (!IsWall(P.Position.X-1, P.Position.Y, P.Position.A))
-		move(1);
-	else if (!IsWall(P.Position.X, P.Position.Y-1, P.Position.A))
-		move(0);
-	else if (!IsWall(P.Position.X+1, P.Position.Y, P.Position.A))
-		move(3);
-	else
-		move(2);
 }
 
 
 void prepareToMain()
 {
+	if (!IsEmptyStackAction(S))
+		printf ("// Tidak mengeksekusi perintah dari stack //\n");
+
 	while (!IsEmptyStackAction(S))
 	{
 		Action A;
 		PopAction(&S, &A); /*Kosongkan stack*/
 	}
-	printf ("// Tidak mengeksekusi perintah dari stack //\n");
+	
 
 	P.CurrentTime = MakeJAM(9, 00, 00);
-	P.Day += 1;
 
 	MAINPHASE = true;
 	P.Debt = 0;
@@ -1742,6 +1743,7 @@ void mainToPrepare()
 		DequeueAntrian(&A, &X);
 	}
 
+	P.Day += 1;
 	P.CurrentTime = MakeJAM(21, 0, 0);
 
 	printf("Preparation Phase!!\n");	
@@ -1916,7 +1918,7 @@ void generateMapMain()
     buka = MakeJAM(9,00,00);
 	tutup = MakeJAM(21, 00, 00);
 
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+    if(JAMToDetik(Time(P)) < JAMToDetik(tutup) && JAMToDetik(Time(P)) >= JAMToDetik(buka)){
         printf("Main phase Day %d\n",Day(P));
     }
     else{
