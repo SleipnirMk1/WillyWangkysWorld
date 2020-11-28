@@ -24,6 +24,7 @@ int TIME_BUILD = 120;
 int TIME_BUY = 40;
 int TIME_UPGRADE = 120;
 int TIME_MOVE = 1;
+int TIME_REPAIR = 20;
 
 int REPAIR_COST = 40;
 
@@ -48,7 +49,7 @@ POINT officePosition;
 POINT AntrianPosition;
 
 
-boolean MAINPHASE = false;
+boolean MAINPHASE = true;
 boolean RUN_NEWGAME = true;
 boolean RUN = true;
 boolean OFFICE_MODE = false;
@@ -297,119 +298,7 @@ int main()
 }
 
 
-
-boolean IsWall(float X, float Y, int A)
-{
-	return ((X == 0)|(X == 19)|(Y == 19)|(Y == 0))&&(!IsGerbang(X, Y, A));
-}
-boolean IsGerbang(float X, float Y, int A)
-{
-	if (A == 1)
-		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 19));
-	else if (A == 2)
-		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 19));
-	else if (A == 3)
-		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 0));
-	else if (A == 4)
-		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 0));
-}
-void gerak(int X)
-{
-	POINT segment; 
-	if (X == 0)
-	{
-		//printf("WW\n");
-		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
-		{
-			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position));
-			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
-			{
-
-				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y-1 < 0))
-					Geser (&P.Position, 0, -1, 0);
-				
-				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
-				{
-					POINT V;
-					GetVEdge(G, P.Position, &V);
-
-					(P).Position = V;
-				}
-			}
-		}
-	}
-	else if (X == 1)
-	{
-		//printf("AA\n");
-		if (!IsWall(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position)))
-		{
-			segment = MakePOINT(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position));
-			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
-			{
-				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X-1 < 0))
-					Geser (&P.Position, -1, 0, 0);
-				
-				if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
-				{
-					POINT V;
-					GetVEdge(G, (P).Position, &V);
-
-					(P).Position = V;
-				}
-			}
-		}
-	}
-	else if (X == 2)
-	{
-		//printf("SS\n");
-		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
-		{
-			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position));
-			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
-			{
-				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y+1 > 19))
-					Geser (&P.Position, 0, 1, 0);
-				
-				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
-				{
-					POINT V;
-					GetVEdge(G, (P).Position, &V);
-
-					(P).Position = V;
-				}
-			}
-		}
-	}
-	else if (X == 3)
-	{
-		//printf("DD\n");
-		if (!IsWall(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position)))
-		{
-			segment = MakePOINT(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position));
-			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
-			{
-				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X+1 > 19))
-					Geser (&P.Position, 1, 0, 0);
-
-				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
-				{
-					POINT V;
-					GetVEdge(G, (P).Position, &V);
-
-					(P).Position = V;
-				}
-			}
-		}
-		
-	}
-}
-
-
-void move(int dir)
-{
-	gerak(dir);
-}
-
+// 
 // ================================================================
 void PERSIAPANGAME()
 {
@@ -450,7 +339,7 @@ void generatePlayer()
 	P.Money = 99999;
 	P.Debt = 0;
 
-	P.CurrentTime = MakeJAM(21, 0, 0);
+	P.CurrentTime = MakeJAM(20, 40, 0);
 	P.Day = 1;
 }
 
@@ -534,6 +423,128 @@ void generateLoadGame()
 {
 	printf("Load GAME!!\n");
 }
+
+
+
+// Movement
+// =================================================================================
+boolean IsWall(float X, float Y, int A)
+{
+	return ((X == 0)|(X == 19)|(Y == 19)|(Y == 0))&&(!IsGerbang(X, Y, A));
+}
+boolean IsGerbang(float X, float Y, int A)
+{
+	if (A == 1)
+		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 19));
+	else if (A == 2)
+		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 19));
+	else if (A == 3)
+		return ((X == 19) && (Y == 4))|((X == 9)&&(Y == 0));
+	else if (A == 4)
+		return ((X == 0) && (Y == 4))|((X == 9)&&(Y == 0));
+}
+void gerak(int X)
+{
+	POINT segment; 
+	if (X == 0)
+	{
+		//printf("WW\n");
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position)))
+		{
+			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) - 1, Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
+			{
+
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y-1 < 0))
+					Geser (&P.Position, 0, -1, 0);
+				
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, P.Position, &V);
+
+					(P).Position = V;
+				}
+				Time(P) = NextNDetik(Time(P), 60);
+			}
+		}
+	}
+	else if (X == 1)
+	{
+		//printf("AA\n");
+		if (!IsWall(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position)))
+		{
+			segment = MakePOINT(Absis(P.Position)-1,Ordinat(P.Position), Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
+			{
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X-1 < 0))
+					Geser (&P.Position, -1, 0, 0);
+				
+				if(IsGerbang(Absis(P.Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
+
+					(P).Position = V;
+				}
+				Time(P) = NextNDetik(Time(P), 60);
+			}
+		}
+	}
+	else if (X == 2)
+	{
+		//printf("SS\n");
+		if (!IsWall(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position)))
+		{
+			segment = MakePOINT(Absis(P.Position),Ordinat(P.Position) + 1, Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
+			{
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.Y+1 > 19))
+					Geser (&P.Position, 0, 1, 0);
+				
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
+
+					(P).Position = V;
+				}
+				Time(P) = NextNDetik(Time(P), 60);
+			}
+		}
+	}
+	else if (X == 3)
+	{
+		//printf("DD\n");
+		if (!IsWall(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position)))
+		{
+			segment = MakePOINT(Absis(P.Position) + 1,Ordinat(P.Position), Area(P.Position));
+			if ((!IsWahanaPosition(segment)) && (!IsAntrianPosition(segment)))
+			{
+				if (!(IsGerbang(P.Position.X, P.Position.Y, P.Position.A) && P.Position.X+1 > 19))
+					Geser (&P.Position, 1, 0, 0);
+
+				if(IsGerbang(Absis((P).Position),Ordinat((P).Position), Area((P).Position)))
+				{
+					POINT V;
+					GetVEdge(G, (P).Position, &V);
+
+					(P).Position = V;
+				}
+				Time(P) = NextNDetik(Time(P), 60);
+			}
+		}
+	}
+}
+
+
+void move(int dir)
+{
+	gerak(dir);
+}
+
+
+
 
 
 // void conti()
@@ -1579,6 +1590,7 @@ void repair()
             
         Condition(ListWahanaYandDimiliki[idx]) = true;
 		Money(P) -= REPAIR_COST;
+		Time(P) = NextNDetik(Time(P), TIME_REPAIR*60);
         
     }
     else
@@ -1746,7 +1758,7 @@ void mainToPrepare()
 	P.Day += 1;
 	P.CurrentTime = MakeJAM(21, 0, 0);
 
-	printf("Preparation Phase!!\n");	
+	printf("Preparation Phase!!\n");
 }
 
 
@@ -1914,15 +1926,30 @@ void RandomAntrian()
 
 void generateMapMain()
 {
-    JAM buka, tutup;
+	JAM buka, tutup;
     buka = MakeJAM(9,00,00);
 	tutup = MakeJAM(21, 00, 00);
 
-    if(JAMToDetik(Time(P)) < JAMToDetik(tutup) && JAMToDetik(Time(P)) >= JAMToDetik(buka)){
-        printf("Main phase Day %d\n",Day(P));
+	if (IsEmptyQueueAntrian(A))
+		RandomAntrian();
+
+	if(JAMToDetik(Time(P)) - JAMToDetik(tutup) >= 0 && MAINPHASE)
+	{
+		mainToPrepare();
+	}
+	else if (Hour(Time(P)) >= 9 && JLT(Time(P), tutup) && JAMToDetik(Time(P)) - JAMToDetik(buka) >= 0 && !MAINPHASE)
+	{
+		prepareToMain();
+	}
+
+	boolean Maen = JAMToDetik(Time(P)) < JAMToDetik(tutup) && JAMToDetik(Time(P)) >= JAMToDetik(buka);
+
+	printf("\n\n");
+    if(Maen){
+        printf("MAIN PHASE DAY %d\n",Day(P));
     }
     else{
-        printf("Preparation phase Day %d\n",Day(P));
+        printf("PREPARATION PHASE DAY %d\n",Day(P));
     }
 
     /*generating map */
@@ -1945,7 +1972,7 @@ void generateMapMain()
     TulisJAM(Time(P));
     printf("\n");
 
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+    if(Maen){
         printf("Closing time : ");
         TulisJAM(tutup);
         printf("\n");
@@ -1969,11 +1996,11 @@ void generateMapMain()
     }
     
     
-    if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
-        printf("Closing time : ");
-        TulisJAM(tutup);
-        printf("\n");
-    }
+    // if(JLT(Time(P),tutup) && JGT(Time(P),buka)){
+    //     printf("Closing time : ");
+    //     TulisJAM(tutup);
+    //     printf("\n");
+    // }
 
 	if (MAINPHASE)
 	{

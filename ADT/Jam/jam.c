@@ -76,9 +76,15 @@ void TulisJAM (JAM J)
    Jika jam / menit / detik hanya satu digit, tuliskan satu digit tanpa 0 di depannya. */
 {
     if (Hour(J) < 10)
-        printf("0%d:0%d", Hour(J),Minute(J));
+        if (Minute(J)<10)
+            printf("0%d:0%d", Hour(J),Minute(J));
+        else
+            printf("0%d:%d", Hour(J),Minute(J));
     else
-        printf("%d:0%d", Hour(J),Minute(J));
+        if (Minute(J)<10)
+            printf("%d:0%d", Hour(J),Minute(J));
+        else
+            printf("%d:%d", Hour(J),Minute(J));
 }
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -175,17 +181,17 @@ long Durasi (JAM JAw, JAM JAkh)
         n = detikAkh - detikAw;
     }else
     {
-        n = 86400 - detikAkh - detikAw;
+        n = 86400 + detikAkh - detikAw;
     }
     return n;
 }
 void CetakDurasi(long Durasi)
 {
-	int x, y;
-	x = Durasi % 86400;
-	x = x/3600;
-	y = x % 3600;
-	y = y / 60;
-	printf("%d hour(s) %d minute(s)", x, y);
+	int h, m;
+	int x = Durasi % 86400;
+	h = x/3600;
+    m = x % 3600;
+    m /= 60;
+	printf("%d hour(s) %d minute(s)", h, m);
 }
 #endif

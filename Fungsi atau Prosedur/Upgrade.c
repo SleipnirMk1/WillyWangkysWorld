@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "boolean.h"
-#include "mesinkata.h"
-#include "tree.h"
+#include "..\ADT\mesinkata\mesinkata.h"
+#include "..\ADT\tree\tree.h"
 #include "point.h"
 #include "arraywahana.h"
 #include "player.h"
