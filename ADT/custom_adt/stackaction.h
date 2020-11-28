@@ -90,4 +90,9 @@ void PopAction (StackAction * S, Action * X);
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
+int NbElmtStackAction(StackAction S);
+
+int TotalTimeAction(StackAction S);
+
+
 #endif

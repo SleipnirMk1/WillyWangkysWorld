@@ -61,3 +61,32 @@ void InversStack (StackAction * S)
     }
     *S = temp;
 }
+
+int NbElmtStackAction(StackAction S)
+{
+    int i = 0;
+    while(!IsEmptyStackAction(S))
+    {
+        Action A;
+        PopAction(&S, &A);
+        i++;
+    }
+
+    return i;
+}
+
+int TotalTimeAction(StackAction S)
+{
+    int n = NbElmtStackAction(S);
+    int sum = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        Action A;
+        PopAction(&S, &A);
+
+        sum += ActionTime(A);
+    }
+    
+    return sum;
+}
