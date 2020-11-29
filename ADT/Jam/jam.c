@@ -65,7 +65,7 @@ void BacaJAM (JAM * J)
     scanf("%d %d %d", &HH, &MM, &SS);
     do {
         scanf("%d",&HH);
-    } while (IsJAMValid(HH,MM,SS));
+    } while (!IsJAMValid(HH,MM,SS));
     * J = MakeJAM(HH,MM,SS);
 }
 void TulisJAM (JAM J)

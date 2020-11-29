@@ -14,8 +14,6 @@
 #include "ADT\jam\jam.h"
 #include "ADT\Tree\tree.h"
 
-// #define MAXSTACKACTION 100
-
 #define MAX_SIZE_MAP 20
 
 // Dalam Satuan menit
@@ -56,7 +54,7 @@ boolean RUN_NEWGAME = true;
 boolean RUN = true;
 boolean OFFICE_MODE = false;
 
-Kata NEW, LOAD, EXIT;
+Kata NEW, LOAD, EXIT, HELP;
 Kata BUILD, UPGRADE, BUY, UNDO, EXECUTE, MAIN;
 Kata SERVE, REPAIR, DETAIL, OFFICE, PREPARE;
 Kata SAVE, CONTINUE;
@@ -81,6 +79,7 @@ void EXITGAME(int x);
 void generateLoadGame();
 void generateNewGame();
 void saveGame();
+void loadGame();
 void conti();
 
 void generateMapMain();
@@ -129,47 +128,51 @@ void AntrianEmosiRising();
 
 void KalimatToChar(Kalimat K, char *S);
 void SpasiToUnderScore(char *S, int Max);
+void UnderScoreToSpasi(char *S, int Max);
 void savePlayer(char dir[]);
 void saveWahana(char dir[]);
+void saveAntrian(char dir[]);
+void saveStack(char dir[]);
+
+void loadPlayer(char dir[]);
+void loadWahana(char dir[]);
+void loadAntrian(char dir[]);
+void loadStack(char dir[]);
+
+void intro();
+void help();
 
 // ==============================================
 
 int main()
 {
-	// PERSIAPANGAME();
+	PERSIAPANGAME();
 
-	// CreateEmptyStackAction(&S);
-	// MakeEmptyQueueAntrian(&A, 100);
+	CreateEmptyStackAction(&S);
+	MakeEmptyQueueAntrian(&A, 100);
 
-	// generateAllConstant();
+	generateAllConstant();
 
 	generatePlayer();
 	generateWahanaTersedia();
 	generateWahanaYangDimiliki();
 
-	// generateListMaterial();
-
-	//printf("%f\n", P.Position.Y);
-	// generatePosFromFile();
-	// generateMatFromFile();
-	// generateWahFromFile();
-	// generateStaFromFile();
-
-	
-	// Tree T = generateWahanaUpgradeTree();
-	// PrintTreeIndent(T, 2);
-
-	saveGame();
+	generateListMaterial();
 
 
-	RUN = false;
-	RUN_NEWGAME = false;
+	intro();
+
+
+	RUN = true;
+	RUN_NEWGAME = true;
 	boolean runned = false;
 
-	printf("NEW // LOAD // EXIT\n\n");
+	
 	
 	while(RUN_NEWGAME)
 	{
+		printf("\nNEW // LOAD // EXIT\n\n");
+		
 		printf("Masukkan perintah : ");
 		Kalimat input = GetKalimat();
 		Kata K;
@@ -181,15 +184,19 @@ int main()
 		}
 		else if (KataSama(K, NEW))
 		{
-			//generateNewGame();
+			generateNewGame();
 			RUN_NEWGAME = false;
 			runned = true;
 		}
 		else if (KataSama(K, LOAD))
 		{
-			//generateLoadGame();
+			loadGame();
 			RUN_NEWGAME = false;
 			runned = true;
+		}
+		else if (KataSama(K, HELP))
+		{
+			help();
 		}
 		else
 		{
@@ -221,26 +228,22 @@ int main()
 		else if (KataSama(K, MoveW))
 		{
 			move(0);
-			RandomAntrian();
 		}
 		else if (KataSama(K, MoveA))
 		{
 			move(1);
-			RandomAntrian();
 		}
 		else if (KataSama(K, MoveS))
 		{
 			move(2);
-			RandomAntrian();
 		}
 		else if (KataSama(K, MoveD))
 		{
 			move(3);
-			RandomAntrian();
 		}
 		else if (KataSama(K, SAVE))
 		{
-			//saveGame();
+			saveGame();
 		}
 		else if (KataSama(K, CONTINUE))
 		{
@@ -364,13 +367,9 @@ void PERSIAPANGAME()
 
 void generatePlayer()
 {
-	P.Name = SetKalimat("Alstrukdat KWWW");
+	P.Position = MakePOINT(1, 1, 1);
 
-	Area(P.Position) = 1;
- 	Absis(P.Position) = 4;
-	Ordinat(P.Position) = 10;
-
-	P.Money = 99999;
+	P.Money = 200;
 	MoneyDebt(P) = 0;
 
 	P.Material.wood = 50;
@@ -392,6 +391,7 @@ void generateAllConstant()
 	SetKata(&NEW, "new");
 	SetKata(&LOAD, "load");
 	SetKata(&EXIT, "exit");
+	SetKata(&HELP, "help");
 
 	SetKata(&BUY, "buy");
 	SetKata(&UNDO, "undo");
@@ -433,10 +433,7 @@ void generateAllConstant()
 void generateWahanaYangDimiliki()
 {
 	MakeEmptyWahana(&ListWahanaDimiliki);
-
-	AddAsLastElWahana(&ListWahanaDimiliki, ElmtWahana(ListWahanaTersedia, 0));
-
-	NbWahanaDimiliki = 1;
+	NbWahanaDimiliki = 0;
 }
 
 void generateWahanaTersedia()
@@ -448,7 +445,14 @@ void generateWahanaTersedia()
 
 void generateNewGame()
 {
-	printf("New GAME!!\n");
+	printf("\nMemulai Permainan Baru...\n");
+
+	printf("\nMasukkan Nama : \n");
+
+	Kalimat Name = GetKalimat();
+	P.Name = Name;
+
+	generatePlayer();
 }
 
 void generateLoadGame()
@@ -595,13 +599,36 @@ void saveGame()
 	printf("Saving...\n");
 	savePlayer("save/playerSave.txt"); 
 	saveWahana("save/wahanaSave.txt");
+
+	if (MAINPHASE)
+	{
+		saveAntrian("save/antrianSave.txt");
+	}
+	else
+	{
+		saveStack("save/antrianStack.txt");
+	}
 }
 
-// void loadGame()
-// {
-// 	loadPlayer("save/playerSave.txt");
-// 	loadWahana("save/wahanaSave.txt");
-// }
+void loadGame()
+{
+	loadPlayer("save/playerSave.txt");
+	loadWahana("save/wahanaSave.txt");
+
+	if (P.CurrentTime.HH >= 9 && P.CurrentTime.HH <= 20)
+	{
+		MAINPHASE = true;
+	}
+	else
+	{
+		MAINPHASE = false;
+	}
+
+	if (MAINPHASE)
+		loadAntrian("save/antrianSave.txt");
+	else
+		loadStack("save/antrianStack.txt");
+}
 
 void savePlayer(char dir[])
 {
@@ -779,7 +806,7 @@ void saveAntrian(char dir[])
 		return;
 	
 	FILE *f; 
-	f = open(dir, "w");
+	f = fopen(dir, "w");
 
 	if (f == NULL)
 		return;
@@ -827,7 +854,7 @@ void saveStack(char dir[])
 		return;
 	
 	FILE *f; 
-	f = open(dir, "w");
+	f = fopen(dir, "w");
 
 	if (f == NULL)
 		return;
@@ -835,9 +862,6 @@ void saveStack(char dir[])
 	printf("\nSaving Antrian...\n");
 
 	StackAction tmp = S;
-	
-	StackAction tmp;
-	CreateEmptyStackAction(&tmp);
 
 	while(!IsEmptyStackAction(tmp))
 	{
@@ -897,7 +921,7 @@ void saveStack(char dir[])
 void loadPlayer(char dir[])
 {
 	FILE *f;
-	f = open(dir, "r");
+	f = fopen(dir, "r");
 
 	if (f == NULL)
 	{
@@ -946,7 +970,7 @@ void loadPlayer(char dir[])
 void loadWahana(char dir[])
 {
 	FILE *f;
-	f = open(dir, "r");
+	f = fopen(dir, "r");
 
 	if (f == NULL)
 	{
@@ -995,16 +1019,99 @@ void loadWahana(char dir[])
 
 
 
-void loadAntrian(char dir)
+void loadAntrian(char dir[])
 {
 	FILE *f;
-	f = open(dir, "r");
+	f = fopen(dir, "r");
 
 	if (f == NULL)
 	{
 		printf("\nFile Not Found..\n");
 		return;
 	}
+
+	int n = NbElmtWahana(ListWahanaDimiliki);
+
+	char pri[20];
+	char in[n][20];
+	QueueAntrian tmp;
+	MakeEmptyQueueAntrian(&tmp, 100);
+	int count = 0;
+
+	while(fscanf(f, "%s ", pri) != EOF)
+	{	
+		Antrian e;
+		e.prio = atoi(pri);
+		MakeEmptyWahana(&(e.info));
+
+		for (int i = 0; i < n; i++)
+		{
+			fscanf(f, "%s ", in[i]);
+
+			if (atoi(in[i]) == 1)
+			{
+				AddAsLastElWahana(&(e.info), ElmtWahana(ListWahanaDimiliki, i));
+			}
+		}
+		EnqueueAntrian(&tmp, e);
+	}
+
+	A = tmp;
+
+	fclose(f);
+}
+
+
+void loadStack(char dir[])
+{
+	FILE *f;
+	f = fopen(dir, "r");
+
+	if (f == NULL)
+	{
+		printf("\nFile Not Found..\n");
+		return;
+	}
+
+	char name[250];
+	char type[20];
+	char time[20];
+	char amount[20];
+	char price[20];
+	char matWood[20];
+	char matStone[20];
+	char matIron[20];
+	char posx[20];
+	char posy[20];
+	char posa[20];
+
+	StackAction tmp;
+	CreateEmptyStackAction(&tmp);
+	int count = 0;
+
+	while (fscanf(f, "%s %s %s %s %s %s %s %s %s %s %s", name, type, time, amount, price, matWood, matStone, matIron, posx, posy, posa) != EOF)
+	{
+		Action e;
+
+		UnderScoreToSpasi(name, 250);
+		ActionName(e) = SetKalimat(name);
+		SetKata(&ActionType(e), type);
+		ActionTime(e) = atoi(time);
+		ActionAmount(e) = atoi(amount);
+		ActionPrice(e) = atoi(price);
+		ActionMaterialCost(e).wood = atoi(matWood);
+		ActionMaterialCost(e).stone = atoi(matStone);
+		ActionMaterialCost(e).iron = atoi(matIron);
+
+		ActionPosition(e) = MakePOINT((float)atoi(posx), (float)atoi(posy), atoi(posa));
+
+		PushAction(&tmp, e);
+		count++;
+	}
+
+	S = tmp;
+
+	fclose(f);
 }
 
 
@@ -2233,10 +2340,10 @@ void RandomBroken(int idxWahana)
 //     fclose(fp);
 // }
 
-void UnderScoreToSpasi(char *S, int max)
+void UnderScoreToSpasi(char *S, int Max)
 {
 	int i = 0;
-	while(S[i] != '\0' && i < max)
+	while(S[i] != '\0' && i < Max)
 	{
 		if (S[i] == '_')
 			S[i] = ' ';
@@ -2525,4 +2632,101 @@ void PrintMap()
 		}
 		printf("\n");
 	}	
+}
+
+
+void intro()
+{
+	printf("     __      __.__.__  .__                             \n");
+	printf("/  7    /  1__|  | |  | ___.__.                        \n");
+	printf("\   7171   /  |  | |  |<   |  |                        \n");
+	printf(" \        /|  |  |_|  |_\___  |                        \n");
+	printf("  \__/\  / |__|____/____/ ____|                        \n");
+	printf("       \/               \/                             \n");
+	printf(" __      __                        __                  \n");
+	printf("/  \    /  \_____    ____    ____ |  | _____.__. ______\n");
+	printf("\   \/\/   /\__  \  /    \  / ___\|  |/ <   |  |/  ___/\n");
+	printf(" \        /  / __ \|   |  \/ /_/  >    < \___  |\___ \ \n");
+	printf("  \__/\  /  (____  /___|  /\___  /|__|_ \/ ____/____  >\n");
+	printf("       \/        \/     \//_____/      \/\/         \/ \n");
+	printf(" __      __            .__       .___                  \n");
+	printf("/  \    /  \___________|  |    __| _/                  \n");
+	printf("\   \/\/   /  _ \_  __ \  |   / __ |                   \n");
+	printf(" \        (  <_> )  | \/  |__/ /_/ |                   \n");
+	printf("  \__/\  / \____/|__|  |____/\____ |                   \n");
+	printf("       \/                         \/           	       \n");
+    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    printf(":                    |:                    |:                     |:                |:                :\n");
+    printf(":      NEW GAME      |:    COMING SOON     |:     COMING SOON     |:      HELP      |:      EXIT      :\n");
+    printf(":                    |:                    |:                     |:                |:                :\n");
+    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    /* sesuaikan lagi itu menu nya dengan inputnya */
+}
+
+void help()
+{
+    int input_help;
+    boolean end = false;
+
+    while (!end)
+    {
+        printf(" 1. cmdgame\n");
+        printf(" 2. creditgame\n");
+        printf(" 3. quithelp\n");
+        printf(" [Willy Wangky Bot] Can I help you? : <choose help number>\n");
+		printf("   >>> ");
+        scanf("%d", &input_help);
+        if (input_help == 0)
+        {
+            
+        }
+        else if (input_help == 1)
+        {
+            printf(" [Willy Wangky Bot] Here is our list command game : \n");
+            printf("\n");
+            printf(" I. Movement \n");
+            printf(" ================================================ \n");
+            printf(" 1. w : move up one tile \n");
+            printf(" 2. a : move left one tile \n");
+            printf(" 3. s : move down one tile \n");
+            printf(" 4. d : move right one tile \n");
+            printf("\n");
+            printf(" II. In-Game \n");
+            printf(" ================================================ \n");
+            printf(" \n");
+            printf("\n");
+            printf(" III. Office \n");
+            printf(" ================================================ \n");
+            printf(" \n");
+            printf("\n");
+            printf(" IV. Preparation Phase \n");
+            printf(" ================================================ \n");
+            printf(" \n");
+            printf("\n");
+            printf(" V. Main Phase \n");
+            printf(" ================================================ \n");
+            printf(" \n");
+        }
+        else if (input_help == 2)
+        {
+            printf(" [Willy Wangky Bot] This game was credited by : \n");
+            printf("\n");
+            printf(" 1. Ilyasa Salafi Putra Jamal \n");
+            printf(" 2. Yudi Alfayat \n");
+            printf(" 3. Giant Andreas Tambunan \n");
+            printf(" 4. Benidictus Galih Mahar Putra \n");
+            printf(" 5. Raffi Fadhlurrahman Putra Rahiem \n");
+        }
+        else if (input_help == 3)
+        {
+            printf("Have fun~ !\n");
+            end = true;
+        }
+        else
+        {
+            printf("There is no such command in the help menu\n");
+        }
+        printf("\n");
+    }
+    
 }
