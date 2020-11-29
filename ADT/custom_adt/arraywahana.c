@@ -130,14 +130,13 @@ void TulisIsiTabWahana (ArrayWahana T)
 	{
 		int n = NbElmtWahana(T);
 		int i;
-
 		printf("[");
 		for(i = IdxMinWahana; i < n; i++)
 		{
-			printf("%s", Nama(ElmtWahana(T,i)));
+			PrintKalimat(Nama(ElmtWahana(T, i)));
 
 			if(i != GetLastIdxWahana(T))
-				printf(",");
+				printf(", ");
 		}
 		printf("]");
 	}

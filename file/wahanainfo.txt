@@ -1,15 +1,15 @@
-Nama		Tipe	Uang	Wood	Stone	Iron	Kap	Durasi	Profit	Deskripsi
-Ferris Wheel 	1	40	50	20	40	2	900	5	A big spinning wheel, you go up then go down
-Magic Circle	2	20	10	30	20	4	900	5	Infused with magic, riding gives you pleasant feeling
-Eye of Wanky	3	30	15	25	30	8	900	10	You can see the entire park from the top
-Fortune Wheel	4	35	20	30	10	6	900	25	Good fortune always came to those who rode this
-Fast Ball	5	25	5	20	30	2	720	5	Spins very quickly
-Curve Ball	6	35	10	25	40	2	720	15	Visibly angled, still spins very fast
-Fireball	7	35	5	30	35	4	600	5	Spins at a ludicrous speed
-Funhouse	8	35	60	25	20	3	1200	5	House filled with fun, yay
-House of Tricks	9	20	15	10	15	5	1200	5	House riddled with trickery and mischief
-Candy Factory	10	30	10	15	40	8	1200	10	The exact replica of wanky's own candy factory
-Loki's Palace	11	40	5	10	5	5	900	15	Palace of trickery approved by the god of mischief
-Haunted Mansion	12	20	20	15	5	3	900	5	Mansion dwelled by ghosts and the supernatural
-Count's Manor	13	25	20	30	20	4	720	10	Manor built based on count dracula's dwelling
-Cursed Castle	14	20	25	40	15	6	600	10	Castle built for one purpose, terror
+Nama		Uang	Wood	Stone	Iron	Kap	Durasi	Profit	Deskripsi
+Ferris_Wheel 	40	50	20	40	2	900	5	A_big_spinning_wheel,_you_go_up_then_go_down
+Magic_Circle	20	10	30	20	4	900	5	Infused_with_magic,_riding_gives_you_pleasant_feeling
+Eye_of_Wanky	30	15	25	30	8	900	10	You_can_see_the_entire_park_from_the_top
+Fortune_Wheel	35	20	30	10	6	900	25	Good_fortune_always_came_to_those_who_rode_this
+Fast_Ball	25	5	20	30	2	720	5	Spins_very_quickly
+Curve_Ball	35	10	25	40	2	720	15	Visibly_angled,_still_spins_very_fast
+Fireball	35	5	30	35	4	600	5	Spins_at_a_ludicrous_speed
+Funhouse	35	60	25	20	3	1200	5	House_filled_with_fun,_yay
+House_of_Tricks	20	15	10	15	5	1200	5	House_riddled_with_trickery_and_mischief
+Candy_Factory	30	10	15	40	8	1200	10	The_exact_replica_of_wanky's_own_candy_factory
+Loki's_Palace	40	5	10	5	5	900	15	Palace_of_trickery_approved_by_the_god_of_mischief
+Haunted_Mansion	20	20	15	5	3	900	5	Mansion_dwelled_by_ghosts_and_the_supernatural
+Count's_Manor	25	20	30	20	4	720	10	Manor_built_based_on_count_dracula's_dwelling
+Cursed_Castle	20	25	40	15	6	600	10	Castle_built_for_one_purpose,_terror
