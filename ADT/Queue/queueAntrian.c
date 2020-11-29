@@ -14,6 +14,7 @@
 #include "queueAntrian.h"
 #include "boolean.h"
 #include "..\mesinkata\mesinkata.h"
+#include "..\custom_adt\arraywahana.h"
 
 // #define Nil -1
 // /* Konstanta untuk mendefinisikan address tak terdefinisi */
@@ -253,7 +254,7 @@ void DequeueAntrian (QueueAntrian * Q, infotype * X)
         Q mungkin kosong */
 {
 	*X = InfoHead(*Q);
-
+	
 	if (Tail(*Q) == Head(*Q))
 	{
 		Head(*Q) = Nil;
@@ -283,36 +284,55 @@ void PrintQueueAntrian (QueueAntrian Q)
 {
 	if (IsEmptyQueueAntrian(Q))
 	{
-		printf("[]");
+		printf("()");
 	}
 	else if (Head(Q) <= Tail(Q))
 	{
-		printf("[");
 		for (int i = Head(Q); i <= Tail(Q); i++)
 		{
-			PrintKalimat(InfoAntrian(Elmt(Q, i)));
-			
-			if (i != Tail(Q))
-				printf(",");
+			Antrian A = Elmt(Q, i);
+			ArrayWahana W = InfoAntrian(A);
+			printf("(");
+			for(int j = 0; j < NbElmtWahana(W); j++)
+			{
+				PrintKalimat(Nama(ElmtWahana(W, j)));
+				if(j != NbElmtWahana(W)-1)
+					printf(", ");
+			}
+			printf(") ");
+			printf("Kesabaran : %d\n", PrioAntrian(A));
 		}
-		printf("]");
 	}
 	else
 	{
-		printf("[");
 		for (int i = Head(Q); i <= MaxEl(Q)-1; i++)
 		{
-			PrintKalimat(InfoAntrian(Elmt(Q, i)));
-			printf(",");
+			Antrian A = Elmt(Q, i);
+			ArrayWahana W = InfoAntrian(A);
+			printf("(");
+			for(int j = 0; j < NbElmtWahana(W); j++)
+			{
+				PrintKalimat(Nama(ElmtWahana(W, j)));
+				if(j != NbElmtWahana(W)-1)
+					printf(", ");
+			}
+			printf(") ");
+			printf("Kesabaran : %d\n", PrioAntrian(A));
 		}
 
 		for (int i = 0; i <= Tail(Q); i++)
 		{
-			PrintKalimat(InfoAntrian(Elmt(Q, i)));
-
-			if (i != Tail(Q))
-				printf(",");
+			Antrian A = Elmt(Q, i);
+			ArrayWahana W = InfoAntrian(A);
+			printf("(");
+			for(int j = 0; j < NbElmtWahana(W); j++)
+			{
+				PrintKalimat(Nama(ElmtWahana(W, j)));
+				if(j != NbElmtWahana(W)-1)
+					printf(", ");
+			}
+			printf(") ");
+			printf("Kesabaran : %d\n", PrioAntrian(A));
 		}
-		printf("]");
 	}
 }

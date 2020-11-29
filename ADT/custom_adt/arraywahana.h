@@ -126,4 +126,7 @@ void DelLastElWahana (ArrayWahana * T, wahanatype * X);
 /*      Banyaknya elemen tabel berkurang satu */
 /*      Tabel T mungkin menjadi kosong */
 
+void MoveLeftToIdx(ArrayWahana *T, int idx);
+
+
 #endif

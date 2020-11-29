@@ -18,8 +18,6 @@
 
 #define MAX_SIZE_MAP 20
 
-
-
 // Dalam Satuan menit
 int TIME_BUILD = 120;
 int TIME_BUY = 40;
@@ -28,6 +26,9 @@ int TIME_MOVE = 1;
 int TIME_REPAIR = 20;
 
 int REPAIR_COST = 40;
+
+int MAX_KESABARAN = 5;
+int MAX_ANTRIAN = 5;
 
 
 Player P;
@@ -121,8 +122,10 @@ void PERSIAPANGAME();
 ArrayWahana ReadWahanaInfo(char dir[]);
 
 Tree generateWahanaUpgradeTree();
-
+void RandomBroken(int idxWahana);
 void PrintInfoPlayer();
+
+void AntrianEmosiRising();
 
 // ==============================================
 
@@ -211,18 +214,22 @@ int main()
 		else if (KataSama(K, MoveW))
 		{
 			move(0);
+			RandomAntrian();
 		}
 		else if (KataSama(K, MoveA))
 		{
 			move(1);
+			RandomAntrian();
 		}
 		else if (KataSama(K, MoveS))
 		{
 			move(2);
+			RandomAntrian();
 		}
 		else if (KataSama(K, MoveD))
 		{
 			move(3);
+			RandomAntrian();
 		}
 		else if (KataSama(K, SAVE))
 		{
@@ -260,6 +267,7 @@ int main()
 				else if (KataSama(K, MAIN))
 				{
 					prepareToMain();
+					
 				}
 				else
 				{
@@ -271,7 +279,7 @@ int main()
 			{
 				if (KataSama(K, SERVE))
 				{
-					//serve();
+					serve(input);
 				}
 				else if (KataSama(K, REPAIR))
 				{
@@ -352,8 +360,8 @@ void generatePlayer()
 	P.Name = SetKalimat("Alstrukdat");
 
 	Area(P.Position) = 1;
- 	Absis(P.Position) = 6;
-	Ordinat(P.Position) = 6;
+ 	Absis(P.Position) = 4;
+	Ordinat(P.Position) = 10;
 
 	P.Money = 99999;
 	MoneyDebt(P) = 0;
@@ -483,6 +491,7 @@ void gerak(int X)
 					(P).Position = V;
 				}
 				Time(P) = NextNDetik(Time(P), 60);
+				RandomAntrian();
 			}
 		}
 	}
@@ -505,6 +514,7 @@ void gerak(int X)
 					(P).Position = V;
 				}
 				Time(P) = NextNDetik(Time(P), 60);
+				RandomAntrian();
 			}
 		}
 	}
@@ -527,6 +537,7 @@ void gerak(int X)
 					(P).Position = V;
 				}
 				Time(P) = NextNDetik(Time(P), 60);
+				RandomAntrian();
 			}
 		}
 	}
@@ -549,6 +560,7 @@ void gerak(int X)
 					(P).Position = V;
 				}
 				Time(P) = NextNDetik(Time(P), 60);
+				RandomAntrian();
 			}
 		}
 	}
@@ -1567,31 +1579,141 @@ void prepareToMain()
 
 	MAINPHASE = true;
 	MoneyDebt(P) = 0;
+
 	RandomAntrian();
 }
 
 
 // // MAIN PHASE
 // // ================================================================
-// void Serve(Kalimat Namawahana)
-// {
-//     printf("//\tServing Costumer\t//\n");
-//     infotype del;
-//     Dequeue(Q,&del);
-//     *Player.money = *Player.money + Namawahana.cost // ??
-//     // Time nya maju
+/* ketika command serve di input langsung memnaggil prosedur serve */
+/* nama wahana di input di prosedur serve */
 
-// 	boolean found = false;
-// 	int i = 0;
-// 	while (i < NBWahana(W) && !found)
-// 		if (IsEQKalimat(W[i].Name, Namawahana))
-// 			found = true;
-// 		else
-// 			i++;
+void serve(Kalimat inputnamaWahana)
+{
+	POINT t = P.Position;
+	if 
+	(
+		!IsAntrianPosition(MakePOINT(t.X+1, t.Y, t.A)) && 
+		!IsAntrianPosition(MakePOINT(t.X, t.Y+1, t.A)) &&
+		!IsAntrianPosition(MakePOINT(t.X-1, t.Y, t.A)) &&
+		!IsAntrianPosition(MakePOINT(t.X, t.Y-1, t.A))
+	)
+	{
+		printf("\nPlayer Tidak Berada di Sekitar Antrian\n");
+		return;
+	}
+
+	if (IsEmptyQueueAntrian(A))
+	{
+		printf("\nAntrian Sedang Kosong!!\n");
+		return;
+	}
+
+    /* Antiran punya posisition ? */
+    /* pengecekan apakah player di dekat antrian belum */
+    int idxWahanaDimiliki = 0;
+    boolean adaWahana = false;
+    while ((idxWahanaDimiliki<NbWahanaDimiliki) && !(adaWahana))
+	{
+        if(IsEQKalimat(inputnamaWahana, Nama(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki))))
+		{
+            adaWahana = true;
+        }
+        else{
+            idxWahanaDimiliki++;
+        }
+    }
+
+	if (adaWahana && !Condition(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)))
+	{
+		printf("\nWahana Sedang Rusak!!\n");
+		return;
+	}
+
+	if (adaWahana && Condition(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)))
+	{
+		
+		Antrian e = Elmt(A, A.HEAD);
+		ArrayWahana W = e.info;
+		
+		int idxWahanaAntrian = 0;
+		boolean adaAntrian = false;
+		while ((idxWahanaAntrian<NbElmtWahana(W)) && !(adaAntrian))
+		{
+			if(IsEQKalimat(inputnamaWahana, Nama(ElmtWahana(W, idxWahanaAntrian))))
+			{
+				adaAntrian = true;
+			}
+			else{
+				idxWahanaAntrian++;
+			}
+		}
+
+		if (adaAntrian)
+		{
+			//TulisIsiTabWahana(W);
+			addMoney(&P, Profit(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)));
+			TotalNaik(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)) += 1;
+			TotalProfit(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)) += Profit(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki));
+			TodayNaik(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)) += 1;
+			TodayProfit(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)) += Profit(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki));
+			addTime(&P, (long) PlayTime(ElmtWahana(ListWahanaDimiliki, idxWahanaDimiliki)));
+
+			MoveLeftToIdx(&W, idxWahanaAntrian);
+
+			DequeueAntrian(&A, &e);
+			
+			if (NbElmtWahana(W) != 0)
+			{
+				InfoAntrian(e) = W;
+				PrioAntrian(e) -= 1;
+
+				if (PrioAntrian(e) > 0)
+					EnqueueAntrian(&A, e);
+			}
+
+			printf("\nServing ");
+			PrintKalimat(inputnamaWahana);
+			printf(" ...\n");
+
+			RandomBroken(idxWahanaDimiliki);
+		}
+		else
+		{
+			printf("\nTidak ada Antrian yang dimaksud\n");
+		}
+	}
+	else
+	{
+		printf("\nTidak ada Antrian yang dimaksud\n");
+	}
+}
+
+
+void AntrianEmosiRising()
+{
+	if(NBElmtQueueAntrian(A) == 0 && !MAINPHASE)
+		return;
+
+	QueueAntrian tmp;
+	MakeEmptyQueueAntrian(&tmp, 100);
+
+	while(!IsEmptyQueueAntrian(A))
+	{
+		Antrian e;
+		DequeueAntrian(&A, &e);
+		PrioAntrian(e) -= 1;
+
+		if (PrioAntrian(e) > 0)
+		{
+			EnqueueAntrian(&tmp, e);
+		}
+	}
 	
-
-// 	RandomBroken(i);
-// }
+	//PrintQueueAntrian(tmp);
+	A = tmp;
+}
 
 
 int IdxBrokenWahanSekitar(POINT P)
@@ -1622,8 +1744,6 @@ int IdxBrokenWahanSekitar(POINT P)
 
 void repair()
 {
-	printf("Repair\n");
-
 	int idx = IdxBrokenWahanSekitar(P.Position);
 
 	if (idx != -1)
@@ -1640,7 +1760,9 @@ void repair()
         Condition(ElmtWahana(ListWahanaDimiliki, idx)) = true;
 		Money(P) -= REPAIR_COST;
 		Time(P) = NextNDetik(Time(P), TIME_REPAIR*60);
-        
+
+		AntrianEmosiRising();
+		RandomAntrian();
     }
     else
     {
@@ -1668,6 +1790,9 @@ void detail()
 		printf("Status : Berfungsi\n");
 	else
 		printf("Status : Rusak\n");
+	
+	AntrianEmosiRising();
+	RandomAntrian();
 }
 
 boolean IsOfficePosition(int A, float X, float Y)
@@ -1704,6 +1829,9 @@ void InOffice()
 		{	
 			printf("Exit dari Office");
 			OFFICE_MODE= false;
+
+			AntrianEmosiRising();
+			RandomAntrian();
 		}
 		else if (KataSama(K, DETAILS) || KataSama(K, REPORT))
 		{
@@ -1832,36 +1960,67 @@ void EXITGAME(int x)
 
 void RandomAntrian()
 {	
-	if (NbWahanaDimiliki != 0)
+	if (NbWahanaDimiliki != 0 && NBElmtQueueAntrian(A) < MAX_ANTRIAN && MAINPHASE)
 	{
-		int minimum_number = 0, max_number = NbWahanaDimiliki-1;
+		int minAntrianWahana = 1;
+		int maxAntrianWahana = NbWahanaDimiliki;
+		int MinNumber = 1;
+		int MaxNumber = 10;
+		
 		srand(time(0));
+		int adaAntri = rand() % (MaxNumber + 1 - MinNumber) + MinNumber;
+		if (adaAntri > 3)
+			return;
+		
+		srand(time(0));
+		int n = rand() % (maxAntrianWahana + 1 - minAntrianWahana) + minAntrianWahana;
+		printf("\n== Ada Antrian Masuk ==\n");
 
-		for (int i = 0; i < 5; ++i)
+		if (n != 0)
 		{
-			int idxWahana = rand() % (max_number + 1 - minimum_number) + minimum_number;
-			
-			Antrian Q;
-			InfoAntrian(Q) = Nama(ElmtWahana(ListWahanaDimiliki, idxWahana));
-			PrioAntrian(Q) = 0;
+			ArrayWahana W;
+			MakeEmptyWahana(&W);
 
-			EnqueueAntrian(&A, Q);
+			int i = 0;
+			while(i < n)
+			{
+				int minimum_number = 0, max_number = NbWahanaDimiliki-1;
+				
+				srand(time(0));
+				int idxWahana = rand() % (max_number + 1 - minimum_number) + minimum_number;
+
+				if (!SearchBWahana(W, Tipe(ElmtWahana(ListWahanaDimiliki, idxWahana))))
+				{
+					AddAsLastElWahana(&W, ElmtWahana(ListWahanaDimiliki, idxWahana));
+					i++;
+				}
+			}
+
+			Antrian e;
+			PrioAntrian(e) = MAX_KESABARAN;
+			InfoAntrian(e) = W;
+
+			EnqueueAntrian(&A, e);
 		}
 	}
 }
 
-// void RandomBroken(int idxWahana)
-// {
-// 	int broke = random(0, 5);
+void RandomBroken(int idxWahana)
+{
+	int MinNumber = 1;
+	int MaxNumber = 10;
+	srand(time(0));
 
-// 	if (broke >=4 && broke <= 5)
-// 	{
-// 		(*W)[idxWahana].Status = BROKESTATUS;
-// 		printf("Wahana ");
-// 		PrintKalimat((W)[idxWahana].Name)
-// 		printf(" Telah Rusak!!");
-// 	}
-// }
+	int broke = rand() % (MaxNumber + 1 - MinNumber) + MinNumber;
+
+	if (broke <= 1)
+	{
+		Condition(ElmtWahana(ListWahanaDimiliki, idxWahana)) = false;
+		printf("\nWahana ");
+		PrintKalimat(ElmtWahana(ListWahanaDimiliki, idxWahana).Name);
+		printf(" Telah Rusak!!\n");
+	}
+}
 
 
 // void ReadMaterial(char addressFile[], int *wood, int *stone, int *iron, int *mamank) {
@@ -2068,7 +2227,7 @@ void generateMapMain()
     //     printf("\n");
     // }
 
-	if (MAINPHASE && NbElmtWahana(ListWahanaDimiliki) != 0)
+	if (MAINPHASE && NbElmtWahana(ListWahanaDimiliki) != 0 && NBElmtQueueAntrian(A) != 0)
 	{
 		printf("\n");
 		PrintQueueAntrian(A);

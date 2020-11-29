@@ -14,6 +14,7 @@
 
 #include "boolean.h"
 #include "..\mesinkata\mesinkata.h"
+#include "..\custom_adt\arraywahana.h"
 
 #define Nil -1
 #define MAXINFO 10
@@ -22,7 +23,7 @@
 /* Definisi elemen dan address */
 typedef struct {
     int prio;  /* [1..100], prioritas dengan nilai 1..100 (1 adalah prioritas tertinggi) */
-    Kalimat info;  /* elemen karakter */
+    ArrayWahana info;  /* elemen karakter */
 } infotype;
 
 typedef infotype Antrian;

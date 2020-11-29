@@ -96,7 +96,6 @@ boolean IsIdxEffWahana (ArrayWahana T, IdxType i)
 boolean IsEmptyWahana (ArrayWahana T)
 /* Mengirimkan true jika tabel T kosong, mengirimkan false jika tidak */
 {
-	printf("21312");
 	return NbElmtWahana(T) == 0;
 }
 
@@ -281,8 +280,21 @@ void DelLastElWahana (ArrayWahana * T, wahanatype * X)
 /*      Tabel T mungkin menjadi kosong */
 {
 	int last = GetLastIdxWahana(*T);
-
 	*X = ElmtWahana(*T, last);
-
+	
 	Tipe(ElmtWahana(*T, last)) = ValUndef;
+}
+
+void MoveLeftToIdx(ArrayWahana *T, int idx)
+{
+	for (int i = idx; i < NbElmtWahana(*T)-1; i++)
+	{
+		ElmtWahana(*T, i) = ElmtWahana(*T, i+1);
+	}
+	
+	if (NbElmtWahana(*T) != 0)
+	{
+		wahanatype X;
+		DelLastElWahana(T, &X);
+	}
 }
