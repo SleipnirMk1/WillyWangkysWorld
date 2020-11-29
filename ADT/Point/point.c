@@ -18,29 +18,30 @@ POINT MakePOINT (float X, float Y, int A)
 }
 /* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */
 void BacaPOINT (POINT * P)
-/* Membaca nilai absis dan ordinat dari keyboard dan membentuk
-   POINT P berdasarkan dari nilai absis dan ordinat tersebut */
-/* Komponen X dan Y dibaca dalam 1 baris, dipisahkan 1 buah spasi */
-/* Contoh: 1 2
-   akan membentuk POINT <1,2> */
+/* Membaca nilai absis, ordinat, dan area dari keyboard dan membentuk
+   POINT P berdasarkan dari nilai absis, ordinat, dan area tersebut */
+/* Komponen X, Y, dan A dibaca dalam 1 baris, dipisahkan 1 buah spasi */
+/* Contoh: 1 2 3
+   akan membentuk POINT <1,2,3> */
 /* I.S. Sembarang */
 /* F.S. P terdefinisi */
 {
 	float x, y, a;
 	
-	scanf("%f\n", &x);
-	scanf("%f\n", &y);
+	scanf("%f ", &x);
+	scanf("%f ", &y);
 	scanf("%f\n", &a);
 	*P = MakePOINT(x, y, a);
 }
 void TulisPOINT (POINT P)
-/* Nilai P ditulis ke layar dengan format "(X,Y)"
+/* Nilai P ditulis ke layar dengan format "(X,Y,A)"
    tanpa spasi, enter, atau karakter lain di depan, belakang,
    atau di antaranya
    Output X dan Y harus dituliskan dalam bilangan riil dengan 2 angka di belakang koma.
+	Output Area dituliskan dalam integer
 */
 /* I.S. P terdefinisi */
-/* F.S. P tertulis di layar dengan format "(X,Y)" */
+/* F.S. P tertulis di layar dengan format "(X,Y,Z)" */
 {
 	printf("(%.2f,%.2f,%d)", Absis(P), Ordinat(P), Area(P));
 }
@@ -62,22 +63,22 @@ boolean NEQ (POINT P1, POINT P2)
 
 /* *** Kelompok menentukan di mana P berada *** */
 boolean IsOrigin (POINT P)
-/* Menghasilkan true jika P adalah titik origin */
+/* Menghasilkan true jika P adalah titik origin dalam suatu area */
 {
 	return ((Absis(P) == 0) && (Ordinat(P) == 0));
 }
 boolean IsOnSbX (POINT P)
-/* Menghasilkan true jika P terletak Pada sumbu X */
+/* Menghasilkan true jika P terletak Pada sumbu X pada suatu area */
 {
 	return (Ordinat(P) == 0);
 }
 boolean IsOnSbY (POINT P)
-/* Menghasilkan true jika P terletak pada sumbu Y */
+/* Menghasilkan true jika P terletak pada sumbu Y pada suatu area */
 {
 	return (Absis(P) == 0);
 }
 int Kuadran (POINT P)
-/* Menghasilkan kuadran dari P: 1, 2, 3, atau 4 */
+/* Menghasilkan kuadran dari P: 1, 2, 3, atau 4 dalam suatu area */
 /* Prekondisi : P bukan titik origin, */
 /*              dan P tidak terletak di salah satu sumbu */
 {
@@ -117,11 +118,12 @@ POINT NextA (POINT P)
 }
 POINT PlusDelta (POINT P, float deltaX, float deltaY, int deltaA)
 /* Mengirim salinan P yang absisnya adalah Absis(P) + deltaX dan ordinatnya adalah Ordinat(P) + deltaY */
+/* Serta area nya Area(P) + deltaA */
 {
 	return MakePOINT(Absis(P) + deltaX, Ordinat(P) + deltaY, Area(P) + deltaA);
 }
 POINT MirrorOf (POINT P, boolean SbX)
-/* Menghasilkan salinan P yang dicerminkan terhadap salah satu sumbu */
+/* Menghasilkan salinan P yang dicerminkan terhadap salah satu sumbu dalam suatu area */
 /* Jika SbX bernilai true, maka dicerminkan terhadap sumbu X */
 /* Jika SbX bernilai false, maka dicerminkan terhadap sumbu Y */
 {
@@ -136,7 +138,7 @@ POINT MirrorOf (POINT P, boolean SbX)
 	
 }
 float Jarak0 (POINT P)
-/* Menghitung jarak P ke (0,0) */
+/* Menghitung jarak P ke (0,0,A) */
 {
 	float x  = (Absis(P) * Absis(P)) + (Ordinat(P) * Ordinat(P));
 	return sqrt(x);
@@ -144,7 +146,6 @@ float Jarak0 (POINT P)
 float Panjang (POINT P1, POINT P2)
 /* Menghitung panjang garis yang dibentuk P1 dan P2 */
 /* Hanya digunakan untuk mengukur panjang dalam satu area yang sama, tidak berbeda area */
-/* Jika digunakan untuk mengukur panjang 2 point beda area, akan mengembalikan hasil seolah-olah satu area */
 {
 	float x, y;
 
@@ -164,7 +165,7 @@ void GeserKeSbX (POINT *P)
 /* I.S. P terdefinisi */
 /* F.S. P berada pada sumbu X dengan absis sama dengan absis semula. */
 /* Proses : P digeser ke sumbu X. */
-/* Contoh : Jika koordinat semula (9,9), maka menjadi (9,0) */
+/* Contoh : Jika koordinat semula (9,9,1), maka menjadi (9,0,1) */
 {
 	*P = MakePOINT(Absis(*P), 0, Area(*P));
 }
@@ -172,7 +173,7 @@ void GeserKeSbY (POINT *P)
 /* I.S. P terdefinisi*/
 /* F.S. P berada pada sumbu Y dengan ordinat yang sama dengan semula. */
 /* Proses : P digeser ke sumbu Y. */
-/* Contoh : Jika koordinat semula (9,9), maka menjadi (0,9) */
+/* Contoh : Jika koordinat semula (9,9,1), maka menjadi (0,9,1) */
 {
 	*P = MakePOINT(0, Ordinat(*P), Area(*P));
 }
@@ -186,7 +187,7 @@ void Mirror (POINT *P, boolean SbX)
 }
 void Putar (POINT *P, float Sudut)
 /* I.S. P terdefinisi */
-/* F.S. P digeser sebesar Sudut derajat dengan sumbu titik (0,0) searah jarum jam*/
+/* F.S. P digeser sebesar Sudut derajat dengan sumbu titik (0,0) searah jarum jam, masih dalam area yang sama */
 {
 	*P = MakePOINT(((Absis(*P) * cos(Sudut)) + (-1) * Ordinat(*P) * sin(Sudut) ), ((Absis(*P) * sin(Sudut)) + (Ordinat(*P) * cos(Sudut))), Area(*P));
 }

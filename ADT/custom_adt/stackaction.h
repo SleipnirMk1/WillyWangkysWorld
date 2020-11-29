@@ -91,8 +91,12 @@ void PopAction (StackAction * S, Action * X);
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
 int NbElmtStackAction(StackAction S);
+// Mengembalikan jumlah aksi dalam stack
 
 int TotalTimeAction(StackAction S);
+// mengembalikan total waktu seluruh aksi dalam stack
+
 int TotalPrice(StackAction S);
+// mengembalikan total biaya seluruh aksi dalam stack
 
 #endif

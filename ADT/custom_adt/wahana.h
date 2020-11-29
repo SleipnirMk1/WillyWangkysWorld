@@ -1,3 +1,10 @@
+/* File : wahana.c */
+
+
+#ifndef WAHANA_H
+#define WAHANA_H
+
+/* Requirements */
 #include <stdio.h>
 #include "boolean.h"
 //#include "jam.h"
@@ -6,28 +13,24 @@
 #include "player.h"
 //#include "../listBerkait/listlinier.h"
 
-#ifndef WAHANA_H
-#define WAHANA_H
-
-// #define Nil -1;
 
 /* *** Definisi TYPE WAHANA *** */
 typedef struct {
-	Kalimat Name;
-    int Type;
-    boolean Condition;
-    int PriceCost;
-    Material MaterialCost;
-    POINT Position;
-    Kalimat Deskripsi;
-    int Capacity;
-    int PlayTime;
-    int Profit;
-    int UsedAmount;
-    int TotalProfit;
-    int UsedToday;
-    int ProfitToday;
-    //List Upgrade;
+	Kalimat Name;           // Nama wahana
+    int Type;               // Tipe wahana
+    boolean Condition;      // Kondisi rusak/tidak
+    int PriceCost;          // Harga uang
+    Material MaterialCost;  // Keperluan material
+    POINT Position;         // Posisi wahana dalam taman bermain
+    Kalimat Deskripsi;      // Deskripsi wahana
+    int Capacity;           // Kapasitas pengunjung
+    int PlayTime;           // Durasi digunakan
+    int Profit;             // Keuntungan tiap pengunjung
+    int UsedAmount;         // Total digunakan
+    int TotalProfit;        // Total pendapatan
+    int UsedToday;          // Penggunaan hari ini
+    int ProfitToday;        // Pendapatan wahana hari ini
+    //List Upgrade;         // Sejarah upgrade
 } WAHANA;
 
 /* *** Notasi Akses: WAHANA *** */
