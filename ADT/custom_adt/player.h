@@ -13,7 +13,6 @@ typedef struct{
     int wood;
     int stone;
     int iron;
-    //int mamank;
 }Material;
 
 typedef struct{
@@ -47,15 +46,20 @@ typedef struct{
 #define Wood(M) (M).wood
 #define Stone(M) (M).stone
 #define Iron(M) (M).iron
-//#define Mamank(M) (M).mamank
 
 /* ************ Prototype ************ */
 void addMoney (Player *P, int X);
+/* menambahkan uang player sebanyak X */
 
-void addMaterial(Player *P, int wood, int stone, int iron, int mamank);
+void addMaterial(Player *P, int wood, int stone, int iron);
+/* menambahkan atau mengurangi (jika input minus) material yang dimiliki player */
 
 void nextDay(Player *P);
+/* hari maju sebanyak 1 hari */
 
 void createEmptyMaterial (Material *Mat);
+
+void addTime(Player *P, long X);
+/* menambahkan waktu yang dilewati player sebanyak X (dalam detik) */
 
 #endif
