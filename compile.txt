@@ -1,1 +1,1 @@
-gcc main.c ADT/mesinkata/mesinkata.c ADT/mesinkata/mesinkar.c ADT/graph/graph.c ADT/point/point.c ADT/custom_adt/player.c ADT/jam/jam.c ADT/custom_adt/stackaction.c
+gcc main.c ADT/mesinkata/mesinkata.c ADT/mesinkata/mesinkar.c ADT/graph/graph.c ADT/point/point.c ADT/custom_adt/player.c ADT/jam/jam.c ADT/custom_adt/stackaction.c ADT/custom_adt/arraywahana.c ADT/queue/queueAntrian.c ADT/Tree/tree.c

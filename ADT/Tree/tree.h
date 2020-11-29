@@ -5,26 +5,26 @@
  
  #include <stdlib.h>
  
- #define Nil NULL
+ #define NilTree NULL
  #define Info(T) (T)->info
  #define Left(T) (T)->left
  #define Right(T) (T)->right
  
- typedef char infotype;
- typedef struct TNode *address;
+ typedef char infotypeTree;
+ typedef struct TNode *addressTree;
  typedef struct TNode
  { 
- 	infotype info;
- 	address left;
- 	address right;
+ 	infotypeTree info;
+ 	addressTree left;
+ 	addressTree right;
  } Node;
  
- typedef address Tree;
+ typedef addressTree Tree;
  
- void Alokasi(address *P, infotype X);
+ void AlokasiTree(addressTree *P, infotypeTree X);
  void BuildTree(Tree *T);
- void BuildTreeFromString(Tree *T, char *st, int *idx);
+void BuildTreeFromString(Tree *T, char *st, int *idx, int MAX);
  void PrintTree(Tree T);
- Tree SearchTreeNode(Tree P, infotype X);
+ Tree SearchTreeNode(Tree P, infotypeTree X);
  
  #endif

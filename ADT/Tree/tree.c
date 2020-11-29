@@ -1,16 +1,17 @@
 /* file : tree.c */
 
+#include <stdio.h>
 #include "tree.h"
-#include "mesinkar.h"
+#include "..\mesinkata\mesinkar.h"
 
-void Alokasi(address *P, infotype)
+void AlokasiTree(addressTree *P, infotypeTree X)
 { 
-	*P=(address) malloc(sizeof(Node));
- 	if (*P != Nil) 
+	*P=(addressTree) malloc(sizeof(Node));
+ 	if (*P != NilTree) 
 	{
 		Info(*P)=X;
-		Left(*P)=Nil;
-		Right(*P)=Nil;
+		Left(*P)=NilTree;
+		Right(*P)=NilTree;
 	}
 }
 void BuildTree(Tree *T)
@@ -19,35 +20,38 @@ void BuildTree(Tree *T)
 	ADV();
  	if (CC==')')
  	{
-		(*T)=Nil;
+		(*T)=NilTree;
 	}else
  	{ 
-		Alokasi(T,CC);
+		AlokasiTree(T,CC);
 		ADV();
 		BuildTree(&Left(*T));
 	 	BuildTree(&Right(*T));
 	}
  	ADV();
 }
-void BuildTreeFromString(Tree *T, char *st, int *idx)
+void BuildTreeFromString(Tree *T, char *st, int *idx, int MAX)
  /* input dari string st */
 { 	
+	printf("Test0\n");
 	(*idx)++; /* advance */
+
 	if (st[*idx]==')')
 	{
-		(*T)=Nil;
+		(*T)=NilTree;
 	}else
  	{	 
-	 	Alokasi(T, st[*idx]);
+	 	AlokasiTree(T, st[*idx]);
 		(*idx)++; /* advance */
-	 	BuildTreeFromString(&Left(*T),st,idx);
-	 	BuildTreeFromString(&Right(*T),st,idx);
+		printf("Test1\n");
+	 	BuildTreeFromString(&Left(*T),st,idx, MAX);
+	 	BuildTreeFromString(&Right(*T),st,idx, MAX);
 	}
- 	(*idx)++; /* advance */
+ 	//(*idx)++; /* advance */
 }
 void PrintTree(Tree T)
 { 
-	if (T==Nil)
+	if (T==NilTree)
 	{
 		 printf("()");
 	}else
@@ -58,29 +62,29 @@ void PrintTree(Tree T)
 	}
 }
 
-Tree SearchTreeNode(Tree P, infotype X)
-/* Mengirimkan node dari P yang bernilai X */
+Tree SearchTreeNode(Tree P, infotypeTree X)
+/* Mengirimkan node dari P yang berNilTreeai X */
 {
-   if (P == Nil)
+   if (P == NilTree)
    {
-      	return Nil;
+      	return NilTree;
    }
    else if (Info(P) == X)
    {
     	return P;
    }
    else {
-		if (SearchTree(Left(P), X) != Nil)
+		if (SearchTreeNode(Left(P), X) != NilTree)
 		{
-			return (SearchTree(Left(P), X);
+			return (SearchTreeNode(Left(P), X));
 		}
-		else if (SearchTree(Right(P), X) != Nil)
+		else if (SearchTreeNode(Right(P), X) != NilTree)
 		{
-			return (SearchTree(Right(P), X);
+			return (SearchTreeNode(Right(P), X));
 		}
 		else
 		{
-			return Nil;
+			return NilTree;
 		}
    }
 }
