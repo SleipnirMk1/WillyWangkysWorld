@@ -10,7 +10,7 @@
  #define Left(T) (T)->left
  #define Right(T) (T)->right
  
- typedef char infotypeTree;
+ typedef int infotypeTree;
  typedef struct TNode *addressTree;
  typedef struct TNode
  { 
@@ -20,11 +20,20 @@
  } Node;
  
  typedef addressTree Tree;
- 
+ boolean IsTreeEmpty(Tree T);
  void AlokasiTree(addressTree *P, infotypeTree X);
  void BuildTree(Tree *T);
 void BuildTreeFromString(Tree *T, char *st, int *idx);
  void PrintTree(Tree T);
  Tree SearchTreeNode(Tree P, infotypeTree X);
+
+
+void PrintTreeLevel(Tree P, int h, int level);
+
+void PrintTreeIndent(Tree P, int h);
+
+Tree BuildBalanceTree(int n, int *in);
+
+
  
  #endif
