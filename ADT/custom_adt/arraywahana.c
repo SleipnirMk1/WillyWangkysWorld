@@ -96,6 +96,7 @@ boolean IsIdxEffWahana (ArrayWahana T, IdxType i)
 boolean IsEmptyWahana (ArrayWahana T)
 /* Mengirimkan true jika tabel T kosong, mengirimkan false jika tidak */
 {
+	printf("21312");
 	return NbElmtWahana(T) == 0;
 }
 
@@ -156,7 +157,7 @@ boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2)
 	else
 	{
 		boolean Eq = true;
-
+	
 		int n = NbElmtWahana(T1);
 		int i = IdxMinWahana;
 
@@ -183,7 +184,7 @@ IdxType Search1Wahana (ArrayWahana T, int tipe)
 /* Menghasilkan indeks tak terdefinisi (IdxUndef) jika tabel T kosong */
 /* Skema Searching yang digunakan bebas */
 {
-	if (IsEmptyWahana(T))
+	if (NbElmtWahana(T) == 0)
 	{
 		return IdxUndef;
 	}
@@ -201,7 +202,7 @@ IdxType Search1Wahana (ArrayWahana T, int tipe)
 			else
 				i++;
 		}
-
+		
 		if (found)
 			return i;
 		else
