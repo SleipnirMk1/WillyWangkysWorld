@@ -8,9 +8,11 @@
 #include "ADT\custom_adt\player.h"
 #include "ADT\point\point.h"
 #include "ADT\custom_adt\stackaction.h"
+#include "ADT\custom_adt\arraywahana.h"
 #include "ADT\custom_adt\wahana.h"
 #include "ADT\queue\queueAntrian.h"
 #include "ADT\jam\jam.h"
+#include "ADT\Tree\tree.h"
 //#include "ADT\custom_adt\listlinierwahana.h"
 
 // #define MAXSTACKACTION 100
@@ -34,9 +36,9 @@ Graph G;
 StackAction S;
 QueueAntrian A;
 
-WAHANA ListWahanaYandDimiliki[100];
+ArrayWahana ListWahanaYandDimiliki;
 int NbWahanaYangDimiliki = 0;
-WAHANA ListWahanaTersedia[100];
+ArrayWahana ListWahanaTersedia;
 int NbAvailableWahana = 0;
 
 
@@ -388,30 +390,28 @@ void generateAllConstant()
 
 void generateWahanaYangDimiliki()
 {
-	ListWahanaYandDimiliki[0].Name = SetKalimat("Roller Coster");
-	ListWahanaYandDimiliki[1].Name = SetKalimat("Biang Lala");
-	ListWahanaYandDimiliki[2].Name = SetKalimat("Uwu Coster");
+	ListWahanaYandDimiliki.TI[0].Name = SetKalimat("Roller Coster");
+	ListWahanaYandDimiliki.TI[1].Name = SetKalimat("Biang Lala");
+	ListWahanaYandDimiliki.TI[2].Name = SetKalimat("Uwu Coster");
 
-	ListWahanaYandDimiliki[0].Position = MakePOINT(5, 6, 1);
-	ListWahanaYandDimiliki[1].Position = MakePOINT(2, 15, 2);
-	ListWahanaYandDimiliki[2].Position = MakePOINT(9, 10, 1);
+	ListWahanaYandDimiliki.TI[0].Position = MakePOINT(5, 6, 1);
+	ListWahanaYandDimiliki.TI[1].Position = MakePOINT(2, 15, 2);
+	ListWahanaYandDimiliki.TI[2].Position = MakePOINT(9, 10, 1);
 
 	NbWahanaYangDimiliki = 3;
 }
 
 void generateWahanaTersedia()
 {
-	ListWahanaTersedia[0].Name = SetKalimat("Roller Coster");
-	ListWahanaTersedia[1].Name = SetKalimat("Biang Lala");
-	ListWahanaTersedia[2].Name = SetKalimat("Arum Jerang");
+	ListWahanaTersedia.TI[0].Name = SetKalimat("Roller Coster");
+	ListWahanaTersedia.TI[1].Name = SetKalimat("Biang Lala");
+	ListWahanaTersedia.TI[2].Name = SetKalimat("Uwu Coster");
 
-	ListWahanaTersedia[0].PriceCost = 100;
-	ListWahanaTersedia[1].PriceCost = 50;
-	ListWahanaTersedia[2].PriceCost = 30;
+	ListWahanaTersedia.TI[0].PriceCost = 100;
+	ListWahanaTersedia.TI[0].PriceCost = 50;
+	ListWahanaTersedia.TI[0].PriceCost = 30;
 
 	NbAvailableWahana = 3;
-
-
 }
 
 void generateNewGame()
@@ -873,7 +873,7 @@ void PrintListWahanaTersedia()
 {
 	for (int i = 0; i < NbAvailableWahana; i++)
 	{
-		PrintKalimat(ListWahanaTersedia[i].Name);
+		PrintKalimat(ListWahanaTersedia.TI[i].Name);
 		printf("\n");
 	}
 	
@@ -904,7 +904,7 @@ void build ()
 			int i = 0;
 			while(i < NbAvailableWahana && !available)
 			{
-				if (IsEQKalimat(K, ListWahanaTersedia[i].Name))
+				if (IsEQKalimat(K, ListWahanaTersedia.TI[i].Name))
 					available = true;
 				else
 					i++;
@@ -917,18 +917,18 @@ void build ()
 			else
 			{
 
-				if (CanBuild(ListWahanaTersedia[i]))
+				if (CanBuild(ListWahanaTersedia.TI[i]))
 				{
 					Action A;
-					ActionName(A) = ListWahanaTersedia[i].Name;
+					ActionName(A) = ListWahanaTersedia.TI[i].Name;
 					SetKata(&ActionType(A), "build");
 					ActionTime(A) = 100;
 					ActionAmount(A) = 1;
-					ActionPrice(A) = ListWahanaTersedia[i].PriceCost;
+					ActionPrice(A) = ListWahanaTersedia.TI[i].PriceCost;
 					ActionPosition(A) = P.Position;
 					PushAction(&S, A);
 
-					P.Debt += ListWahanaTersedia[i].PriceCost;
+					P.Debt += ListWahanaTersedia.TI[i].PriceCost;
 
 					printf("Perintah Build ");
 					PrintKalimat(K);
@@ -948,53 +948,6 @@ void build ()
 	
 }
 
-// ListWahana GetNearbyWahana (POINT posisi_player, ListWahana list_of_built_wahana)
-// {
-// 	ListWahana Lout;
-// 	CreateEmptyW(&Lout);
-
-// 	if (IsEmpty(list_of_built_wahana)){
-//         return Nil;
-//     }
-//     else
-// 	{
-// 		float X, Y;
-// 		int A;
-// 		address Elmt = First(list_of_built_wahana);
-//         while (Elmt != Nil)
-// 		{
-// 			X = Absis(Lokasi(Info(Elmt)));
-// 			Y = Ordinat(Lokasi(Info(Elmt)));
-// 			A = Area(Lokasi(Info(Elmt)));
-
-// 			if (Area(posisi_player) == A)
-// 			{
-// 				if ((X + 1) == Absis(posisi_player) && Y == Ordinat(posisi_player))
-// 				{
-// 					InsVLast(&Lout, Info(Elmt));
-// 				}
-// 				else if ((X - 1) == Absis(posisi_player) && Y == Ordinat(posisi_player))
-// 				{
-// 					InsVLast(&Lout, Info(Elmt));
-// 				}
-// 				else if (X  == Absis(posisi_player) && (Y + 1) == Ordinat(posisi_player))
-// 				{
-// 					InsVLast(&Lout, Info(Elmt));
-// 				}
-// 				else if (X  == Absis(posisi_player) && (Y - 1) == Ordinat(posisi_player))
-// 				{
-// 					InsVLast(&Lout, Info(Elmt));
-// 				}
-// 			}
-
-// 			Elmt = Next(Elmt);
-// 		}
-//     }
-
-// 	return Lout;
-// }
-
-
 int IdxWahanaSekitar(POINT P)
 {
 	boolean found = false;
@@ -1006,7 +959,7 @@ int IdxWahanaSekitar(POINT P)
 		POINT P3 = MakePOINT(Absis(P), Ordinat(P)+1, Area(P));
 		POINT P4 = MakePOINT(Absis(P)-1, Ordinat(P), Area(P));
 
-		POINT PW = ListWahanaYandDimiliki[i].Position;
+		POINT PW = ListWahanaYandDimiliki.TI[i].Position;
 
 		if (EQ(PW, P1))
 			found = true;
@@ -1026,198 +979,175 @@ int IdxWahanaSekitar(POINT P)
 		return i;
 }
 
-// void Upgrade ()
-// {
-// 	int IsAdaWahanaSekitar = IdxWahanaSekitar(P.Position);
+// Membaca dari file seharusnya, klo ga ya buat tree sendiri
+Tree generateWahanaUpgradeTree()
+{
+	Tree W;
+	W = ReadWahana("wahana.txt");
+	return W;
+}
 
-// 	if (IsAdaWahanaSekitar == -1)
-// 	{
-// 		printf("Tidak ada wahana yang tersedia!!\n");
-// 		return;
-// 	}
+// Melayani Input jenis upgrade dengan melihat pohon upgrade
+void CheckTreeUpgrade(Tree UpgradeTree, ArrayWahana T_built_wahana, ArrayWahana T_all_wahana, IdxType i_nearby, boolean * CanUpgrade, IdxType * TargetUpgrade)
+{
+	// Utk input tujuan upgrade
+	Kalimat Q;
 
+	// Fungsi mencari simpul yang sesuai dengan tipe wahana yg akan diupgrade
+	Tree UpTarget = SearchTreeNode(UpgradeTree, Tipe(ElmtWahana(T_built_wahana, i_nearby)));
 
-// 	boolean upgrade = true;
+	// Jika ditemukan simpul yang sesuai
+	if (UpTarget != Nil)	
+	{
+		// Memastikan ada upgrade utk simpul
+		if (Left(UpTarget) != Nil && Right(UpTarget) != Nil)
+		{
+			printf("%s\n", Info(Left(UpTarget)) );
+			printf("%s\n", Info(Right(UpTarget)) );
+			Q = GetKalimat();
 
-// 	while(upgrade && !IsAdaWahanaSekitar != -1)
-// 	{
-// 		ListWahana arr = GetNearbyWahana(Position(player));	// Masukkan data posisi pemain
+			// Mencari informasi dari cabang upgrade wahana terpilih
+			IdxType Target1 = Search1Wahana(T_all_wahana, Info(Left(UpTarget)) );
+			IdxType Target2 = Search1Wahana(T_all_wahana, Info(Right(UpTarget)) );
 
-// 		if (IsEmpty(arr))
-// 		{
-// 			printf("Tidak ada wahana yang bisa di upgrade di sekitar\n");
-// 			upgrade = false;
-// 		}
+			// Jika cabang kiri
+			if (IsEQKalimat(Q, Nama(ElmtWahana(T_all_wahana, Target1))))
+			{
+				// Pengecekan resource, sama seperti build
+				if (CanBuild(ElmtWahana(T_all_wahana, Target1)) )
+				{
+					*CanUpgrade = true;
+					*TargetUpgrade = Target1;
+				}
+				else
+				{
+					printf("Sumber daya tidak mencukupi\n");
+				}
+				
+			}
+			// Jika cabang kanan
+			else if (IsEQKalimat(Q, Nama(ElmtWahana(T_all_wahana, Target1)) ) )
+			{
+				// Pengecekan resource, sama seperti build
+				if (CanBuild(ElmtWahana(T_all_wahana, Target2)) )
+				{
+					*CanUpgrade = true;
+					*TargetUpgrade = Target2;
+				}
+				else
+				{
+					printf("Sumber daya tidak mencukupi\n");
+				}
+			}
+			// Pilihan cabang tidak tersedia
+			else
+			{
+				printf("Tidak terdapat upgrade tersebut\n");
+			}
+		}
+		// Tidak terdapat upgrade utk wahana
+		else
+		{
+			printf("Wahana ini tidak memiliki upgrade\n");
+		}
+	}
+	// Tidak ditemukan wahana dalam tree
+	else
+	{
+		printf("Wahana tidak valid\n");
+	}
+}
 
-// 		printf("Ingin upgrade wahana apa?\n");
+// Melayani fungsi upgrade
+void Upgrade (StackAction * S)
+{
+	// Cek ada wahana di sekitar player, fungsi yg sudah ada tidak masalah
+	int IsAdaWahanaSekitar = IdxWahanaSekitar(P.Position);
 
-//         int i;
-// 		for (i = 0; i < NbElmt(arr); ++i)
-//         {
-//             printf("%s\n", Elmt(arr, i));     // Print nama wahana yang tersedia
-//         }
+	// Utk loop
+	boolean IsUpgrading;
 
-// 		QueueKata K = GetQueueKata();
+	if (IsAdaWahanaSekitar = -1)
+	{
+		printf("Tidak ada wahana yang tersedia!!\n");
+		IsUpgrading = false;
+	}
+	else
+	{
+		IsUpgrading = true;
+	}
+
+	// Menyingkat nama variabel
+	int Idx_sekitar = IsAdaWahanaSekitar;		
+	ArrayWahana T_built = ListWahanaYandDimiliki;
+
+	// Harus mengakses informasi wahana dari database yang mencangkup semua wahana
+	// Berbeda dengan database wahana yang tersedia utk dibangun
+	ArrayWahana T_all_wahana = generateListAllWahana();	
+
+	// Mengakses pohon upgrade
+	Tree UpTree;
+	UpTree = generateWahanaUpgradeTree();
+
+	while(IsUpgrading)
+	{
+		printf("Sedang meng-upgrade wahana %s\n", Nama(ElmtWahana(T_built, Idx_sekitar)) );
+
+		Kalimat K = GetKalimat();
+		Kalimat K2 = K;
+		Kata exitKata;
+		DequeueKalimat(&K2, &exitKata);
 		
-// 		if(IsEQ(K, EXIT))
-// 		{
-// 			upgrade = false;
-// 			printf("Upgrade dibatalkan\n");
-// 		}
-// 		else
-// 		{
-// 			boolean inReach = false;
-// 			for (i = 0; i < NbElmt(arr); ++i)
-// 			{
-// 				if (IsEQ(K, Elmt(arr, i)))
-//                 {
-//                     inReach = true;
-//                 }
-// 			}
+		if(KataSama(exitKata, EXIT))
+		{
+			IsUpgrading = false;
+			printf("Upgrade dibatalkan\n");
+		}
+		else
+		{
+			boolean CanUpgrade = false;
+			// TargetUp adalah index wahana yang tujuan upgrade
+			IdxType TargetUp;
 
-// 			if (!inReach)
-// 			{
-// 				printf("Wahana yang dipilih tidak dalam jangkauan\n");
-// 			}
-// 			else
-// 			{
-// 				boolean CanUpgrade = false;
-// 				printf("Ingin upgrade menjadi apa?\n");
-// 				QueueKata Q;
-// 				address P;
-// 				Material MOwn, MCost;
+			printf("Ingin upgrade menjadi apa?\n");
+			CheckTreeUpgrade(UpTree, T_built, T_all_wahana, Idx_sekitar, &CanUpgrade, &TargetUp);
 
-// 				int Durasi;
-// 				int Uang, Wood, Stone, Iron;
+			if (CanUpgrade)
+			{
+				Action A;
+				ActionName(A) = Nama(ElmtWahana(T_all_wahana, TargetUp));
+				SetKata(&ActionType(A), "upgrade");	
+				ActionTime(A) = TIME_UPGRADE;
+				ActionAmount(A) = 1;
+				ActionPrice(A) = Price(ElmtWahana(T_all_wahana, TargetUp));	// harga uang
+				
+				// lokasi wahana lama, bisa utk rujukan ke wahana lama
+				ActionPosition(A) = Lokasi(ElmtWahana(T_built, Idx_sekitar));	
 
-// 				// Bagian bawahnya nantinya mau dibuat fungsi lagi biar lebih rapi
+				// Keperluan material
+				Wood(ActionMaterialCost(A)) = Wood(MaterialCost(ElmtWahana(T_all_wahana, TargetUp)));	// harga kayu
+				Stone(ActionMaterialCost(A)) = Stone(MaterialCost(ElmtWahana(T_all_wahana, TargetUp)));	// harga batu
+				Iron(ActionMaterialCost(A)) = Iron(MaterialCost(ElmtWahana(T_all_wahana, TargetUp)));		// harga besi
+				
+				PushAction(S, A);	// Push ke stack
 
-// 				if (IsEQ(K, Info(W1)))
-// 				{
-// 					printf("%s\n", Left(W1));
-// 					printf("%s\n", Right(W1));
-// 					Q = GetQueueKata();
+				P.Debt += Price(ElmtWahana(T_all_wahana, TargetUp));
 
-// 					if (IsEQ(Q, Left(W1)))
-// 					{
-// 						P = Search(L, Left(W1));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 					else if (IsEQ(Q, Right(W1)))
-// 					{
-// 						P = Search(L, Right(W1));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 				}
-// 				else if (IsEQ(K, Info(W2)))
-// 				{
-// 					printf("%s\n", Left(W2));
-// 					printf("%s\n", Right(W2));
-// 					Q = GetQueueKata();
+				printf("Perintah Upgrade ");
+				PrintQueue(K);
+				printf(" dimasukkan ke dalam Stack\n");
 
-// 					if (IsEQ(Q, Left(W2)))
-// 					{
-// 						P = Search(L, Left(W2));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 					else if (IsEQ(Q, Right(W2)))
-// 					{
-// 						P = Search(L, Right(W2));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 				}
-// 				else if (IsEQ(K, Info(W3)))
-// 				{
-// 					printf("%s\n", Left(W3));
-// 					printf("%s\n", Right(W3));
-// 					Q = GetQueueKata();
-
-// 					if (IsEQ(Q, Left(W3)))
-// 					{
-// 						P = Search(L, Left(W3));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 					else if (IsEQ(Q, Right(W3)))
-// 					{
-// 						P = Search(L, Right(W3));	// Mungkin fungsi search nya perlu di ubah
-// 						MCost = MaterialCost(Info(P));
-// 						MOwn = Material(player);
-// 						if (Money(player) >= Price(Info(P)) && Wood(MOwn) >= Wood(MCost) && Stone(MOwn) >= Stone(Info(MCost)) && Iron(MOwn) >= Iron(Info(MCost)) && Mamank(MOwn) >= Mamank(MCost))	// Cek resource
-// 						{
-// 							boolean CanUpgrade = true;
-// 						}
-// 					}
-// 				}
-// 				else
-// 				{
-// 					printf("Tidak ada upgrade untuk wahana ini\n");
-// 				}
-
-// 				Durasi = Durasi(Info(P));
-// 				Uang = Price(Info(P));
-// 				Wood = Wood(MCost);
-// 				Stone = Stone(MCost);
-// 				Iron = Iron(MCost);
-
-// 				if (CanUpgrade)
-// 				{
-// 					Action A;
-// 					ActionName(A) = "Upgrade";
-// 					ActionType(A) = UPGRADETYPE;
-// 					ActionTime(A) = Durasi;
-// 					ActionAmount(A) = 1;
-// 					ActionPrice(A) = Uang;
-// 					ActionPosition(A) = Lokasi(Info(P));
-// 					Wood(ActionMaterialCost(A)) = Wood;
-// 					Stone(ActionMaterialCost(A)) = Stone;
-// 					Iron(ActionMaterialCost(A)) = Iron;
-
-// 					Push(S, A);
-
-// 					printf("Perintah Upgrade ");
-// 					PrintQueue(K);
-// 					printf("Menjadi ");
-// 					PrintQueue(Q);
-// 					printf(" dimasukkan ke dalam Stack\n");
-
-// 					upgrade = false;
-// 				}
-// 				else
-// 				{
-// 					printf("Tidak dapat melakukan upgrade ");
-// 					PrintQueue(K);
-// 					printf("\n");
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
+				IsUpgrading = false;
+			}
+			else
+			{
+				printf("Tidak dapat melakukan upgrade ");
+				PrintQueue(K);
+				printf("\n");
+			}
+		}	
+	}
+}
 
 void generateListMaterial()
 {
@@ -1403,17 +1333,17 @@ void executeBuild(Action A)
 	int i = 0;
 	while(i < NbAvailableWahana && !found)
 	{
-		if (IsEQKalimat(ListWahanaTersedia[i].Name, ActionName(A)))
+		if (IsEQKalimat(Nama(ElmtWahana(ListWahanaTersedia, i)), ActionName(A)))
 			found = true;
 		else
 			i++;
 	}
 
 	int n = NbWahanaYangDimiliki;
-	ListWahanaYandDimiliki[n] = ListWahanaTersedia[i];
+	ElmtWahana(ListWahanaYandDimiliki, n) = ElmtWahana(ListWahanaTersedia, i);
 
-	ListWahanaYandDimiliki[n].Condition = true;
-	ListWahanaYandDimiliki[n].Position = ActionPosition(A);
+	Condition(ElmtWahana(ListWahanaYandDimiliki, n)) = true;
+	Lokasi(ElmtWahana(ListWahanaYandDimiliki, n)) = ActionPosition(A);
 
 	NbWahanaYangDimiliki += 1;
 
@@ -1554,11 +1484,11 @@ int IdxBrokenWahanSekitar(POINT P)
 		POINT P2 = MakePOINT(Absis(P)+1, Ordinat(P), Area(P));
 		POINT P4 = MakePOINT(Absis(P)-1, Ordinat(P), Area(P));
 
-		POINT PW = ListWahanaYandDimiliki[i].Position;
+		POINT PW = Lokasi(ElmtWahana(ListWahanaYandDimiliki, i));
 
-		if (EQ(PW, P2) && !Condition(ListWahanaYandDimiliki[i]))
+		if (EQ(PW, P2) && !Condition(ElmtWahana(ListWahanaYandDimiliki, i)))
 			found = true;
-		else if (EQ(PW, P4) && !Condition(ListWahanaYandDimiliki[i]))
+		else if (EQ(PW, P4) && !Condition(ElmtWahana(ListWahanaYandDimiliki, i)))
 			found = true;
 		else
 			i++;
@@ -1585,10 +1515,10 @@ void repair()
 			return;
 		}
         printf("Memperbaiki ");
-		PrintKalimat(ListWahanaYandDimiliki[idx].Name);
+		PrintKalimat(Nama(ElmtWahana(ListWahanaYandDimiliki, idx)));
 		printf("\n");
             
-        Condition(ListWahanaYandDimiliki[idx]) = true;
+        Condition(ElmtWahana(ListWahanaYandDimiliki, idx)) = true;
 		Money(P) -= REPAIR_COST;
 		Time(P) = NextNDetik(Time(P), TIME_REPAIR*60);
         
@@ -1610,12 +1540,12 @@ void detail()
 	}
 
     printf("Nama Wahana: ");
-	PrintKalimat(ListWahanaYandDimiliki[idx].Name);
+	PrintKalimat(Nama(ElmtWahana(ListWahanaYandDimiliki, idx)));
 	printf("\n");
     printf("Lokasi Wahana: ");
-	PrintVertex(ListWahanaYandDimiliki[idx].Position);
+	PrintVertex(Lokasi(ElmtWahana(ListWahanaYandDimiliki, idx)));
 	printf("\n");
-    if(Condition(ListWahanaYandDimiliki[idx]))
+    if(Condition(ElmtWahana(ListWahanaYandDimiliki, idx)))
 		printf("Status : Berfungsi\n");
 	else
 		printf("Status : Rusak\n");
@@ -1666,10 +1596,10 @@ void InOffice()
 			boolean found = false;
 			while (!found && i <= NbWahanaYangDimiliki)
 			{
-				if (IsEQKalimat(nama, ListWahanaYandDimiliki[i].Name))
+				if (IsEQKalimat(nama, Nama(ElmtWahana(ListWahanaYandDimiliki, i))))
 				{
 					found = true;
-					Wahana = ListWahanaYandDimiliki[i];
+					Wahana = ElmtWahana(ListWahanaYandDimiliki, i);
 				}
 				else
 				{
@@ -1791,7 +1721,7 @@ void RandomAntrian()
 		int idxWahana = rand() % (max_number + 1 - minimum_number) + minimum_number;
 		
 		Antrian Q;
-		InfoAntrian(Q) = ListWahanaYandDimiliki[idxWahana].Name;
+		InfoAntrian(Q) = Nama(ElmtWahana(ListWahanaYandDimiliki, idxWahana));
 		PrioAntrian(Q) = 0;
 
 		EnqueueAntrian(&A, Q);
@@ -2028,7 +1958,7 @@ boolean IsAdaBroken()
 	int i = 0;
 	while (i < NbWahanaYangDimiliki && !found)
 	{
-		if (!Condition(ListWahanaYandDimiliki[i]))
+		if (!Condition(ElmtWahana(ListWahanaYandDimiliki, i)))
 			found = true;
 		else
 			i++;
@@ -2042,9 +1972,9 @@ void PrintBrokenWahana()
 	printf("Broken : ");
 	for (int i = 0; i < NbWahanaYangDimiliki; i++)
 	{
-		if (!Condition(ListWahanaYandDimiliki[i]))
+		if (!Condition(ElmtWahana(ListWahanaYandDimiliki, i)))
 		{
-			PrintKalimat(ListWahanaYandDimiliki[i].Name);
+			PrintKalimat(Nama(ElmtWahana(ListWahanaYandDimiliki, i)));
 			printf(" | ");
 		}
 	}
@@ -2065,7 +1995,7 @@ boolean IsWahanaPosition(POINT P)
 	int i = 0;
 	while (i < NbWahanaYangDimiliki && !found)
 	{
-		if (EQ(P, ListWahanaYandDimiliki[i].Position))
+		if (EQ(P, Lokasi(ElmtWahana(ListWahanaYandDimiliki, i))))
 			found = true;
 		else
 			i++;

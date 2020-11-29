@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arraywahana.h"
+#include "wahana.h"
 #include "boolean.h"
-#include "mesinkata.h"
+#include "..\mesinkata\mesinkata.h"
 
 
 /* ********** KONSTRUKTOR ********** */
@@ -17,7 +18,7 @@ void MakeEmptyWahana (ArrayWahana * T)
 	int i;
 	for(i=IdxMinWahana; i<=IdxMaxWahana; i++)
 	{
-		Tipe(Elmt(*T, i)) = ValUndef;
+		Tipe(ElmtWahana(*T, i)) = ValUndef;
 	}
 }
 
@@ -31,7 +32,7 @@ int NbElmtWahana (ArrayWahana T)
 {
 	int count = 0;
 
-	while(Tipe(Elmt(T, count)) != ValUndef && count <= IdxMaxWahana)
+	while(Tipe(ElmtWahana(T, count)) != ValUndef && count <= IdxMaxWahana)
 	{
 		count++;
 	}
@@ -133,7 +134,7 @@ void TulisIsiTabWahana (ArrayWahana T)
 		printf("[");
 		for(i = IdxMinWahana; i < n; i++)
 		{
-			printf("%s", Nama(Elmt(T,i)));
+			printf("%s", Nama(ElmtWahana(T,i)));
 
 			if(i != GetLastIdxWahana(T))
 				printf(",");
@@ -162,7 +163,7 @@ boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2)
 
 		while(i < n && Eq)
 		{
-			if (Tipe(Elmt(T1, i)) != Tipe(Elmt(T2, i)))
+			if (Tipe(ElmtWahana(T1, i)) != Tipe(ElmtWahana(T2, i)))
 				Eq = false;
 
 			i++;
@@ -196,7 +197,7 @@ IdxType Search1Wahana (ArrayWahana T, int tipe)
 
 		while (!found && i < n)
 		{
-			if (Tipe(Elmt(T, i)) == tipe)
+			if (Tipe(ElmtWahana(T, i)) == tipe)
 				found = true;
 			else
 				i++;
@@ -222,7 +223,7 @@ boolean SearchBWahana (ArrayWahana T, int tipe)
 
 	while (!found && i < n)
 	{
-		if (Tipe(Elmt(T, i)) == tipe)
+		if (Tipe(ElmtWahana(T, i)) == tipe)
 			found = true;
 
 		i++;
@@ -247,7 +248,7 @@ int CountXWahana (ArrayWahana T, wahanatype X)
 
 	for (i = IdxMinWahana; i < n; i++)
 	{
-		if (!IsEQKalimat(Nama(Elmt(T, i)), Nama(X)))
+		if (!IsEQKalimat(Nama(ElmtWahana(T, i)), Nama(X)))
 			count++;
 	}
 
@@ -266,7 +267,7 @@ void AddAsLastElWahana (ArrayWahana * T, wahanatype X)
 {
 	int n = NbElmtWahana(*T);
 
-	Elmt(*T, n) = X;
+	ElmtWahana(*T, n) = X;
 }
 
 
@@ -281,7 +282,7 @@ void DelLastElWahana (ArrayWahana * T, wahanatype * X)
 {
 	int last = GetLastIdxWahana(*T);
 
-	*X = Elmt(*T, last);
+	*X = ElmtWahana(*T, last);
 
-	Tipe(Elmt(*T, last)) = ValUndef;
+	Tipe(ElmtWahana(*T, last)) = ValUndef;
 }

@@ -7,7 +7,7 @@
 
 #include "boolean.h"
 #include "wahana.h"
-#include "mesinkata.h"
+#include "..\mesinkata\mesinkata.h"
 
 /*  Kamus Umum */
 #define IdxMaxWahana 99
@@ -36,7 +36,7 @@ typedef struct {
    Definisi elemen pertama : T[i] dengan i=0 */
   
 /* ********** SELEKTOR ********** */
-#define Elmt(T,i) (T).TI[(i)]
+#define ElmtWahana(T,i) (T).TI[(i)]
 
 /* ********** KONSTRUKTOR ********** */
 /* Konstruktor : create tabel kosong  */

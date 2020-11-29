@@ -4,7 +4,7 @@
 #include "../point/point.h"
 #include "../mesinkata/mesinkata.h"
 #include "player.h"
-#include ".../List Berkait/listlinier.h"
+#include "../listBerkait/listlinier.h"
 
 #ifndef WAHANA_H
 #define WAHANA_H
