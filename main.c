@@ -1364,6 +1364,7 @@ void execute()
 	
 	 /* Kamus lokal */
     StackAction StackExecute;
+	CreateEmptyStackAction(&StackExecute);
     Action A;
 
 	P.Money -= P.Debt;
@@ -1377,7 +1378,7 @@ void execute()
             PopAction(&S, &A);
             PushAction(&StackExecute, A);
         }
-
+		printf("%d\n", NbElmtStackAction(StackExecute));
         while (!IsEmptyStackAction(StackExecute))
         {
             PopAction(&StackExecute, &A);
