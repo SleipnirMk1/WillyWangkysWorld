@@ -1,3 +1,4 @@
+/* File arraywahana.h */
 /* MODUL TABEL WAHANA DENGAN ELEMEN WAHANA */
 /* Penempatan elemen selalu rapat kiri */
 /* Banyaknya elemen didefinisikan secara implisit, memori tabel statik */
@@ -17,7 +18,7 @@
 #define IdxUndef -999 
 /* Indeks tak terdefinisi*/
 #define ValUndef -1
-/* Nilai elemen tak terdefinisi*/
+/* Nilai tipe wahana tak terdefinisi*/
 
 /* Definisi elemen dan koleksi objek */
 typedef int IdxType;  /* type indeks */
@@ -25,14 +26,12 @@ typedef WAHANA wahanatype;   /* type elemen tabel */
 typedef struct { 
   wahanatype TI[IdxMaxWahana+1]; /* memori tempat penyimpan elemen (container) */
 } ArrayWahana;
-/* Indeks yang digunakan [IdxMinWahana..IdxMaxWahana] */
-/* Indeks ke-0 tidak digunakan */
 /* Jika T adalah ArrayWahana, cara deklarasi dan akses: */
 /* Deklarasi : T : ArrayWahana */
 /* Maka cara akses: 
    T[i] untuk mengakses elemen ke-i */
 /* Definisi : 
-   Tabel kosong: semua elemen bernilai ValUndef
+   Tabel kosong: semua elemen wahana bertipe ValUndef
    Definisi elemen pertama : T[i] dengan i=0 */
   
 /* ********** SELEKTOR ********** */
@@ -43,7 +42,7 @@ typedef struct {
 void MakeEmptyWahana (ArrayWahana * T);
 /* I.S. T sembarang */
 /* F.S. Terbentuk tabel T kosong dengan kapasitas IdxMaxWahana-IdxMinWahana+1 */
-/* Proses: Inisialisasi semua elemen tabel T dengan ValUndef */
+/* Proses: Inisialisasi semua elemen wahana tabel T dengan tipe ValUndef */
 
 /* ********** SELEKTOR (TAMBAHAN) ********** */
 /* *** Banyaknya elemen *** */
@@ -80,16 +79,14 @@ boolean IsFullWahana (ArrayWahana T);
 /* ********** BACA dan TULIS dengan INPUT/OUTPUT device ********** */
 /* *** Mendefinisikan isi tabel dari pembacaan *** */
 void TulisIsiTabWahana (ArrayWahana T);
-/* Proses : Menuliskan isi tabel dengan traversal, tabel ditulis di antara kurung siku; 
+/* Proses : Menuliskan nama wahana isi tabel dengan traversal, tabel ditulis di antara kurung siku; 
    antara dua elemen dipisahkan dengan separator "koma", tanpa tambahan karakter di depan,
    di tengah, atau di belakang, termasuk spasi dan enter */
 /* I.S. T boleh kosong */
 /* F.S. Jika T tidak kosong: [e1,e2,...,en] */
-/* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
 /* Jika tabel kosong : menulis [] */
 
 /* ********** OPERATOR RELASIONAL ********** */
-/* *** Operasi pembandingan tabel : < =, > *** */
 boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2);
 /* Mengirimkan true jika T1 sama dengan T2 yaitu jika ukuran T1 = T2 dan semua elemennya sama */
 

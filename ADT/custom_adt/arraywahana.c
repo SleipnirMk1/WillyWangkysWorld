@@ -114,12 +114,11 @@ boolean IsFullWahana (ArrayWahana T)
 /* *** Mendefinisikan isi tabel dari pembacaan *** */
 
 void TulisIsiTabWahana (ArrayWahana T)
-/* Proses : Menuliskan isi tabel dengan traversal, tabel ditulis di antara kurung siku; 
+/* Proses : Menuliskan nama wahana isi tabel dengan traversal, tabel ditulis di antara kurung siku; 
    antara dua elemen dipisahkan dengan separator "koma", tanpa tambahan karakter di depan,
    di tengah, atau di belakang, termasuk spasi dan enter */
 /* I.S. T boleh kosong */
 /* F.S. Jika T tidak kosong: [e1,e2,...,en] */
-/* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
 /* Jika tabel kosong : menulis [] */
 {
 	if (IsEmptyWahana(T))

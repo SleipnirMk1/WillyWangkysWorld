@@ -1,40 +1,36 @@
+/* File : player.c */
 /************** ADT PLAYER **************/
 
 #ifndef player_H
 #define player_H
 
+/* Requirements */
 #include <stdlib.h>
 #include <stdio.h>
 #include "../Jam/jam.h"
 #include "../point/point.h"
 #include "../mesinkata/mesinkata.h"
 
+/* Material */
 typedef struct{
-    int wood;
-    int stone;
-    int iron;
+    int wood; // kayu
+    int stone;  // batuan
+    int iron; // besi
 }Material;
 
+// Player
 typedef struct{
-  Kalimat Name;
-  JAM CurrentTime;
-  int Day;
-  POINT Position;
-  int Money;
-  int MoneyDebt;
-  Material Material;
-  Material MaterialDebt;
+  Kalimat Name;   // Nama player
+  JAM CurrentTime;    // Jam sekarang di permainan
+  int Day;      // Hari permainan ke berapa
+  POINT Position;   // Posisi pemain
+  int Money;    // Uang yang dimiliki
+  int MoneyDebt;    // utang, uang yang akan dipakai
+  Material Material;    // material yang dimiliki
+  Material MaterialDebt;  // material yang akan dipakai
 } Player;
 
-
-// typedef struct
-// {
-// 	Kalimat Name;
-// 	int Money;
-// 	Material Mat;
-// 	Point Pos;
-// } Player;
-
+// Notasi akses selektor player
 /* P adalah player, M adalah Material */
 #define Name(P) (P).Name
 #define Time(P) (P).CurrentTime
@@ -45,6 +41,7 @@ typedef struct{
 #define MoneyDebt(P) (P).MoneyDebt
 #define MaterialDebt(P) (P).MaterialDebt
 
+// Notasi akses selektor material
 #define Wood(M) (M).wood
 #define Stone(M) (M).stone
 #define Iron(M) (M).iron
@@ -60,6 +57,7 @@ void nextDay(Player *P);
 /* hari maju sebanyak 1 hari */
 
 void createEmptyMaterial (Material *Mat);
+// membuat struct material yang setiap elemennya bernilai 0
 
 void addTime(Player *P, long X);
 /* menambahkan waktu yang dilewati player sebanyak X (dalam detik) */

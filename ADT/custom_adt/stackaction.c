@@ -63,6 +63,7 @@ void InversStack (StackAction * S)
 }
 
 int NbElmtStackAction(StackAction S)
+// Mengembalikan jumlah aksi dalam stack
 {
     int i = 0;
     while(!IsEmptyStackAction(S))
@@ -76,6 +77,7 @@ int NbElmtStackAction(StackAction S)
 }
 
 int TotalTimeAction(StackAction S)
+// mengembalikan total waktu seluruh aksi dalam stack
 {
     int n = NbElmtStackAction(S);
     int sum = 0;
@@ -92,6 +94,7 @@ int TotalTimeAction(StackAction S)
 }
 
 int TotalPrice(StackAction S)
+// mengembalikan total biaya seluruh aksi dalam stack
 {
     int sum = 0;
     while(!IsEmptyStackAction(S))
