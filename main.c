@@ -929,13 +929,29 @@ void PrintListWahanaTersedia()
 
 void build ()
 {
-	printf("Build\n");
+
+	Tree T = generateWahanaUpgradeTree();
+
+	if (Right(T) == NilTree || Left(T) == NilTree)
+	{
+		printf("\nTidak Ada Wahana Yang Dapat Dibangun!!\n");
+		return;
+	}
+
+	int Target1 = Info(Left(T)) - 1;
+	int Target2 = Info(Right(T)) - 1;
 
 	boolean build = true;
 	while(build)
 	{
 		printf("\nWahana Yang dapat dibangun : \n");
-		PrintListWahanaTersedia();
+		printf("List : \n");
+		printf("	- ");
+		PrintKalimat(Nama(ElmtWahana(ListWahanaTersedia, Target1)));
+		printf("\n");
+		printf("	- ");
+		PrintKalimat(Nama(ElmtWahana(ListWahanaTersedia, Target2)));
+		printf("\n");
 		
 		printf("\nMasukkan Nama Wahana ('exit' untuk membatalkan build) : ");
 
@@ -951,14 +967,20 @@ void build ()
 		}
 		else
 		{
+			Kalimat K1 = Nama(ElmtWahana(ListWahanaTersedia, Target1));
+			Kalimat K2 = Nama(ElmtWahana(ListWahanaTersedia, Target2));
+
 			boolean available = false;
 			int i = 0;
-			while(i < NbWahanaTersedia && !available)
+			if (IsEQKalimat(K1, K))
 			{
-				if (IsEQKalimat(K, ListWahanaTersedia.TI[i].Name))
-					available = true;
-				else
-					i++;
+				available = true;
+				i = Target1;
+			}
+			else if (IsEQKalimat(K2, K))
+			{
+				available = true;
+				i = Target2;
 			}
 
 			if (!available)
