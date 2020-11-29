@@ -127,22 +127,27 @@ void PrintInfoPlayer();
 
 void AntrianEmosiRising();
 
+void KalimatToChar(Kalimat K, char *S);
+void SpasiToUnderScore(char *S, int Max);
+void savePlayer(char dir[]);
+void saveWahana(char dir[]);
+
 // ==============================================
 
 int main()
 {
-	PERSIAPANGAME();
+	// PERSIAPANGAME();
 
-	CreateEmptyStackAction(&S);
-	MakeEmptyQueueAntrian(&A, 100);
+	// CreateEmptyStackAction(&S);
+	// MakeEmptyQueueAntrian(&A, 100);
 
-	generateAllConstant();
+	// generateAllConstant();
 
 	generatePlayer();
 	generateWahanaTersedia();
 	generateWahanaYangDimiliki();
 
-	generateListMaterial();
+	// generateListMaterial();
 
 	//printf("%f\n", P.Position.Y);
 	// generatePosFromFile();
@@ -154,9 +159,11 @@ int main()
 	// Tree T = generateWahanaUpgradeTree();
 	// PrintTreeIndent(T, 2);
 
+	saveGame();
 
-	RUN = true;
-	RUN_NEWGAME = true;
+
+	RUN = false;
+	RUN_NEWGAME = false;
 	boolean runned = false;
 
 	printf("NEW // LOAD // EXIT\n\n");
@@ -357,7 +364,7 @@ void PERSIAPANGAME()
 
 void generatePlayer()
 {
-	P.Name = SetKalimat("Alstrukdat");
+	P.Name = SetKalimat("Alstrukdat KWWW");
 
 	Area(P.Position) = 1;
  	Absis(P.Position) = 4;
@@ -375,7 +382,7 @@ void generatePlayer()
 	MaterialDebt(P).iron = 0;
 
 	P.CurrentTime = MakeJAM(21, 0, 0);
-	P.Day = 1;
+	P.Day = 2;
 }
 
 
@@ -583,12 +590,12 @@ void move(int dir)
 
 // // SAVE LOAD
 // // ==================================================================
-// void saveGame()
-// {
-// 	printf("Saving...\n");
-// 	savePlayer("save/playerSave.txt"); 
-// 	saveWahana("save/wahanaSave.txt");
-// }
+void saveGame()
+{
+	printf("Saving...\n");
+	savePlayer("save/playerSave.txt"); 
+	saveWahana("save/wahanaSave.txt");
+}
 
 // void loadGame()
 // {
@@ -596,274 +603,410 @@ void move(int dir)
 // 	loadWahana("save/wahanaSave.txt");
 // }
 
-// void savePlayer(char dir[])
-// {
-// 	FILE *f;
-// 	f = fopen(dir, "w");
-
-// 	char wr[300];
-// 	int c = 0;
+void savePlayer(char dir[])
+{
+	FILE *f;
+	f = fopen(dir, "w");
 	
-// 	QtoS(wr, P.Name, &c);
-// 	ItoS(wr, P.Money, &c);
-// 	ItoS(wr, P.Mat.Wood, &c);
-// 	ItoS(wr, P.Mat.Stone, &c);
-// 	ItoS(wr, P.Mat.Ruby, &c);
-// 	ItoS(wr, P.Pos.Area, &c);
-// 	ItoS(wr, P.Pos.x, &c);
-// 	ItoS(wr, P.Pos.y, &c);
+
+	if (f != NULL)
+	{
+		printf("Saving Player Data...\n");
+		
+		char name[250]; 
+		KalimatToChar(P.Name, name);
+		SpasiToUnderScore(name, 250);
+
+		char Curr[20];
+		sprintf(Curr, "%d", JAMToDetik(P.CurrentTime));
+
+		char day[10];
+		sprintf(day, "%d", P.Day);
+
+		char posX[20];
+		sprintf(posX, "%.0f", P.Position.X);
+		char posY[20];
+		sprintf(posY, "%.0f", P.Position.Y);
+		char posA[20];
+		sprintf(posA, "%d", P.Position.A);
+
+		char money[10];
+		sprintf(money, "%d", P.Money);
+
+		char moneyDebt[10];
+		sprintf(moneyDebt, "%d", P.MoneyDebt);
+
+		char matWood[10];
+		sprintf(matWood, "%d", P.Material.wood);
+		char matStone[10];
+		sprintf(matStone, "%d", P.Material.stone);
+		char matIron[10];
+		sprintf(matIron, "%d", P.Material.iron);
+
+		char matDebtWood[10];
+		sprintf(matDebtWood, "%d", P.MaterialDebt.wood);
+		char matDebtStone[10];
+		sprintf(matDebtStone, "%d", P.MaterialDebt.stone);
+		char matDebtIron[10];
+		sprintf(matDebtIron, "%d", P.MaterialDebt.iron);
+
+		fputs(name, f);fputs(" ", f);
+		
+		fputs(Curr, f);fputs(" ", f);
+
+		fputs(day, f);fputs(" ", f);
+		
+		fputs(posX, f);fputs(" ", f);
+
+		fputs(posY, f);fputs(" ", f);
+
+		fputs(posA, f);fputs(" ", f);
+
+		fputs(money, f);fputs(" ", f);
+
+		fputs(moneyDebt, f);fputs(" ", f);
+
+		fputs(matWood, f);fputs(" ", f);
+		fputs(matStone, f);fputs(" ", f);
+		fputs(matIron, f);fputs(" ", f);
+
+		fputs(matDebtWood, f);fputs(" ", f);
+		fputs(matDebtStone, f);fputs(" ", f);
+		fputs(matDebtIron, f);fputs("\n", f);
+	}
+
+	fclose(f);
+}
+
+void KalimatToChar(Kalimat K, char *S)
+{
+	int n = NbKata(K);
+	
+	int c = 0;
+	for (int i = 0; i < n; i++)
+	{
+		Kata kata;
+		DequeueKalimat(&K, &kata);
+		int j = 0;
+		while (j < kata.Length && c < 250)
+		{
+			S[c++] = kata.TabKata[j++];
+		}
+
+		if(i != n-1)
+			S[c++] = ' ';
+	}
+	S[c++] = '\0';
+}
+
+void SpasiToUnderScore(char *S, int Max)
+{
+	int i = 0;
+	while(i < Max && S[i] != '\0')
+	{
+		if (S[i] == ' ')
+			S[i] = '_';
+		
+		i++;
+	}
+}
+
+void saveWahana(char dir[])
+{
+	FILE *f;
+	f = fopen(dir, "w");
+	
+	
+	if (f == NULL)
+	{
+		fclose(f);
+		return;
+	}
+
+	printf("Saving Wahana Data...\n");
+	for (int i = 0; i < NbElmtWahana(ListWahanaDimiliki); i++)
+	{
+		int type = Tipe(ElmtWahana(ListWahanaDimiliki, i));
+		int cond = Condition(ElmtWahana(ListWahanaDimiliki, i));
+
+		float posX = Lokasi(ElmtWahana(ListWahanaDimiliki, i)).X;
+		float posY = Lokasi(ElmtWahana(ListWahanaDimiliki, i)).Y;
+		int posA = Lokasi(ElmtWahana(ListWahanaDimiliki, i)).A;
+
+		int usedamout = TotalNaik(ElmtWahana(ListWahanaDimiliki, i));
+		int totProfit = TodayProfit(ElmtWahana(ListWahanaDimiliki, i));
+		int usedtoday = TodayNaik(ElmtWahana(ListWahanaDimiliki, i));
+		int profittoday = TodayProfit(ElmtWahana(ListWahanaDimiliki, i));
+
+
+		char tipe[20];
+		sprintf(tipe, "%d", type);
+
+		char xpos[20];
+		sprintf(xpos, "%d", (int)posX);
+		char ypos[20];
+		sprintf(ypos, "%d", (int)posY);
+		char apos[20];
+		sprintf(apos, "%d", (int)posA);
+
+		char naikTotal[20];
+		sprintf(naikTotal, "%d", usedamout);
+		char profTotal[20];
+		sprintf(profTotal, "%d", totProfit);
+		char todayNaik[20];
+		sprintf(todayNaik, "%d", usedtoday);
+		char todayProfit[20];
+		sprintf(todayProfit, "%d", profittoday);
+
+		fputs(tipe, f); fputs(" ", f);
+		fputs(xpos, f); fputs(" ", f);
+		fputs(ypos, f); fputs(" ", f);
+		fputs(apos, f); fputs(" ", f);
+		fputs(naikTotal, f); fputs(" ", f);
+		fputs(profTotal, f); fputs(" ", f);
+		fputs(todayNaik, f); fputs(" ", f);
+		fputs(todayProfit, f); fputs("\n", f);
+	}
+	
+
+	fclose(f);
+}
+
+
+void saveAntrian(char dir[])
+{
+	if (!MAINPHASE)
+		return;
+	
+	FILE *f; 
+	f = open(dir, "w");
+
+	if (f == NULL)
+		return;
+
+	printf("\nSaving Antrian...\n");
+
+	QueueAntrian tmp = A;
+	int n = NBElmtQueueAntrian(A);
+
+	for (int i = 0; i < n; i++)
+	{
+		Antrian e;
+		DequeueAntrian(&A, &e);
+		
+		int prio = e.prio;
+		char pri[5];
+		sprintf(pri, "%d", prio);
+
+		fputs(pri, f); fputs(" ", f);
+
+		for (int j = 0; j < NbElmtWahana(ListWahanaDimiliki); j++)
+		{
+			if (SearchBWahana(e.info, Tipe(ElmtWahana(ListWahanaDimiliki, i))))
+			{
+				fputs("1", f);
+			}
+			else
+			{
+				fputs("0", f);
+			}
+
+			if (j != NbElmtWahana(ListWahanaDimiliki)-1)
+				fputs(" ", f);	
+		}
+		if (i != n-1)
+			fputs("\n", f);
+	}
+
+	fclose(f);
+}
+
+void saveStack(char dir[])
+{
+	if (MAINPHASE)
+		return;
+	
+	FILE *f; 
+	f = open(dir, "w");
+
+	if (f == NULL)
+		return;
+
+	printf("\nSaving Antrian...\n");
+
+	StackAction tmp = S;
+	
+	StackAction tmp;
+	CreateEmptyStackAction(&tmp);
+
+	while(!IsEmptyStackAction(tmp))
+	{
+		Action a;
+		PopAction(&tmp, &a);
+		
+		char name[250];
+		KalimatToChar(ActionName(a), name);
+		SpasiToUnderScore(name, 250);
+
+		char type[20];
+		for (int i = 0; i < ActionType(a).Length; i++)
+		{
+			type[i] = ActionType(a).TabKata[i];
+		}
+		type[ActionType(a).Length] = '\0';
+
+		char time[20];
+		sprintf(time, "%d", ActionTime(a));
+		char amount[20];
+		sprintf(amount, "%d", ActionAmount(a));
+		char price[20];
+		sprintf(price, "%d", ActionPrice(a));
+
+		char matWood[20];
+		sprintf(matWood, "%d", ActionMaterialCost(a).wood);
+		char matStone[20];
+		sprintf(matStone, "%d", ActionMaterialCost(a).stone);
+		char matIron[20];
+		sprintf(matIron, "%d", ActionMaterialCost(a).iron);
+		
+		char posx[20];
+		sprintf(posx, "%d", (int)ActionPosition(a).X);
+		char posy[20];
+		sprintf(posy, "%d", (int)ActionPosition(a).Y);
+		char posa[20];
+		sprintf(posa, "%d", (int)ActionPosition(a).A);
+
+		fputs(name, f); fputs(" ", f);
+		fputs(type, f); fputs(" ", f);
+		fputs(time, f); fputs(" ", f);
+		fputs(amount, f); fputs(" ", f);
+		fputs(price, f); fputs(" ", f);
+		fputs(matWood, f); fputs(" ", f);
+		fputs(matStone, f); fputs(" ", f);
+		fputs(matIron, f); fputs(" ", f);
+		fputs(posx, f); fputs(" ", f);
+		fputs(posy, f); fputs(" ", f);
+		fputs(posa, f); fputs("\n", f);
+	}
+
+	fclose(f);
+}
+
+
+
+void loadPlayer(char dir[])
+{
+	FILE *f;
+	f = open(dir, "r");
+
+	if (f == NULL)
+	{
+		printf("\nFile Not Found..\n");
+		return;
+	}
 
 	
-// 	printf("Saving Player Data...\n");
-// 	if (c > 0 && f != NULL) 
-// 	{ 
-// 		fputs(wr, f);
-// 		fputs("\n", f);
-// 	}
+	char name[250];
+	char time[20];
+	char day[20];
+	char posx[20];
+	char posy[20];
+	char posa[20];
+	char money[20];
+	char moneyDebt[20];
+	char matWood[20];
+	char matStone[20];
+	char matIron[20];
+	char matDebtWood[20];
+	char matDebtStone[20];
+	char matDebtIron[20];
 
-// 	fclose(f);
-// }
+	while (fscanf(f, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", name, time, day, posx, posy, posa, money, moneyDebt, matWood, matStone, matIron, matDebtWood, matDebtStone, matDebtIron) != EOF)
+	{
+		UnderScoreToSpasi(name, 250);
+		P.Name = SetKalimat(name);
 
-// void saveWahana(char dir[])
-// {
-// 	FILE *f;
-// 	f = fopen(dir, "w");
-// 	printf("Saving Wahana Data...\n");
-// 	for(int i = 0; i < NbWahana; i++)
-// 	{
-// 		char wr[300];
-// 		int c = 0;
+		P.CurrentTime = DetikToJAM(atoi(time));
+		P.Day = atoi(day);
+		P.Position = MakePOINT((float)atoi(posx), (float)atoi(posy), atoi(posa));
+		P.Money = atoi(money);
+		P.MoneyDebt = atoi(moneyDebt);
+		P.Material.wood = atoi(matWood);
+		P.Material.stone = atoi(matStone);
+		P.Material.iron = atoi(matIron);
 
-// 		QtoS(wr, W[i].Name, &c);
-// 		ItoS(wr, W[i].Type, &c);
-// 		ItoS(wr, W[i].Level, &c);
-// 		ItoS(wr, W[i].Cost, &c);
-// 		ItoS(wr, W[i].Pos.Area, &c);
-// 		ItoS(wr, W[i].Pos.x, &c);
-// 		ItoS(wr, W[i].Pos.y, &c);
+		P.MaterialDebt.wood = atoi(matDebtWood);
+		P.MaterialDebt.stone = atoi(matDebtStone);
+		P.MaterialDebt.iron = atoi(matDebtIron);
+	}
 
-// 		wr[c++] = '\0';
+	fclose(f);
+}
 
+void loadWahana(char dir[])
+{
+	FILE *f;
+	f = open(dir, "r");
 
-// 		if (c > 0 && f != NULL) 
-// 		{ 
-// 			fputs(wr, f);
-// 			fputs("\n", f);
-// 		}
-// 	}
+	if (f == NULL)
+	{
+		printf("\nFile Not Found..\n");
+		return;
+	}
 
-// 	fclose(f);
-// }
-
-// void loadPlayer(char dir[])
-// {
-// 	FILE *f;
-// 	f = fopen(dir, "r");
-
-// 	if (f != NULL)
-// 	{
-// 		printf("Getting Player Data...\n");
-
-// 		char wr[200];
-// 		while( fgets ( wr, 200, f ) != NULL ) 
-//         { 
-// 			char content[20];
-// 			int x = 0;
-// 			int j = 0;
-// 			for (int i = 0; i < NB(wr); i++)
-// 			{
-// 				if (wr[i] != ',')
-// 				{
-// 					content[j++] = wr[i];
-// 				}
-// 				else
-// 				{
-// 					content[j++] = '\0';
-// 					if (x == 0)
-// 					{
-// 						P.Name = SetKalimat(content);
-// 					}
-// 					else if (x == 1)
-// 					{
-// 						int money;
-// 						sscanf(content, "%d", &money);
-// 						P.Money = money;
-// 					}
-// 					else if (x == 2)
-// 					{
-// 						int wood;
-// 						sscanf(content, "%d", &wood);
-// 						P.Mat.Wood = wood;
-// 					}
-// 					else if (x == 3)
-// 					{
-// 						int stone;
-// 						sscanf(content, "%d", &stone);
-// 						P.Mat.Stone = stone;
-// 					}
-// 					else if (x == 4)
-// 					{
-// 						int ruby;
-// 						sscanf(content, "%d", &ruby);
-// 						P.Mat.Ruby = ruby;
-// 					}
-// 					else if (x == 5)
-// 					{
-// 						int area;
-// 						sscanf(content, "%d", &area);
-// 						P.Pos.Area = area;
-// 					}
-// 					else if (x == 6)
-// 					{
-// 						int posx;
-// 						sscanf(content, "%d", &posx);
-// 						P.Pos.x = posx;
-// 					}
-// 					else if (x == 7)
-// 					{
-// 						int posy;
-// 						sscanf(content, "%d", &posy);
-// 						P.Pos.y = posy;
-// 					}
-
-// 					x++;
-// 					j = 0;
-// 				}
-// 			}
-			
-// 		}
-
-// 		fclose(f);
-// 	}
-// 	else
-// 	{
-// 		printf("File Not Found\n");
-// 	}
-
-// 	fclose(f);
-// }
-
-// void loadWahana(char dir[])
-// {
-// 	FILE *f;
-// 	f = fopen(dir, "r");
-
-// 	if (f != NULL)
-// 	{
-// 		printf("Getting Wahana Data...\n");
-
-// 		char wr[200];
-// 		int cnt = 0;
-// 		int banyakwahana = 0;
-// 		while( fgets ( wr, 200, f ) != NULL ) 
-//         { 
-// 			char content[20];
-// 			int x = 0;
-// 			int j = 0;
-// 			for (int i = 0; i < NB(wr); i++)
-// 			{
-// 				if (wr[i] != ',')
-// 				{
-// 					content[j++] = wr[i];
-// 				}
-// 				else
-// 				{
-// 					content[j++] = '\0';
-// 					if (x == 0)
-// 					{
-// 						W[cnt].Name = SetKalimat(content);
-// 					}
-// 					else if (x == 1)
-// 					{
-// 						int type;
-// 						sscanf(content, "%d", &type);
-// 						W[cnt].Type = type;
-// 					}
-// 					else if (x == 2)
-// 					{
-// 						int level;
-// 						sscanf(content, "%d", &level);
-// 						W[cnt].Level = level;
-// 					}
-// 					else if (x == 3)
-// 					{
-// 						int cost;
-// 						sscanf(content, "%d", &cost);
-// 						W[cnt].Cost = cost;
-// 					}
-// 					else if (x == 4)
-// 					{
-// 						int area;
-// 						sscanf(content, "%d", &area);
-// 						W[cnt].Pos.Area = area;
-// 					}
-// 					else if (x == 5)
-// 					{
-// 						int posx;
-// 						sscanf(content, "%d", &posx);
-// 						W[cnt].Pos.x = posx;
-// 					}
-// 					else if (x == 6)
-// 					{
-// 						int posy;
-// 						sscanf(content, "%d", &posy);
-// 						W[cnt].Pos.y = posy;
-// 					}
-
-// 					x++;
-// 					j = 0;
-// 				}
-// 			}
-
-// 			cnt++;
-// 		}
-
-// 		NbWahana = cnt;
-// 	}
-// 	else
-// 	{
-// 		printf("File Not Found\n");
-// 	}
-
-// 	fclose(f);
-// }
-
-// void ItoS(char *S, int X, int *c)
-// {
-// 	Kata K;
-// 	char tmp[20]; 
-//     sprintf(tmp, "%d", X);
-// 	SetKata(&K, tmp);
-
-// 	for (int i = 0; i < K.Length; i++)
-// 		S[(*c)++] = K.TabKata[i];
+	char tipe[20];
+	char xpos[20];
+	char ypos[20];
+	char apos[20];
+	char naikTotal[20];
+	char profTotal[20];
+	char todayNaik[20];
+	char todayProfit[20];
 	
-// 	S[(*c)++] = ',';
-// }
+	int count = 0;
 
-// void QtoS(char *S, Kalimat Q, int *c)
-// {
-// 	while(!IsEmptyKalimat(Q))
-// 	{
-// 		Kata K;
-// 		DequeueKalimat(&Q, &K);
-// 		for (int i = 0; i < K.Length; i++)
-// 			S[(*c)++] = K.TabKata[i];	
+	ArrayWahana tmp;
+	MakeEmptyWahana(&tmp);
 
-// 		if (!IsEmptyKalimat(Q))
-// 			S[(*c)++] = ' ';
-// 	}
-// 	S[(*c)++] = ',';
-// }
+	while(fscanf(f, "%s %s %s %s %s %s %s %s", tipe, xpos, ypos, apos, naikTotal, profTotal, todayNaik, todayProfit) != EOF)
+	{
+		int idxWahana = atoi(tipe)-1;
 
-// int NB(char S[])
-// {
-// 	int n = 0;
-// 	while(S[n] != '\0')
-// 		n++;
+		WAHANA W = ElmtWahana(ListWahanaTersedia, idxWahana);
 
-// 	return n;
-// }
+		W.Position = MakePOINT((float)atoi(xpos), (float)atoi(ypos), atoi(apos));
+
+		W.UsedAmount = atoi(naikTotal);
+		W.TotalProfit = atoi(profTotal);
+		W.UsedToday = atoi(todayNaik);
+		W.ProfitToday = atoi(todayProfit);
+
+		AddAsLastElWahana(&tmp, W);
+		count++;
+	}
+
+	if (count != 0)
+	{
+		ListWahanaDimiliki = tmp;
+	}
+
+	fclose(f);
+}
+
+
+
+void loadAntrian(char dir)
+{
+	FILE *f;
+	f = open(dir, "r");
+
+	if (f == NULL)
+	{
+		printf("\nFile Not Found..\n");
+		return;
+	}
+}
+
 
 
 

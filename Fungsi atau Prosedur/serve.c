@@ -15,7 +15,7 @@
 /* ketika command serve di input langsung memnaggil prosedur serve */
 /* nama wahana di input di prosedur serve */
 
-void Serve()
+void Serve(Kalimat inputnama)
 {
     Kalimat inputnamaWahana = GetKalimat();
     /* Antiran punya posisition ? */
