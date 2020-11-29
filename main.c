@@ -1100,7 +1100,7 @@ void upgrade ()
 	boolean isUpgrading = true;
 
 	// Menyingkat nama variabel
-	int Idx_sekitar = IsAdaWahanaSekitar;		
+	int Idx_sekitar = IsAdaWahanaSekitar;	
 	ArrayWahana T_built = ListWahanaDimiliki;
 	//printf("%d", NbElmtWahana(T_built));
 
