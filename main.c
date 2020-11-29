@@ -356,11 +356,15 @@ void generatePlayer()
 	Ordinat(P.Position) = 6;
 
 	P.Money = 99999;
-	P.Debt = 0;
+	MoneyDebt(P) = 0;
 
-	P.Material.wood = 500;
-	P.Material.iron = 500;
-	P.Material.stone = 500;
+	P.Material.wood = 50;
+	P.Material.iron = 50;
+	P.Material.stone = 50;
+
+	MaterialDebt(P).wood = 0;
+	MaterialDebt(P).stone = 0;
+	MaterialDebt(P).iron = 0;
 
 	P.CurrentTime = MakeJAM(21, 0, 0);
 	P.Day = 1;
@@ -863,9 +867,6 @@ void PrintInfoPlayer()
 
 
 
-
-
-
 // // PREPARATION PHASE
 // // ================================================================
 boolean IsMasihAdaWaktu(int t)
@@ -890,8 +891,14 @@ boolean IsMasihAdaWaktu(int t)
 
 boolean CanBuild(WAHANA W)
 {
-	boolean can = (P.Money >= W.PriceCost && P.Material.wood >= W.MaterialCost.wood && P.Material.stone >= W.MaterialCost.stone && P.Material.iron >= W.MaterialCost.iron);
-	
+	boolean can = 
+	(
+		Money(P) >= MoneyDebt(P) + Price(W) && 
+		Material(P).wood >= MaterialDebt(P).wood + MaterialCost(W).wood &&
+		Material(P).stone >= MaterialDebt(P).stone + MaterialCost(W).stone &&
+		Material(P).iron >= MaterialDebt(P).iron + MaterialCost(W).iron
+	);
+
 	can = can && IsMasihAdaWaktu(TIME_BUILD);
 
 	return can;
@@ -918,7 +925,7 @@ void build ()
 		printf("\nWahana Yang dapat dibangun : \n");
 		PrintListWahanaTersedia();
 		
-		printf("\nMasukkan Nama Wahana : ");
+		printf("\nMasukkan Nama Wahana ('exit' untuk membatalkan build) : ");
 
 		Kalimat K = GetKalimat();
 		Kalimat K2 = K;
@@ -963,9 +970,13 @@ void build ()
 					ActionMaterialCost(A).stone = ElmtWahana(ListWahanaTersedia, i).MaterialCost.stone;
 					ActionMaterialCost(A).iron = ElmtWahana(ListWahanaTersedia, i).MaterialCost.iron;
 
+					P.MaterialDebt.wood += ActionMaterialCost(A).wood;
+					P.MaterialDebt.stone += ActionMaterialCost(A).stone;
+					P.MaterialDebt.iron += ActionMaterialCost(A).iron;
+
 					PushAction(&S, A);
 
-					P.Debt += ListWahanaTersedia.TI[i].PriceCost;
+					MoneyDebt(P) += ListWahanaTersedia.TI[i].PriceCost;
 
 					printf("\nPerintah Build ");
 					PrintKalimat(K);
@@ -1047,7 +1058,7 @@ int IdxWahanaSekitar(POINT P)
 Tree generateWahanaUpgradeTree()
 {
 	int info = 0;
-	Tree W = BuildBalanceTree(14+1, &info);
+	Tree W = BuildBalanceTree(NbElmtWahana(ListWahanaTersedia)+1, &info);
 	//W = ReadWahana("file/wahanatree.txt");
 	return W;
 }
@@ -1214,9 +1225,13 @@ void upgrade ()
 		Stone(ActionMaterialCost(A)) = Stone(MaterialCost(ElmtWahana(T_all_wahana, TargetUpgrade)));	// harga batu
 		Iron(ActionMaterialCost(A)) = Iron(MaterialCost(ElmtWahana(T_all_wahana, TargetUpgrade)));		// harga besi
 		
-		PushAction(&S, A);	// Push ke stack
+		MaterialDebt(P).wood += ActionMaterialCost(A).wood;
+		MaterialDebt(P).stone += ActionMaterialCost(A).stone;
+		MaterialDebt(P).iron += ActionMaterialCost(A).iron; 
 
-		P.Debt += Price(ElmtWahana(T_all_wahana, TargetUpgrade));
+		MoneyDebt(P) += Price(ElmtWahana(T_all_wahana, TargetUpgrade));
+
+		PushAction(&S, A);	// Push ke stack
 
 		printf("\nPerintah Upgrade ");
 		PrintKalimat(Nama(ElmtWahana(T_all_wahana, TargetUpgrade)));
@@ -1308,20 +1323,20 @@ void buy()
 
 	//printf("%d\n", IsMasihAdaWaktu(TIME_BUY));
 
-	if (i != -1 && P.Money >= P.Debt + totalHarga && IsMasihAdaWaktu(TIME_BUY))
+	if (i != -1 && P.Money >= MoneyDebt(P) + totalHarga && IsMasihAdaWaktu(TIME_BUY))
 	{
 		/* memasukkan ke stack */
 		Action X;
 		//JAM J;
 		/* (masih pemisalan) membeli 1 material membutuhkan waktu 5 menit */
-		int lama = 5*KataToInteger(banyak);
+		//int lama = 5*KataToInteger(banyak);
 		ActionName(X) = SetKalimat(nama.TabKata);
 		SetKata(&ActionType(X), "buy");
-		ActionTime(X)= lama;
+		ActionTime(X)= TIME_BUY;
 		ActionAmount(X) = KataToInteger(banyak);
 		ActionPrice(X) = totalHarga;
 		ActionPosition(X) = P.Position;
-		P.Debt += totalHarga;
+		MoneyDebt(P) += totalHarga;
 
 		PushAction(&S,X);
 
@@ -1349,7 +1364,14 @@ void undo ()
 	Action A;
 	PopAction(&S, &A);
 
-	P.Debt -= ActionPrice(A);
+	MoneyDebt(P) -= ActionPrice(A);
+
+	if (KataSama(ACTION_BUILD, ActionType(A)) || KataSama(ACTION_UPGRADE, ActionType(A)))
+	{
+		MaterialDebt(P).wood -= ActionMaterialCost(A).wood;
+		MaterialDebt(P).stone -= ActionMaterialCost(A).stone;
+		MaterialDebt(P).iron -= ActionMaterialCost(A).iron;
+	}
 
 	printf("Menghapus Perintah ");
 	PrintKata(ActionType(A));
@@ -1365,8 +1387,12 @@ void execute()
 	CreateEmptyStackAction(&StackExecute);
     Action A;
 
-	P.Money -= P.Debt;
-	P.Debt = 0;
+	Money(P) -= MoneyDebt(P);
+	MoneyDebt(P) = 0;
+
+	Material(P).wood -= MaterialDebt(P).wood;
+	Material(P).stone -= MaterialDebt(P).stone;
+	Material(P).iron -= MaterialDebt(P).iron;
 	
     /*Algoritma*/
     if (!IsEmptyStackAction(S))
@@ -1415,19 +1441,18 @@ void executeBuild(Action A)
 			i++;
 	}
 
-
 	WAHANA W = ElmtWahana(ListWahanaTersedia, i);
 
 	Condition(W) = true;
 	Lokasi(W) = ActionPosition(A);
+	TotalNaik(W) = 0;
+	TotalProfit(W) = 0;
+	TodayNaik(W) = 0;
+	TodayProfit(W) = 0;
 
 	AddAsLastElWahana(&ListWahanaDimiliki, W);
 
 	NbWahanaDimiliki += 1;
-
-	P.Material.wood -= ActionMaterialCost(A).wood;
-	P.Material.iron -= ActionMaterialCost(A).iron;
-	P.Material.stone -= ActionMaterialCost(A).stone;
 
 	POINT t = P.Position;
 
@@ -1541,7 +1566,7 @@ void prepareToMain()
 	P.CurrentTime = MakeJAM(9, 00, 00);
 
 	MAINPHASE = true;
-	P.Debt = 0;
+	MoneyDebt(P) = 0;
 	RandomAntrian();
 }
 
@@ -2032,7 +2057,7 @@ void generateMapMain()
         printf("Jumlah aksi yang akan dilakukan : %d\n",(NbElmtStackAction(S)));
         printf("Total waktu yang dibutuhkan : %d", TotalTimeAction(S)); 
         printf("\n");
-        printf("Total uang yang dibutuhkan : %d", P.Debt);
+        printf("Total uang yang dibutuhkan : %d", MoneyDebt(P));
 		printf("\n");
     }
     
