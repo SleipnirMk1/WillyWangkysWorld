@@ -159,19 +159,15 @@ int main()
 
 	generateListMaterial();
 
-
-	intro();
-
-
 	RUN = true;
 	RUN_NEWGAME = true;
 	boolean runned = false;
 
-	
-	
+
 	while(RUN_NEWGAME)
 	{
-		printf("\nNEW // LOAD // EXIT\n\n");
+		intro();
+		printf("\nnew // load // help // exit\n\n");
 		
 		printf("Masukkan perintah : ");
 		Kalimat input = GetKalimat();
@@ -447,7 +443,7 @@ void generateNewGame()
 {
 	printf("\nMemulai Permainan Baru...\n");
 
-	printf("\nMasukkan Nama : \n");
+	printf("\nMasukkan Nama : ");
 
 	Kalimat Name = GetKalimat();
 	P.Name = Name;
@@ -2501,6 +2497,7 @@ void generateMapMain()
 
 	if (MAINPHASE && NbElmtWahana(ListWahanaDimiliki) != 0 && NBElmtQueueAntrian(A) != 0)
 	{
+		printf("Antrian [%d/%d]:\n", NBElmtQueueAntrian(A), MAX_ANTRIAN);
 		printf("\n");
 		PrintQueueAntrian(A);
 		printf("\n");
@@ -2637,50 +2634,68 @@ void PrintMap()
 
 void intro()
 {
-	printf("     __      __.__.__  .__                             \n");
-	printf("/  7    /  1__|  | |  | ___.__.                        \n");
-	printf("\   7171   /  |  | |  |<   |  |                        \n");
-	printf(" \        /|  |  |_|  |_\___  |                        \n");
-	printf("  \__/\  / |__|____/____/ ____|                        \n");
-	printf("       \/               \/                             \n");
-	printf(" __      __                        __                  \n");
-	printf("/  \    /  \_____    ____    ____ |  | _____.__. ______\n");
-	printf("\   \/\/   /\__  \  /    \  / ___\|  |/ <   |  |/  ___/\n");
-	printf(" \        /  / __ \|   |  \/ /_/  >    < \___  |\___ \ \n");
-	printf("  \__/\  /  (____  /___|  /\___  /|__|_ \/ ____/____  >\n");
-	printf("       \/        \/     \//_____/      \/\/         \/ \n");
-	printf(" __      __            .__       .___                  \n");
-	printf("/  \    /  \___________|  |    __| _/                  \n");
-	printf("\   \/\/   /  _ \_  __ \  |   / __ |                   \n");
-	printf(" \        (  <_> )  | \/  |__/ /_/ |                   \n");
-	printf("  \__/\  / \____/|__|  |____/\____ |                   \n");
-	printf("       \/                         \/           	       \n");
-    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
-    printf(":                    |:                    |:                     |:                |:                :\n");
-    printf(":      NEW GAME      |:    COMING SOON     |:     COMING SOON     |:      HELP      |:      EXIT      :\n");
-    printf(":                    |:                    |:                     |:                |:                :\n");
-    printf(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+	printf(":::::::://:::::::::::::::::::::::::::::::/::-::::::-:::::::::/-/::::::::::::::::\n");
+	printf("::::::/+:/::///::::::::::::::::::::::::::/:::::::::::::::::--:-/::::://:::::::::\n");
+	printf("///////o++/+//+/:::::::::::::::::::::::::/::--::--:::::::::--/-/:::://///:/:::::\n");
+	printf("///+++++/+++//::::::::::::::::///////::::/::-:::--::::-:-::-:/-/:::///////::::::\n");
+	printf("///o++////+//+////+://:::::::////////:::/::::-::--:-`.:--::::/-/:::////////:::::\n");
+	printf("::::::+/+//++/:/://///:///////////+//////:::-``.:-:``./:::--:/:////////+///////:\n");
+	printf(":::::://///////://///::////////++/++//++:::::.`.:-:`.:::-`..:/:/+++/////+/::-:::\n");
+	printf("///////////////:--:////::://++++++++++/:::::-:::--:+::::-.:::///++++++++:-:--:::\n");
+	printf("////////////+//:---:::///:::/+++++++/:::::--:-+//+-/:o-o:-:::://+++++++:------:-\n");
+	printf("////////++/+:+/:--::::::::::://:::--:::-/....://+++so/-+++::::///++++/::--:---:-\n");
+	printf("+++++++sos++sss+o:----::-:-:-::-::-:::::::::::o+////:////:/::::///++/:::::::::::\n");
+	printf("++++++o+/o//oo/./:-:-:::::----:-::-::::---://///:::::///+::///:::::::::::--:::::\n");
+	printf("oo+///+o+o+/++o/:--:-:::--.-.::-:-:::::--/ooooooooooo+oooooooohhs::::::::+//::::\n");
+	printf("o+/////oooo/ooo/:-::-::-/+ooo/::::-:::::/oooooooooooo+ooooooooshho:::::+ss++/:::\n");
+	printf("o//////oooo+ooo/:-::-:+osssssss+/:-:::::ooooyho++++++++++++soooyhh/::syyys+o+++:\n");
+	printf("///////oooo+sss/:-::-://+///+/+//-::+:/+ooooyy/::-::::-:---soooshhy::yy+ys/os/o/\n");
+	printf("///////+++////++/+///:////:///:/://++ooo++ooyy/:-:::::---::o++ooyhsoooo/++++/+++\n");
+	printf("///////s+///++++/++//////////++//+oo+oooo++osy////:-:::::::so+ooshssso++++o+/+/+\n");
+	printf("//////oo+++++++++o+++++++++++o+++ooooo+++++oyy:oso-.-------oo+oosyhsssoooooo++++\n");
+	printf("//////:-::://////:://///////////////++++++++++:/s/--:-:::-:oooo+oos++///////++//\n");
+	printf("//////``o----:---------------------:::::::::-------:::::::::/:::::::---:::::::::\n");
+	printf("//////``o....o/............-----:::--::::--------------:-...-------......--:::::\n");
+	printf("//////:`-...+sohy-.....-------::::::::--------::::::::.`............----..------\n");
+	printf("////////:-..-:::::::::/++/::::::::/:::::::--------::-......`.......-:/::........\n");
+	printf("//////////++++o+/:::/:::/+/::::+oo/::::::/+//////++/////////////+++++++++++++++/\n");
+	printf("//////////ysssyo--------------:----:::++:/ssssyyyyyyyysssssssyyyyyyyyyyyyyyyyyyy\n");
+	printf("//////////+syyys--------------:----/:/ys:/syyyyyyyyysssssssysyyyyyyyyyyyyyyyyyyy\n");
+	printf("///////////+yyyy:---:-------//--:---/::::oyyyyyyyysssssssssyyyyyyyyyyyyyyyyyyyyy\n");
+	printf("/////////////yyy+----:+/----//--:--::+/::+yyyyyyysssyyyyyyyyyyyyyyyyssssyyyyyyyy\n");
+	printf("//////////////syo--/--/:------------/:oo:+yysyyyyyyyyyyyyyyyyyyyssssyssssyyyyyyy\n");
+	printf("\n\n");
+    printf("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    printf(":              |:               |:             |:              |:              :\n");
+    printf(":   NEW GAME   |:  COMING SOON  |: COMING SOON |:     HELP     |:     EXIT     :\n");
+    printf(":              |:               |:             |:              |:              :\n");
+    printf("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
     /* sesuaikan lagi itu menu nya dengan inputnya */
 }
 
+
 void help()
 {
-    int input_help;
+    char input_help;
     boolean end = false;
+	Kata K1, K2, K3;
+	SetKata(&K1, "cmdgame");
+	SetKata(&K2, "creditgame");
+	SetKata(&K3, "quithelp");
 
     while (!end)
     {
-        printf(" 1. cmdgame\n");
-        printf(" 2. creditgame\n");
-        printf(" 3. quithelp\n");
-        printf(" [Willy Wangky Bot] Can I help you? : <choose help number>\n");
+        printf(" - cmdgame\n");
+        printf(" - creditgame\n");
+        printf(" - quithelp\n");
+        printf(" \n[Willy Wangky Bot] Can I help you? : \n\n");
 		printf("   >>> ");
-        scanf("%d", &input_help);
-        if (input_help == 0)
-        {
-            
-        }
-        else if (input_help == 1)
+        Kalimat K = GetKalimat();
+
+		Kata q;
+		DequeueKalimat(&K, &q);
+
+        if (KataSama(q, K1))
         {
             printf(" [Willy Wangky Bot] Here is our list command game : \n");
             printf("\n");
@@ -2707,7 +2722,7 @@ void help()
             printf(" ================================================ \n");
             printf(" \n");
         }
-        else if (input_help == 2)
+        else if (KataSama(q, K2))
         {
             printf(" [Willy Wangky Bot] This game was credited by : \n");
             printf("\n");
@@ -2717,7 +2732,7 @@ void help()
             printf(" 4. Benidictus Galih Mahar Putra \n");
             printf(" 5. Raffi Fadhlurrahman Putra Rahiem \n");
         }
-        else if (input_help == 3)
+        else if (KataSama(q, K3))
         {
             printf("Have fun~ !\n");
             end = true;
