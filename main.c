@@ -1359,9 +1359,7 @@ void undo ()
 }
 
 void execute()
-{
-	printf("Execute\n");
-	
+{	
 	 /* Kamus lokal */
     StackAction StackExecute;
 	CreateEmptyStackAction(&StackExecute);
@@ -1473,22 +1471,42 @@ void executeUpgrade(Action A)
 {
 	printf("Execute Upgrade...\n");
 
-	// boolean found = false;
-	// int i = 0;
-	// while(i < NbWahanaTersedia && !found)
-	// {
-	// 	if (IsEQKalimat(ListWahanaTersedia[i].Name, ActionName(A)))
-	// 		found = true;
-	// 	else
-	// 		i++;
-	// }
+	boolean foundOld = false;
+	int idxOld = 0;
+	while(idxOld < NbWahanaDimiliki && !foundOld)
+	{
+		if (EQ(Lokasi(ElmtWahana(ListWahanaDimiliki, idxOld)), ActionPosition(A)))
+			foundOld = true;
+		else
+			idxOld++;
+	}
 
-	// found = false;
-	// int n = 0;
-	// while(n < NbWahanaDimiliki && !found)
-	// {
-	// }
+	boolean foundNew = false;
+	int idxNew = 0;
+	while(idxNew < NbElmtWahana(ListWahanaTersedia) && !foundNew)
+	{
+		if (IsEQKalimat(Nama(ElmtWahana(ListWahanaTersedia, idxNew)), ActionName(A)))
+			foundNew = true;
+		else
+			idxNew++;
+	}
+	
+	if (!foundOld || !foundNew)
+	{
+		printf("\nUpgrade Failed...\n");
+	}
+	else
+	{
+		WAHANA W = ElmtWahana(ListWahanaTersedia, idxNew);
+		Condition(W) = true;
+		Lokasi(W) = Lokasi(ElmtWahana(ListWahanaDimiliki, idxOld));
+		TotalNaik(W) = TotalNaik(ElmtWahana(ListWahanaDimiliki, idxOld));
+		TotalProfit(W) = TotalProfit(ElmtWahana(ListWahanaDimiliki, idxOld));
+		TodayNaik(W) = 0;
+		TodayProfit(W) = 0;
 
+		ElmtWahana(ListWahanaDimiliki, idxOld) = W;
+	}
 }
 
 void executeBuy(Action A)
