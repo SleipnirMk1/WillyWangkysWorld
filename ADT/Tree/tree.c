@@ -30,10 +30,11 @@ void BuildTree(Tree *T)
 	}
  	ADV();
 }
-void BuildTreeFromString(Tree *T, char *st, int *idx, int MAX)
+
+
+void BuildTreeFromString(Tree *T, char *st, int *idx)
  /* input dari string st */
 { 	
-	printf("Test0\n");
 	(*idx)++; /* advance */
 
 	if (st[*idx]==')')
@@ -43,11 +44,10 @@ void BuildTreeFromString(Tree *T, char *st, int *idx, int MAX)
  	{	 
 	 	AlokasiTree(T, st[*idx]);
 		(*idx)++; /* advance */
-		printf("Test1\n");
-	 	BuildTreeFromString(&Left(*T),st,idx, MAX);
-	 	BuildTreeFromString(&Right(*T),st,idx, MAX);
+	 	BuildTreeFromString(&Left(*T),st,idx);
+	 	BuildTreeFromString(&Right(*T),st,idx);
 	}
- 	//(*idx)++; /* advance */
+ 	(*idx)++; /* advance */
 }
 void PrintTree(Tree T)
 { 

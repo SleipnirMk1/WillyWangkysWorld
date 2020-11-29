@@ -1033,10 +1033,9 @@ Tree ReadWahana(char dir[])
     while (!feof(fp))
     {
         fgets(singleLine, 128, fp);
-		printf("main\n");
 		// printf("%c\n", singleLine[1]);
 		// printf("%s\n", singleLine);
-        BuildTreeFromString(&T, singleLine, &idx, 128);
+        BuildTreeFromString(&T, singleLine, &idx);
     }
 	fclose(fp);
     return T;

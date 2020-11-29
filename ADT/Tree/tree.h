@@ -23,7 +23,7 @@
  
  void AlokasiTree(addressTree *P, infotypeTree X);
  void BuildTree(Tree *T);
-void BuildTreeFromString(Tree *T, char *st, int *idx, int MAX);
+void BuildTreeFromString(Tree *T, char *st, int *idx);
  void PrintTree(Tree T);
  Tree SearchTreeNode(Tree P, infotypeTree X);
  
