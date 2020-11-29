@@ -57,6 +57,33 @@ void PrintTree(Tree T)
 		printf(")");
 	}
 }
+
+Tree SearchTreeNode(Tree P, infotype X)
+/* Mengirimkan node dari P yang bernilai X */
+{
+   if (P == Nil)
+   {
+      	return Nil;
+   }
+   else if (Info(P) == X)
+   {
+    	return P;
+   }
+   else {
+		if (SearchTree(Left(P), X) != Nil)
+		{
+			return (SearchTree(Left(P), X);
+		}
+		else if (SearchTree(Right(P), X) != Nil)
+		{
+			return (SearchTree(Right(P), X);
+		}
+		else
+		{
+			return Nil;
+		}
+   }
+}
  
  /*int main()
  { Tree T;

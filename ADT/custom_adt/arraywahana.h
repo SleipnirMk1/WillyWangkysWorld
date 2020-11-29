@@ -95,13 +95,13 @@ boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2);
 
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : Tabel boleh kosong!! *** */
-IdxType Search1Wahana (ArrayWahana T, Kalimat X);
+IdxType Search1Wahana (ArrayWahana T, int tipe);
 /* Search apakah ada elemen tabel T yang bernilai X */
 /* Jika ada, menghasilkan indeks i terkecil, dengan elemen ke-i = X */
 /* Jika tidak ada, mengirimkan IdxUndef */
 /* Menghasilkan indeks tak terdefinisi (IdxUndef) jika tabel T kosong */
 /* Skema Searching yang digunakan bebas */
-boolean SearchBWahana (ArrayWahana T, Kalimat X);
+boolean SearchBWahana (ArrayWahana T, int tipe);
 /* Search apakah ada elemen tabel T yang bernilai X */
 /* Jika ada, menghasilkan true, jika tidak ada menghasilkan false */
 /* Skema searching yang digunakan bebas */

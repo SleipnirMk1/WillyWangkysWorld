@@ -1,10 +1,15 @@
-Nama		Uang	Wood	Stone	Iron	Kap	Durasi	Profit	Deskripsi
-Ferris Wheel 	40	50	20	40	4	720	5	A big spinning wheel, you go up then go down
-Eye of Wanky	30	15	25	30	8	720	10	You can see the entire park from the top
-Fireball	35	5	30	35	6	600	5	Spins at a ludicrous speed
-Funhouse	35	60	25	20	4	900	5	House filled with fun, yay
-Candy Factory	30	10	15	40	8	900	10	The exact replica of wanky candy factory
-Cursed Castle	20	25	40	15	6	720	10	Castle built for one purpose, terror
-Log Ride	30	60	35	10	2	900	5	A simple ride on a log in a river
-Pirate Cove	30	45	5	25	8	900	10	Gather your crew and go on a pirate adventure
-River Rapids	35	10	30	15	4	600	10	An even deadlier river to ride on
+Nama		Tipe	Uang	Wood	Stone	Iron	Kap	Durasi	Profit	Deskripsi
+Ferris Wheel 	1	40	50	20	40	2	900	5	A big spinning wheel, you go up then go down
+Magic Circle	2	20	10	30	20	4	900	5	Infused with magic, riding gives you pleasant feeling
+Eye of Wanky	3	30	15	25	30	8	900	10	You can see the entire park from the top
+Fortune Wheel	4	35	20	30	10	6	900	25	Good fortune always came to those who rode this
+Fast Ball	5	25	5	20	30	2	720	5	Spins very quickly
+Curve Ball	6	35	10	25	40	2	720	15	Visibly angled, still spins very fast
+Fireball	7	35	5	30	35	4	600	5	Spins at a ludicrous speed
+Funhouse	8	35	60	25	20	3	1200	5	House filled with fun, yay
+House of Tricks	9	20	15	10	15	5	1200	5	House riddled with trickery and mischief
+Candy Factory	10	30	10	15	40	8	1200	10	The exact replica of wanky's own candy factory
+Loki's Palace	11	40	5	10	5	5	900	15	Palace of trickery approved by the god of mischief
+Haunted Mansion	12	20	20	15	5	3	900	5	Mansion dwelled by ghosts and the supernatural
+Count's Manor	13	25	20	30	20	4	720	10	Manor built based on count dracula's dwelling
+Cursed Castle	14	20	25	40	15	6	600	10	Castle built for one purpose, terror

@@ -25,5 +25,6 @@
  void BuildTree(Tree *T);
  void BuildTreeFromString(Tree *T, char *st, int *idx);
  void PrintTree(Tree T);
+ Tree SearchTreeNode(Tree P, infotype X);
  
  #endif

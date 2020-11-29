@@ -52,7 +52,7 @@ void WriteMaterial(char addressFile[], int wood, int stone, int iron, int mamank
     fclose(fp);
 }
 
-void ReadWahana(char addressFile[], Tree *t1, Tree* t2, Tree* t3)
+Tree ReadWahana(char addressFile[])
 {
     FILE *fp = fopen(addressFile,"r");
 
@@ -62,28 +62,15 @@ void ReadWahana(char addressFile[], Tree *t1, Tree* t2, Tree* t3)
     }
 
     char singleLine[128];
-    int count = 1;
-    int idx;
+    Tree T;
 
     while (!feof(fp))
     {
         fgets(singleLine, 128, fp);
-        idx = 0;
-        if (count == 1)
-        {
-            BuildTreeFromString(t1, singleLine, &idx);
-        }
-        else if (count == 2)
-        {
-            BuildTreeFromString(t2, singleLine, &idx);
-        }
-        else if (count == 3)
-        {
-            BuildTreeFromString(t3, singleLine, &idx);
-        }
-        ++count;
+        BuildTreeFromString(&T, singleLine, 0);
     }
 
+    return T;
     fclose(fp);
     
 }
@@ -147,16 +134,4 @@ ArrayWahana ReadWahanaInfo(char addressFile[])
 
     return W;
     fclose(fp);
-}
-
-int main()
-{
-    ArrayWahana L;
-    MakeEmptyWahana(&L);
-
-    L = ReadWahanaInfo("wahanainfo.txt");
-
-    TulisIsiTabWahana(L);
-
-    return 0;
 }

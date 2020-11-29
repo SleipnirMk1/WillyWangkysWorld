@@ -4,6 +4,7 @@
 #include "../point/point.h"
 #include "../mesinkata/mesinkata.h"
 #include "player.h"
+#include ".../List Berkait/listlinier.h"
 
 #ifndef WAHANA_H
 #define WAHANA_H
@@ -26,6 +27,7 @@ typedef struct {
     int TotalProfit;
     int UsedToday;
     int ProfitToday;
+    List Upgrade;
 } WAHANA;
 
 /* *** Notasi Akses: WAHANA *** */
@@ -43,5 +45,6 @@ typedef struct {
 #define TotalProfit(P) (P).TotalProfit
 #define TodayNaik(P) (P).UsedToday
 #define TodayProfit(P) (P).ProfitToday
+#define UpgradeHistory(P) (P).Upgrade
 
 #endif

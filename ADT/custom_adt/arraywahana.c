@@ -162,7 +162,7 @@ boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2)
 
 		while(i < n && Eq)
 		{
-			if (!IsEQKalimat(Nama(Elmt(T1, i)), Nama(Elmt(T2, i))))
+			if (Tipe(Elmt(T1, i)) != Tipe(Elmt(T2, i)))
 				Eq = false;
 
 			i++;
@@ -176,7 +176,7 @@ boolean IsEQWahana (ArrayWahana T1, ArrayWahana T2)
 
 /* ********** SEARCHING ********** */
 /* ***  Perhatian : Tabel boleh kosong!! *** */
-IdxType Search1Wahana (ArrayWahana T, Kalimat X)
+IdxType Search1Wahana (ArrayWahana T, int tipe)
 /* Search apakah ada elemen tabel T yang bernilai X */
 /* Jika ada, menghasilkan indeks i terkecil, dengan elemen ke-i = X */
 /* Jika tidak ada, mengirimkan IdxUndef */
@@ -196,7 +196,7 @@ IdxType Search1Wahana (ArrayWahana T, Kalimat X)
 
 		while (!found && i < n)
 		{
-			if (!IsEQKalimat(Nama(Elmt(T, i)), X))
+			if (Tipe(Elmt(T, i)) == tipe)
 				found = true;
 			else
 				i++;
@@ -210,7 +210,7 @@ IdxType Search1Wahana (ArrayWahana T, Kalimat X)
 }
 
 
-boolean SearchBWahana (ArrayWahana T, Kalimat X)
+boolean SearchBWahana (ArrayWahana T, int tipe)
 /* Search apakah ada elemen tabel T yang bernilai X */
 /* Jika ada, menghasilkan true, jika tidak ada menghasilkan false */
 /* Skema searching yang digunakan bebas */
@@ -222,7 +222,7 @@ boolean SearchBWahana (ArrayWahana T, Kalimat X)
 
 	while (!found && i < n)
 	{
-		if (!IsEQKalimat(Nama(Elmt(T, i)), X))
+		if (Tipe(Elmt(T, i)) == tipe)
 			found = true;
 
 		i++;
