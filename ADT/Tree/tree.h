@@ -4,6 +4,7 @@
  #define __TREE_H__
  
  #include <stdlib.h>
+ #include "..\custom_adt\arraywahana.h"
  
  #define NilTree NULL
  #define Info(T) (T)->info
@@ -33,6 +34,8 @@ void PrintTreeLevel(Tree P, int h, int level);
 void PrintTreeIndent(Tree P, int h);
 
 Tree BuildBalanceTree(int n, int *in);
+
+void PrintTreeUpgradeWahana(Tree T, ArrayWahana W, int type);
 
 
  

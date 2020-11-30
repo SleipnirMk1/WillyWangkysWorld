@@ -4,6 +4,7 @@
 #include "boolean.h"
 #include "tree.h"
 #include "..\mesinkata\mesinkar.h"
+#include "..\custom_adt\arraywahana.h"
 
 boolean IsTreeEmpty(Tree T)
 {
@@ -179,6 +180,37 @@ Tree SearchTreeNode(Tree P, infotypeTree X)
 		}
    }
 }
+
+
+void PrintTreeUpgradeWahana(Tree T, ArrayWahana W, int type)
+{
+	if (T == NilTree)
+	{
+		return;
+	}
+	else if (Info(T) == type)
+	{
+		PrintKalimat(W.TI[type-1].Name);
+	}
+	else
+	{
+		if (SearchTreeNode(Left(T), type) != NilTree)
+		{
+			PrintKalimat(W.TI[Info(T)-1].Name);
+			printf(" --> ");
+			PrintTreeUpgradeWahana(Left(T), W, type);
+		}
+		else if (SearchTreeNode(Right(T), type) != NilTree)
+		{
+			PrintKalimat(W.TI[Info(T)-1].Name);
+			printf(" --> ");
+			PrintTreeUpgradeWahana(Right(T), W, type);
+		}
+		else
+			return;
+	}
+}
+
  
  /*int main()
  { Tree T;

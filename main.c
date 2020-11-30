@@ -365,7 +365,7 @@ void generatePlayer()
 {
 	P.Position = MakePOINT(1, 1, 1);
 
-	P.Money = 200;
+	P.Money = 500;
 	MoneyDebt(P) = 0;
 
 	P.Material.wood = 50;
@@ -377,7 +377,7 @@ void generatePlayer()
 	MaterialDebt(P).iron = 0;
 
 	P.CurrentTime = MakeJAM(21, 0, 0);
-	P.Day = 2;
+	P.Day = 1;
 }
 
 
@@ -1682,7 +1682,7 @@ void execute()
             PopAction(&S, &A);
             PushAction(&StackExecute, A);
         }
-		printf("%d\n", NbElmtStackAction(StackExecute));
+		//printf("%d\n", NbElmtStackAction(StackExecute));
         while (!IsEmptyStackAction(StackExecute))
         {
             PopAction(&StackExecute, &A);
@@ -2059,6 +2059,12 @@ void detail()
 	else
 		printf("Status : Rusak\n");
 	
+	printf("History : ");
+
+	Tree T = generateWahanaUpgradeTree();
+	PrintTreeUpgradeWahana(T, ListWahanaTersedia, Tipe(ElmtWahana(ListWahanaDimiliki, idx)));
+	printf("\n");
+	
 	AntrianEmosiRising();
 	RandomAntrian();
 }
@@ -2199,6 +2205,13 @@ void mainToPrepare()
 		Antrian X;
 		DequeueAntrian(&A, &X);
 	}
+
+	for (int i = 0; i < NbElmtWahana(ListWahanaDimiliki); i++)
+	{
+		TodayNaik(ElmtWahana(ListWahanaDimiliki, i)) = 0;
+		TodayProfit(ElmtWahana(ListWahanaDimiliki, i)) = 0;
+	}
+	
 
 	P.Day += 1;
 	P.CurrentTime = MakeJAM(21, 0, 0);
